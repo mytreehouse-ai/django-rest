@@ -50,21 +50,21 @@ class MongoDBConnector:
                 "$vectorSearch": {
                     "queryVector": query_vector,
                     "path": "vector_data",
-                    "numCandidates": num_results * 20,  # Increase candidates to ensure we find enough results
+                    "numCandidates": num_results * 20,
                     "limit": num_results,
                     "index": "VectorSearchIndex"
                 }
             },
             {
                 "$sort": {
-                    "score": -1  # Sort by score in descending order to get the highest similarity scores first
+                    "score": -1 
                 }
             },
             {
                 "$project": {
-                    "original_data": 1,  # Only include the original_data in the results
-                    "score": 1,  # Include the similarity score in the results
-                    "_id": 0  # Exclude the MongoDB default _id field
+                    "original_data": 1,
+                    "score": 1,
+                    "_id": 0
                 }
             }
         ])
