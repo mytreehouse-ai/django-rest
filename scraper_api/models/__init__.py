@@ -1,0 +1,1 @@
+from .scrapy_job_model import ScrapyJobModel

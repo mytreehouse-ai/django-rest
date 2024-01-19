@@ -1,0 +1,33 @@
+# Start with a base Python image
+FROM python:3.11-slim
+
+# Install system dependencies required for the project
+RUN apt-get update
+
+# Add the wait script to ensure dependent services are ready
+ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.9.0/wait /wait
+RUN chmod +x /wait
+
+# Set environment variables
+ENV PYTHONUNBUFFERED=1 \
+    PATH="/home/appuser/.local/bin:${PATH}"
+
+# Create a non-root user 'appuser' for running the application
+RUN useradd -m appuser
+
+# Define the working directory for the application
+WORKDIR /app
+
+# Upgrade pip and install Python dependencies
+COPY requirements.txt /app/
+RUN pip install --upgrade pip
+RUN pip install -r requirements.txt
+
+# Change ownership of /app to appuser
+RUN chown -R appuser:appuser /app
+
+# Switch to non-root user
+USER appuser
+
+# Copy the application code to the container with appropriate ownership
+COPY --chown=appuser:appuser . /app/

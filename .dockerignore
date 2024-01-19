@@ -1,0 +1,35 @@
+# Ignore all bytecode
+*.pyc
+*.pyo
+*.pyd
+__pycache__
+*.so
+
+# Ignore all logs
+*.log
+
+# Ignore OS generated files
+.DS_Store
+ehthumbs.db
+Icon?
+Thumbs.db
+
+# Ignore local configuration files
+.local
+.env
+.teller.yml
+
+# Ignore media and static files
+media/
+static/
+
+# Ignore database and backups
+data/
+backups/
+
+# Ignore other unnecessary files
+*.swp
+*.swo
+*.bak
+*.orig
+*.tmp
