@@ -1,7 +1,7 @@
 version: '3.9'
 services:
-  db:
-    container_name: db
+  postgres:
+    container_name: kmc_savills_db
     image: postgres
     volumes:
       - ./data/db:/var/lib/postgresql/data
@@ -13,8 +13,8 @@ services:
     #command: ["postgres", "-c", "log_statement=all"]
     ports:
     - "5433:5432"
-  app:
-    container_name: app
+  django:
+    container_name: kmc_savills_app
     build:
       context: .
       dockerfile: Dockerfile.local
@@ -33,6 +33,6 @@ services:
     env_file:
       - .env
     depends_on:
-      - db
+      - postgres
     environment:
-      WAIT_HOSTS: db:5432
+      WAIT_HOSTS: postgres:5432

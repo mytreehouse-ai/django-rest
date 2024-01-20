@@ -1,4 +1,5 @@
 import os
+import logging
 from typing import List
 from pymongo import MongoClient
 from langchain_community.vectorstores import FAISS
@@ -7,6 +8,9 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnablePassthrough
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
+
+
+logger = logging.getLogger(__name__)
 
 class MongoDBConnector:
     """
@@ -137,7 +141,9 @@ class OpenAILocalServices:
               - Always present prices in PHP (Philippine Peso).
               - Omit decimal points when the price ends in .0 or .00.
           6. User Guidance for Specificity: When providing property information, advise the owner on how they can refine their query for more targeted results. Encourage specificity in their requests.
-          7. Markdown Format: All responses should be formatted in markdown for clarity and readability.
+          7. If a keyword is highly similar to the description, include it in the recommendation.
+          8. If the user doesn't mention the warehouse, please assume they are looking for one.
+          9. Markdown Format: All responses should be formatted in markdown for clarity and readability.
 
           Follow this response format:
 
