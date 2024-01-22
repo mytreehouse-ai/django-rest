@@ -43,5 +43,6 @@ class LangchainChatRetrieveAPIView(RetrieveAPIView):
         return response
       else:
          response_data = generate_openai_response(question=question)
+         logger.debug(f"Response from run_chain: {response_data}")
          return Response(response_data, content_type='text/plain')
 

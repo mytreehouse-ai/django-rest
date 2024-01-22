@@ -145,6 +145,7 @@ class LangchainOpenAIServices:
           7. If a keyword is highly similar to the description, include it in the recommendation.
           8. If the user doesn't mention the warehouse, please assume they are looking for one.
           9. Markdown Format: All responses should be formatted in markdown for clarity and readability.
+          10. Always remember that #9 guideline is very important.
 
           Follow this response format:
 
