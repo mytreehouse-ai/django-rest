@@ -81,21 +81,22 @@ class MongoDBConnector:
         """
         self.client.close()
 
-class OpenAILocalServices:
+class LangchainOpenAIServices:
     """
     Provides local services for OpenAI operations such as converting text to vectors,
     storing vectors, generating prompt templates, and running chains of operations.
     """
-    def __init__(self, api_key):
+    def __init__(self, api_key, stream=False):
         """
-        Initializes the OpenAILocalServices with the given API key.
+        Initializes the OpenAILocalServices with the given API key and streaming option.
 
         :param api_key: The API key for OpenAI services.
+        :param stream: A boolean indicating whether to enable streaming responses.
         """
         self.llm = ChatOpenAI(
             api_key=api_key, 
-            streaming=True, 
-            callbacks=[StreamingStdOutCallbackHandler()], 
+            streaming=stream, 
+            callbacks=[StreamingStdOutCallbackHandler()] if stream else [], 
             temperature=1.0
         )
 

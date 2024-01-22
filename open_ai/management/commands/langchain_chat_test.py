@@ -1,7 +1,7 @@
 import os
 import logging
 from django.core.management.base import BaseCommand
-from ...services.open_ai_services import OpenAILocalServices
+from ...services.lanchain_openai_services import LangchainOpenAIServices
 
 
 logger = logging.getLogger(__name__)
@@ -14,7 +14,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         question = options['question']
-        open_ai_services = OpenAILocalServices(api_key=os.environ.get("OPENAI_API_KEY"))
+        open_ai_services = LangchainOpenAIServices(api_key=os.environ.get("OPENAI_API_KEY"))
         open_ai_services.run_chain(question)
         # Implementing a new line as per instructions
         self.stdout.write("\n\n")
