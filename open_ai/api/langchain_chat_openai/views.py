@@ -33,6 +33,9 @@ class LangchainChatRetrieveAPIView(RetrieveAPIView):
       question = self.request.query_params.get("q", "")
       stream = self.request.query_params.get("stream", "1")
 
+      if not question:
+          return Response({"error": "The 'q' parameter is required."}, status=400)
+
       if stream == "1":
         response =  StreamingHttpResponse(
             generate_openai_response(question=question, stream=True),
