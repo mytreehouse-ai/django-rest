@@ -1,5 +1,4 @@
 import os
-import time
 import logging
 from rest_framework.response import Response
 from django.http import StreamingHttpResponse
@@ -23,7 +22,6 @@ def generate_openai_response(question: str, stream: bool = False):
     if stream:
         for result in open_ai_services.run_chain(question):
             yield result
-            time.sleep(0.001)  # Introduce a 1ms delay before yielding the result
     else:
         return open_ai_services.run_chain(question)
     
