@@ -97,7 +97,7 @@ class LangchainOpenAIServices:
             api_key=api_key, 
             streaming=stream, 
             callbacks=[StreamingStdOutCallbackHandler()] if stream else [], 
-            temperature=1.0
+            temperature=0.0  # Setting temperature to 0 for deterministic, consistent QA responses
         )
 
     def convert_to_vector(self, text: str):
