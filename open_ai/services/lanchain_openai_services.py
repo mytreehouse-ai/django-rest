@@ -132,6 +132,8 @@ class LangchainOpenAIServices:
 
           Question: {question}
 
+          When responding to a prompt unrelated to warehouse properties, always reply as a friendly assistant. Then, follow up with a prompt offering assistance with warehouse-related inquiries. 
+
           When responding to property inquiries, please adhere to the following guidelines:
 
           1. Attachment Information: Exclude any attachment details mentioned in the property description from your response.
