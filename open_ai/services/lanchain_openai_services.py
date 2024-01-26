@@ -94,7 +94,8 @@ class LangchainOpenAIServices:
         :param stream: A boolean indicating whether to enable streaming responses.
         """
         self.llm = ChatOpenAI(
-            api_key=api_key, 
+            api_key=api_key,
+            model="gpt-3.5-turbo-1106",
             streaming=stream, 
             callbacks=[StreamingStdOutCallbackHandler()] if stream else [], 
             temperature=0.0  # Setting temperature to 0 for deterministic, consistent QA responses
