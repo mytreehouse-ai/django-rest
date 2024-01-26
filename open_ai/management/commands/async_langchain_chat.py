@@ -6,6 +6,7 @@ from django.core.management.base import BaseCommand
 from langchain_openai import ChatOpenAI
 from langchain_community.vectorstores import FAISS
 from langchain_core.output_parsers import StrOutputParser
+from langchain.schema import HumanMessage
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.runnables import RunnablePassthrough
 from langchain.callbacks import AsyncIteratorCallbackHandler
@@ -30,9 +31,19 @@ class Command(BaseCommand):
             callbacks=[callback]
         )
         
-        # task = asyncio.current_task(
-        #     model.agenerate([[]])
-        # )
+        task = asyncio.current_task(
+            model.agenerate(messages=[[HumanMessage(content="Hi?")]])
+        )
+
+        try:
+            async for token in callback.aiter():
+                yield token
+        except Exception as e:
+            print(f"Caught execption {e}")
+        finally:
+            callback.done.set()
+
+        await task
 
     def handle(self, *args, **options):
         question = options['question']
@@ -45,6 +56,6 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS('Successfully got response from OpenAI service'))
         return None
     
-    # python manage.py async_langchain_chat_test "Is there any property available in Makati or Valenzuela that has an area of at least 100 square meters?"
+# python manage.py async_langchain_chat_test "Is there any property available in Makati or Valenzuela that has an area of at least 100 square meters?"
 # python manage.py async_langchain_chat_test "Can you please provide me with two options for large warehouses that are currently available?"
 # python manage.py async_langchain_chat_test "Is there a warehouse located near Taguig that is at least 100 sqm in size?"

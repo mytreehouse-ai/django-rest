@@ -107,7 +107,7 @@ class LangchainOpenAIServices:
         :param text: The text to be converted.
         :return: A vector representation of the text.
         """
-        embeddings = OpenAIEmbeddings()
+        embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
         return embeddings.embed_query(text)
 
     def vector_store(self, data: List[List[float]]) -> None:
