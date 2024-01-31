@@ -118,7 +118,7 @@ class LangchainOpenAIServices:
         :param data: A list of vectors to be stored.
         """
         vectorstore = FAISS.from_texts(
-          data, embedding=OpenAIEmbeddings()
+          data, embedding=OpenAIEmbeddings(model="text-embedding-3-small")
         )
         return vectorstore.as_retriever()
     
