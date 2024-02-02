@@ -149,7 +149,7 @@ class LangchainOpenAIServices:
           8. If a keyword is highly similar to the description, include it in the recommendation.
           9. If the user doesn't mention the warehouse, please assume they are looking for one.
           10. It is important to be specific about the location. If the user asks for Makati, only provide the Makati warehouse location, and if they ask for Taguig, provide the Taguig location, and so on.
-          10. Markdown Format: All responses should be formatted in markdown for clarity and readability.
+          10. Markdown Format: All responses should be formatted in markdown for clarity and readability and always target="_blank" when you include a link in your response.
 
           Follow this response format for warehouse inquiry:
 

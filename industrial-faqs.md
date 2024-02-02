@@ -145,7 +145,7 @@
 7. **Can you provide details about the current insurance coverage for the industrial property, including any claims history?**
 8. **What is the current market demand for industrial properties in this location, and how might it impact the sale?**
 
-## Distribution Center Inquiry:
+## Distribution Center Inquiry
 
 1. **Do you have any listings available in (specific area) outside an industrial park that’s non-PEZA?**
 2. **Do you have any listing available that has at least a 20-meter-wide road or a 4-lane road accessible to 6/8/10-wheeler trucks?**
