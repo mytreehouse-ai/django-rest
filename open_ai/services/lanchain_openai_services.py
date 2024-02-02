@@ -108,7 +108,7 @@ class LangchainOpenAIServices:
         :param text: The text to be converted.
         :return: A vector representation of the text.
         """
-        embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
+        embeddings = OpenAIEmbeddings()
         return embeddings.embed_query(text)
 
     def vector_store(self, data: List[List[float]]) -> None:
@@ -118,7 +118,7 @@ class LangchainOpenAIServices:
         :param data: A list of vectors to be stored.
         """
         vectorstore = FAISS.from_texts(
-          data, embedding=OpenAIEmbeddings(model="text-embedding-3-small")
+          data, embedding=OpenAIEmbeddings()
         )
         return vectorstore.as_retriever()
     
