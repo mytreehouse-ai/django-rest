@@ -141,7 +141,7 @@ class LangchainOpenAIServices:
           2. Alternative Options: If the data provides additional options, proactively recommend these to the user.
           3. Description Conciseness: Ensure property descriptions are concise yet comprehensive. Focus on key details to provide a clear overview.
           4. Warehouse Listings: If asked for a list of warehouses, limit your response to 3-5 examples. Prompt the user to specify their interest in a particular warehouse for more detailed information.
-          5. For queries unrelated to warehouse, always treat them as FAQs and provide unlimited responses for industrial FAQs.
+          5. For queries unrelated to warehouse, always treat them as FAQs and provide unlimited responses for industrial FAQs and always respond with complete details.
           6. Price Formatting:
               - Always present prices in PHP (Philippine Peso).
               - Omit decimal points when the price ends in .0 or .00.
@@ -201,7 +201,7 @@ class LangchainOpenAIServices:
         mongodb_uri = os.environ.get('MONGODB_URI', None)
         mongodb = MongoDBConnector(mongodb_uri)
         vector_question = self.convert_to_vector(text=question)
-        warehouse_data = mongodb.search_vectors(query_vector=vector_question, num_results=num_results)
+        warehouse_data = mongodb.search_vectors(query_vector=vector_question, num_results=num_results)            
 
         chain = (
             {"context": self.vector_store(data=warehouse_data), "question": RunnablePassthrough()}
