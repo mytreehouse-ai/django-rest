@@ -16,11 +16,9 @@ import datetime
 import logging
 from pathlib import Path
 
-
-logger = logging.getLogger(__name__)
 env = environ.Env()
 environ.Env.read_env()
-
+logger = logging.getLogger(__name__)
 
 if '--no-logs' in sys.argv:
     print('> Disabling logging levels of CRITICAL and below.')
@@ -56,8 +54,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_yasg',
     'storages',
-    'management',
     'open_ai',
+    'management',
     'scraper_api'
 ]
 
@@ -139,6 +137,14 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle'
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '100/day',
+        'user': '1000/day'
+    },
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 10,
