@@ -62,7 +62,7 @@ services:
       - postgres
       - django
     environment:
-      WAIT_HOSTS: redis:6379,postgres:5432
+      WAIT_HOSTS: redis:6379,postgres:5432,django:8000
   worker:
     container_name: kmc_savills_worker
     build:
@@ -79,4 +79,4 @@ services:
       - postgres
       - django
     environment:
-      WAIT_HOSTS: redis:6379,postgres:5432
+      WAIT_HOSTS: redis:6379,postgres:5432,django:8000
