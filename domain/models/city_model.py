@@ -10,6 +10,9 @@ class CityModel(BaseModel):
         verbose_name="Name"
     )
 
+    def __str__(self) -> str:
+        return self.name
+
     class Meta:
         db_table = "cities"
         verbose_name = "City"
