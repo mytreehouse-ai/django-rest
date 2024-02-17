@@ -106,7 +106,7 @@ DATABASES = {
         'HOST': env('POSTGRES_HOST'),
         'PORT': env('POSTGRES_PORT'),
         'OPTIONS': {
-            'sslmode': 'disable' if env('NODE_ENV') == 'development' else 'require',
+            'sslmode': 'disable' if env('POSTGRES_SSL_ON') == '0' else 'require',
         }
     }
 }
@@ -221,7 +221,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
 CELERY_BROKER_TRANSPORT_OPTIONS = {
-    'broker_use_ssl': True if env('NODE_ENV') == 'production' and env('REDIS_SSL_ENABLED') == "1" else False,
+    'broker_use_ssl': True if env('REDIS_SSL_ENABLED') == "1" else False,
     'ssl_cert_reqs': 'required' if env('REDIS_SSL_ENABLED') == "1" else 'none',
     'abortConnect': False,
     'broker_connection_timeout': 30,  # seconds
