@@ -1,0 +1,59 @@
+name: azure_docker_deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  set-environment-variables:
+    runs-on: self-hosted
+    environment: docker-server
+    permissions:
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create .env file
+        run: |
+          # Check if each variable exists before writing it to the .env file
+          if [ -n "${{ vars.DJANGO_SECRET_KEY }}" ]; then echo "DJANGO_SECRET_KEY=${{ vars.DJANGO_SECRET_KEY }}" >> .env; fi
+          if [ -n "${{ vars.MONGODB_URI }}" ]; then echo "MONGODB_URI=${{ vars.MONGODB_URI }}" >> .env; fi
+          if [ -n "${{ vars.OPENAI_API_KEY }}" ]; then echo "OPENAI_API_KEY=${{ vars.OPENAI_API_KEY }}" >> .env; fi
+          if [ -n "${{ vars.POSTGRES_DATABASE }}" ]; then echo "POSTGRES_DATABASE=${{ vars.POSTGRES_DATABASE }}" >> .env; fi
+          if [ -n "${{ vars.POSTGRES_HOST }}" ]; then echo "POSTGRES_HOST=${{ vars.POSTGRES_HOST }}" >> .env; fi
+          if [ -n "${{ vars.POSTGRES_USERNAME }}" ]; then echo "POSTGRES_USERNAME=${{ vars.POSTGRES_USERNAME }}" >> .env; fi
+          if [ -n "${{ vars.POSTGRES_PASSWORD }}" ]; then echo "POSTGRES_PASSWORD=${{ vars.POSTGRES_PASSWORD }}" >> .env; fi
+          if [ -n "${{ vars.POSTGRES_PORT }}" ]; then echo "POSTGRES_PORT=${{ vars.POSTGRES_PORT }}" >> .env; fi
+          if [ -n "${{ vars.REDIS_CACHE_URL }}" ]; then echo "REDIS_CACHE_URL=${{ vars.REDIS_CACHE_URL }}" >> .env; fi
+          if [ -n "${{ vars.REDIS_PASSWORD }}" ]; then echo "REDIS_PASSWORD=${{ vars.REDIS_PASSWORD }}" >> .env; fi
+          if [ -n "${{ vars.REDIS_VM_IP_ADD }}" ]; then echo "REDIS_VM_IP_ADD=${{ vars.REDIS_VM_IP_ADD }}" >> .env; fi
+          if [ -n "${{ vars.SCRAPER_API_KEY }}" ]; then echo "SCRAPER_API_KEY=${{ vars.SCRAPER_API_KEY }}" >> .env; fi
+          if [ -n "${{ vars.CORS_ALLOWED_ORIGINS }}" ]; then echo "CORS_ALLOWED_ORIGINS=${{ vars.CORS_ALLOWED_ORIGINS }}" >> .env; fi
+          if [ -n "${{ vars.CSRF_TRUSTED_ORIGINS }}" ]; then echo "CSRF_TRUSTED_ORIGINS=${{ vars.CSRF_TRUSTED_ORIGINS }}" >> .env; fi
+          if [ -n "${{ vars.DJANGO_ALLOWED_HOSTS }}" ]; then echo "DJANGO_ALLOWED_HOSTS=${{ vars.DJANGO_ALLOWED_HOSTS }}" >> .env; fi
+          if [ -n "${{ vars.DJANGO_API_URL }}" ]; then echo "DJANGO_API_URL=${{ vars.DJANGO_API_URL }}" >> .env; fi
+          if [ -n "${{ vars.POSTGRES_SSL_ON }}" ]; then echo "POSTGRES_SSL_ON=${{ vars.POSTGRES_SSL_ON }}" >> .env; fi
+          if [ -n "${{ vars.REDIS_SSL_ENABLED }}" ]; then echo "REDIS_SSL_ENABLED=${{ vars.REDIS_SSL_ENABLED }}" >> .env; fi
+
+  validate-environment-variables:
+    runs-on: self-hosted
+    needs: set-environment-variables
+
+    steps:
+      - name: Grant execute permissions to validate_env_vars.sh
+        run: chmod +x ./validate_env_vars.sh
+      - name: Execute environment variable validation
+        run: ./validate_env_vars.sh
+
+  run-and-build-docker-compose:
+    runs-on: self-hosted
+    needs: validate-environment-variables
+
+    steps:
+      - name: Run and build docker-compose file in the background
+        run: docker compose -f docker-compose.production.yml up --build -d
+
+
+
+
