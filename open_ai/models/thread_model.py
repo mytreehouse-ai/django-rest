@@ -1,5 +1,6 @@
 from django.db import models
-from management.models.base_model import BaseModel
+from domain.models.base_model import BaseModel
+
 
 class ThreadModel(BaseModel):
     id = models.AutoField(primary_key=True)

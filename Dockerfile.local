@@ -2,31 +2,33 @@
 FROM python:3.11-slim
 
 # Install system dependencies required for the project
-RUN apt-get update
+# Including 'git' to ensure successful installation of dependencies from git repositories
+RUN apt-get update && apt-get install -y --no-install-recommends git
 
 # Add the wait script to ensure dependent services are ready
 ADD https://github.com/ufoscout/docker-compose-wait/releases/download/2.9.0/wait /wait
 RUN chmod +x /wait
 
-# Set environment variables
+# Set environment variables to ensure Python output is sent straight to terminal without being first buffered
+# and that our application's Python dependencies are installed in the user's home directory.
 ENV PYTHONUNBUFFERED=1 \
     PATH="/home/appuser/.local/bin:${PATH}"
 
-# Create a non-root user 'appuser' for running the application
+# Create a non-root user 'appuser' for running the application securely
 RUN useradd -m appuser
 
 # Define the working directory for the application
 WORKDIR /app
 
-# Upgrade pip and install Python dependencies
+# Upgrade pip and install Python dependencies listed in requirements.txt
 COPY requirements.txt /app/
-RUN pip install --upgrade pip
-RUN pip install -r requirements.txt
+RUN pip install --upgrade pip && \
+    pip install -r requirements.txt
 
-# Change ownership of /app to appuser
+# Change ownership of /app to appuser to ensure the application runs with the correct permissions
 RUN chown -R appuser:appuser /app
 
-# Switch to non-root user
+# Switch to non-root user for security
 USER appuser
 
 # Copy the application code to the container with appropriate ownership

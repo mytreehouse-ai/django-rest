@@ -1,7 +1,8 @@
 FROM python:3.11-slim
 
 # Install system dependencies required for the project
-RUN apt-get update
+# Including 'git' to ensure successful installation of dependencies from git repositories
+RUN apt-get update && apt-get install -y --no-install-recommends git
 
 # Set environment variables
 ENV PYTHONUNBUFFERED=1 \
