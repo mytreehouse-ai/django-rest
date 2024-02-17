@@ -18,7 +18,7 @@ click-repl==0.3.0
 cron-descriptor==1.4.3
 dataclasses-json==0.6.3
 distro==1.9.0
-Django==5.0.1
+Django==5.0.2
 django-celery-beat @ git+https://github.com/celery/django-celery-beat@f66796b9c5c9e47d118cb5b41d970f07cce72bbe
 django-celery-results==2.5.1
 django-cors-headers==4.3.1
