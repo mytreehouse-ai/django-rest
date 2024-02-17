@@ -30,7 +30,7 @@ class PropertyModel(BaseModel):
         verbose_name="Address Line 2"
     )
     city = models.ForeignKey(
-        "CityModel",
+        "domain.CityModel",
         null=True,
         related_name="city",
         on_delete=models.SET_NULL,
