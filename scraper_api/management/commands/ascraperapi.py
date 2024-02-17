@@ -6,6 +6,7 @@ from django.core.management.base import BaseCommand
 # Configure logger for this module
 logger = logging.getLogger(__name__)
 
+
 class Command(BaseCommand):
     """
     Django management command to send a POST request to ScraperAPI to initiate a scraping job.
@@ -29,20 +30,23 @@ class Command(BaseCommand):
         """
         # Construct the payload with the necessary parameters for the API request
         payload = {
-            "apiKey": os.environ.get("SCRAPER_API_KEY"),  # API key for ScraperAPI, fetched from environment variables
+            # API key for ScraperAPI, fetched from environment variables
+            "apiKey": os.environ.get("SCRAPER_API_KEY"),
             "url": "https://www.lamudi.com.ph/commercial/warehouse/rent",  # The URL to scrape
             "callback": {
                 "type": "webhook",  # The type of callback, in this case, a webhook
-                "url": "https://webhook.site/2581f5f6-bd8b-4419-8101-2e392efa2d6a"  # The callback URL where the results will be sent
+                # The callback URL where the results will be sent
+                "url": "https://webhook.site/3f038b24-30f4-47fb-8669-9c32d9d9d6e5"
             }
         }
-        
+
         # Define the endpoint URL for ScraperAPI where the job will be created
         endpoint = "https://async.scraperapi.com/jobs"
-        
+
         # Send the POST request to the ScraperAPI with the payload and headers
-        response = requests.post(endpoint, json=payload, headers={"Content-Type": "application/json"})
-        
+        response = requests.post(endpoint, json=payload, headers={
+                                 "Content-Type": "application/json"})
+
         # Attempt to parse the response as JSON and handle any parsing errors
         try:
             response_json = response.json()
@@ -54,10 +58,12 @@ class Command(BaseCommand):
         # Check the status code of the response and log the result
         if response.status_code == 200:
             # Log the success message with the response if the status code is 200
-            logger.info(f"Scraping job started successfully. Response: {response_json}")
+            logger.info(
+                f"Scraping job started successfully. Response: {response_json}")
         else:
             # Log the error with the status code and response if the status code is not 200
-            logger.error(f"Failed to start scraping job. Status code: {response.status_code}, Response: {response_json}")
+            logger.error(
+                f"Failed to start scraping job. Status code: {response.status_code}, Response: {response_json}")
 
         # Return the JSON response or the error message as a string
         return str(response_json)
