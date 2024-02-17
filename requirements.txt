@@ -33,9 +33,9 @@ jsonpatch==1.33
 jsonpointer==2.4
 langchain==0.1.5
 langchain-community==0.0.20
-langchain-core==0.1.18
+langchain-core>=0.1.21,<0.1.23
 langchain-openai==0.0.6
-langsmith==0.0.83
+langsmith==0.0.87
 marshmallow==3.20.2
 multidict==6.0.4
 mypy-extensions==1.0.0
@@ -44,7 +44,7 @@ openai==1.10.0
 packaging==23.2
 psycopg2-binary==2.9.9
 pydantic==2.6.1
-pydantic_core==2.14.6
+pydantic_core==2.16.2
 PyJWT==2.8.0
 pymongo==4.6.1
 pytz==2023.3.post1
