@@ -50,13 +50,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_celery_beat',
+    'django_celery_results',
+    'rest_framework_api_key',
     'django_filters',
     'rest_framework',
     'drf_yasg',
     'storages',
+    'domain',
     'open_ai',
-    'management',
-    'scraper_api'
+    'scraper_api',
+    'properties'
 ]
 
 MIDDLEWARE = [
@@ -124,19 +128,21 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-AUTH_USER_MODEL = "management.User"
+AUTH_USER_MODEL = "domain.User"
 
-# JWT AUTHENTICATION
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': datetime.timedelta(days=30),
-    'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=60)
+    'REFRESH_TOKEN_LIFETIME': datetime.timedelta(days=60),
+    'ISSUER': env("DJANGO_API_URL")
 }
 
-# REST FRAMEWORK SETTINGS
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
+    'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    ),
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework_api_key.permissions.HasAPIKey',
+    ],
     'DEFAULT_THROTTLE_CLASSES': [
         'rest_framework.throttling.AnonRateThrottle',
         'rest_framework.throttling.UserRateThrottle'
@@ -150,7 +156,8 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10,
 }
 
-# LOGGING CONFIGURATION
+API_KEY_CUSTOM_HEADER = "HTTP_X_API_KEY"
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -185,7 +192,6 @@ LOGGING = {
     },
 }
 
-# SWAGGER SETTINGS
 SWAGGER_SETTINGS = {
     'USE_SESSION_AUTH': False,
     'SECURITY_DEFINITIONS': {
@@ -212,3 +218,26 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
+CELERY_BROKER_TRANSPORT_OPTIONS = {
+    'broker_use_ssl': True if env('NODE_ENV') == 'production' else False,
+    'ssl_cert_reqs': 'none',
+    'abortConnect': False,
+    'broker_connection_timeout': 30,  # seconds
+    'broker_connection_retry': True,
+    'broker_connection_max_retries': 10,
+    'broker_heartbeat': 10,  # seconds
+}
+CELERY_BROKER_URL = env('REDIS_CACHE_URL')
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_RESULT_EXTENDED = True
+
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": env('REDIS_CACHE_URL'),
+    }
+}
+
+RATELIMIT_USE_CACHE = 'default'

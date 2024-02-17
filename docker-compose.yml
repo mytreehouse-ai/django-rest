@@ -1,5 +1,13 @@
 version: '3.9'
 services:
+  redis:
+    container_name: kmc_savills_redis
+    image: redis:alpine
+    command: "redis-server --save 60 1 --loglevel warning"
+    sysctls:
+      - net.core.somaxconn=1024
+    ports:
+      - "6379:6379"
   postgres:
     container_name: kmc_savills_db
     image: postgres
@@ -25,14 +33,50 @@ services:
              python manage.py collectstatic --no-input &&
              python manage.py makemigrations --no-input &&
              python manage.py migrate --no-input &&
-             python manage.py runserver 0.0.0.0:8001"
+             python manage.py runserver 0.0.0.0:8000"
     volumes:
     - .:/app
     ports:
-    - "8001:8001"
+    - "8000:8000"
     env_file:
       - .env
     depends_on:
+      - redis
       - postgres
     environment:
-      WAIT_HOSTS: postgres:5432
+      WAIT_HOSTS: redis:6379,postgres:5432
+  celery:
+    container_name: kmc_savills_celery
+    build:
+      context: .
+      dockerfile: Dockerfile.local
+    command: >
+      sh -c "/wait &&
+             celery -A mytreehouse beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler"
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - postgres
+      - django
+    environment:
+      WAIT_HOSTS: redis:6379,postgres:5432
+  worker:
+    container_name: kmc_savills_worker
+    build:
+      context: .
+      dockerfile: Dockerfile.local
+    command: >
+      sh -c "/wait && celery -A mytreehouse worker -l INFO -E --concurrency=5"
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    depends_on:
+      - redis
+      - postgres
+      - django
+    environment:
+      WAIT_HOSTS: redis:6379,postgres:5432
