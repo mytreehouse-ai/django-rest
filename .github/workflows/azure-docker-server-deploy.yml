@@ -17,6 +17,7 @@ jobs:
       - name: Create .env file
         run: |
           # Check if each variable exists before writing it to the .env file
+          if [ -n "${{ vars.NODE_ENV }}" ]; then echo "NODE_ENV=${{ vars.NODE_ENV }}" >> .env; fi
           if [ -n "${{ vars.DJANGO_SECRET_KEY }}" ]; then echo "DJANGO_SECRET_KEY=${{ vars.DJANGO_SECRET_KEY }}" >> .env; fi
           if [ -n "${{ vars.MONGODB_URI }}" ]; then echo "MONGODB_URI=${{ vars.MONGODB_URI }}" >> .env; fi
           if [ -n "${{ vars.OPENAI_API_KEY }}" ]; then echo "OPENAI_API_KEY=${{ vars.OPENAI_API_KEY }}" >> .env; fi
