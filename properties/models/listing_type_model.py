@@ -10,6 +10,9 @@ class ListingTypeModel(BaseModel):
         verbose_name="Description"
     )
 
+    def __str__(self) -> str:
+        return self.description
+
     class Meta:
         db_table = "listing_types"
         verbose_name = "Listing type"

@@ -51,6 +51,9 @@ class PropertyModel(BaseModel):
     year_built = models.IntegerField(null=True, verbose_name="Year Built")
     description = models.TextField(null=True, verbose_name="Description")
 
+    def __str__(self) -> str:
+        return str(self.id)
+
     class Meta:
         db_table = "properties"
         verbose_name = "Property"

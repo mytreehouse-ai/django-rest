@@ -10,6 +10,9 @@ class PropertyStatusModel(BaseModel):
         verbose_name="Description"
     )
 
+    def __str__(self) -> str:
+        return self.description
+
     class Meta:
         db_table = "property_statuses"
         verbose_name = "Property status"

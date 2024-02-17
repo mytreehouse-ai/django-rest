@@ -10,6 +10,9 @@ class PropertyTypeModel(BaseModel):
         verbose_name="Description"
     )
 
+    def __str__(self) -> str:
+        return self.description
+
     class Meta:
         db_table = "property_types"
         verbose_name = "Property type"

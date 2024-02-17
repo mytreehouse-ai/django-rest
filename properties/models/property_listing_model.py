@@ -42,6 +42,9 @@ class PropertyListingModel(BaseModel):
     price = models.FloatField(null=True, verbose_name="Price")
     is_active = models.BooleanField(default=False, verbose_name="Is Active")
 
+    def __str__(self) -> str:
+        return self.listing_title
+
     class Meta:
         db_table = "property_listings"
         verbose_name = "Property listing"
