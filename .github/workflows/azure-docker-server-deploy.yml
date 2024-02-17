@@ -18,21 +18,21 @@ jobs:
         run: |
           # Check if each variable exists before writing it to the .env file
           if [ -n "${{ vars.NODE_ENV }}" ]; then echo "NODE_ENV=${{ vars.NODE_ENV }}" >> .env; fi
-          if [ -n "${{ vars.DJANGO_SECRET_KEY }}" ]; then echo "DJANGO_SECRET_KEY=${{ vars.DJANGO_SECRET_KEY }}" >> .env; fi
-          if [ -n "${{ vars.MONGODB_URI }}" ]; then echo "MONGODB_URI=${{ vars.MONGODB_URI }}" >> .env; fi
-          if [ -n "${{ vars.OPENAI_API_KEY }}" ]; then echo "OPENAI_API_KEY=${{ vars.OPENAI_API_KEY }}" >> .env; fi
-          if [ -n "${{ vars.POSTGRES_DATABASE }}" ]; then echo "POSTGRES_DATABASE=${{ vars.POSTGRES_DATABASE }}" >> .env; fi
-          if [ -n "${{ vars.POSTGRES_HOST }}" ]; then echo "POSTGRES_HOST=${{ vars.POSTGRES_HOST }}" >> .env; fi
-          if [ -n "${{ vars.POSTGRES_USERNAME }}" ]; then echo "POSTGRES_USERNAME=${{ vars.POSTGRES_USERNAME }}" >> .env; fi
-          if [ -n "${{ vars.POSTGRES_PASSWORD }}" ]; then echo "POSTGRES_PASSWORD=${{ vars.POSTGRES_PASSWORD }}" >> .env; fi
-          if [ -n "${{ vars.POSTGRES_PORT }}" ]; then echo "POSTGRES_PORT=${{ vars.POSTGRES_PORT }}" >> .env; fi
-          if [ -n "${{ vars.REDIS_CACHE_URL }}" ]; then echo "REDIS_CACHE_URL=${{ vars.REDIS_CACHE_URL }}" >> .env; fi
-          if [ -n "${{ vars.REDIS_PASSWORD }}" ]; then echo "REDIS_PASSWORD=${{ vars.REDIS_PASSWORD }}" >> .env; fi
-          if [ -n "${{ vars.REDIS_VM_IP_ADD }}" ]; then echo "REDIS_VM_IP_ADD=${{ vars.REDIS_VM_IP_ADD }}" >> .env; fi
-          if [ -n "${{ vars.SCRAPER_API_KEY }}" ]; then echo "SCRAPER_API_KEY=${{ vars.SCRAPER_API_KEY }}" >> .env; fi
+          if [ -n "${{ secrets.DJANGO_SECRET_KEY }}" ]; then echo "DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" >> .env; fi
           if [ -n "${{ vars.CORS_ALLOWED_ORIGINS }}" ]; then echo "CORS_ALLOWED_ORIGINS=${{ vars.CORS_ALLOWED_ORIGINS }}" >> .env; fi
           if [ -n "${{ vars.CSRF_TRUSTED_ORIGINS }}" ]; then echo "CSRF_TRUSTED_ORIGINS=${{ vars.CSRF_TRUSTED_ORIGINS }}" >> .env; fi
           if [ -n "${{ vars.DJANGO_ALLOWED_HOSTS }}" ]; then echo "DJANGO_ALLOWED_HOSTS=${{ vars.DJANGO_ALLOWED_HOSTS }}" >> .env; fi
+          if [ -n "${{ secrets.MONGODB_URI }}" ]; then echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" >> .env; fi
+          if [ -n "${{ secrets.OPENAI_API_KEY }}" ]; then echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> .env; fi
+          if [ -n "${{ secrets.POSTGRES_DATABASE }}" ]; then echo "POSTGRES_DATABASE=${{ secrets.POSTGRES_DATABASE }}" >> .env; fi
+          if [ -n "${{ secrets.POSTGRES_HOST }}" ]; then echo "POSTGRES_HOST=${{ secrets.POSTGRES_HOST }}" >> .env; fi
+          if [ -n "${{ secrets.POSTGRES_USERNAME }}" ]; then echo "POSTGRES_USERNAME=${{ secrets.POSTGRES_USERNAME }}" >> .env; fi
+          if [ -n "${{ secrets.POSTGRES_PASSWORD }}" ]; then echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env; fi
+          if [ -n "${{ secrets.POSTGRES_PORT }}" ]; then echo "POSTGRES_PORT=${{ secrets.POSTGRES_PORT }}" >> .env; fi
+          if [ -n "${{ secrets.REDIS_CACHE_URL }}" ]; then echo "REDIS_CACHE_URL=${{ secrets.REDIS_CACHE_URL }}" >> .env; fi
+          if [ -n "${{ secrets.REDIS_PASSWORD }}" ]; then echo "REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}" >> .env; fi
+          if [ -n "${{ secrets.REDIS_VM_IP_ADD }}" ]; then echo "REDIS_VM_IP_ADD=${{ secrets.REDIS_VM_IP_ADD }}" >> .env; fi
+          if [ -n "${{ secrets.SCRAPER_API_KEY }}" ]; then echo "SCRAPER_API_KEY=${{ secrets.SCRAPER_API_KEY }}" >> .env; fi
           if [ -n "${{ vars.DJANGO_API_URL }}" ]; then echo "DJANGO_API_URL=${{ vars.DJANGO_API_URL }}" >> .env; fi
           if [ -n "${{ vars.POSTGRES_SSL_ON }}" ]; then echo "POSTGRES_SSL_ON=${{ vars.POSTGRES_SSL_ON }}" >> .env; fi
           if [ -n "${{ vars.REDIS_SSL_ENABLED }}" ]; then echo "REDIS_SSL_ENABLED=${{ vars.REDIS_SSL_ENABLED }}" >> .env; fi
