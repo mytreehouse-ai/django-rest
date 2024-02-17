@@ -53,7 +53,7 @@ jobs:
 
     steps:
       - name: Run and build docker-compose file in the background
-        run: docker compose -f docker-compose.production.yml up --build -d
+        run: docker compose -f docker-compose-production.yml up --build -d
 
 
 

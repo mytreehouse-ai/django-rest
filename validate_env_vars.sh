@@ -15,7 +15,6 @@ else
     exit 1
 fi
 
-
 # Check each required variable
 required_vars="NODE_ENV"
 
