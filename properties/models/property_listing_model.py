@@ -13,11 +13,11 @@ class PropertyListingModel(BaseModel):
         unique=True,
         verbose_name="Listing URL"
     )
-    property = models.ForeignKey(
+    estate = models.ForeignKey(
         "PropertyModel",
-        related_name="property",
+        related_name="estate",
         on_delete=models.CASCADE,
-        verbose_name="Property"
+        verbose_name="Estate"
     )
     property_type = models.ForeignKey(
         "PropertyTypeModel",
