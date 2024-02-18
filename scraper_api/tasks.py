@@ -43,7 +43,8 @@ def scraperapi_process_scrapy_web():
                 endpoint,
                 json=payload,
                 headers={
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "X-Api-Key": os.environ.get("SCRAPERAPI_WEBHOOK_API_KEY")
                 }
             )
 
