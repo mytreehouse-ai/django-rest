@@ -36,6 +36,7 @@ jobs:
           if [ -n "${{ secrets.SCRAPER_API_KEY }}" ]; then echo "SCRAPER_API_KEY=${{ secrets.SCRAPER_API_KEY }}" >> .env; fi
           if [ -n "${{ vars.POSTGRES_SSL_ON }}" ]; then echo "POSTGRES_SSL_ON=${{ vars.POSTGRES_SSL_ON }}" >> .env; fi
           if [ -n "${{ vars.REDIS_SSL_ENABLED }}" ]; then echo "REDIS_SSL_ENABLED=${{ vars.REDIS_SSL_ENABLED }}" >> .env; fi
+          if [ -n "${{ secrets.SCRAPERAPI_WEBHOOK_API_KEY }}" ]; then echo "SCRAPERAPI_WEBHOOK_API_KEY=${{ secrets.SCRAPERAPI_WEBHOOK_API_KEY }}" >> .env; fi
 
   validate-environment-variables:
     runs-on: self-hosted
