@@ -1,16 +1,45 @@
 import os
+from typing import List
 from logging import getLogger
 from django.utils import timezone
 
 from ..models.scrapy_job_model import ScrapyJobModel
+from ..models.scrapy_web_model import ScrapyWebModel
 
 logger = getLogger(__name__)
 
 
 class ScrapyJobService:
 
+    def get_all_scrapy_web(self) -> List[ScrapyWebModel]:
+        """
+        Retrieves all ScrapyWebModel instances from the database.
+
+        This method queries the database for all instances of ScrapyWebModel, which store the URLs to be scraped by the Scrapy service, and returns them. It is essential for identifying all the target URLs that the Scrapy service will process.
+
+        Returns:
+            QuerySet: A QuerySet containing all instances of ScrapyWebModel, representing all URLs to be scraped.
+        """
+        return ScrapyWebModel.objects.all()
+
     def job_checker():
         running_jobs = ScrapyJobModel.objects.filter(status="running")[:10]
+
+    def create_job(self, **kwargs):
+        """
+        Creates a new Scrapy job in the database.
+
+        This method takes keyword arguments that correspond to the fields of the ScrapyJobModel
+        and creates a new instance of ScrapyJobModel with these fields.
+
+        Args:
+            **kwargs: Variable length keyword arguments. Expected to contain all necessary fields
+            for creating a ScrapyJobModel instance.
+
+        Returns:
+            ScrapyJobModel: The newly created ScrapyJobModel instance.
+        """
+        return ScrapyJobModel.objects.create(**kwargs)
 
     def update_job(self, job_id: str, attempts: int, status: str, html_code: str | None, failed_reason: str | None) -> None:
         """

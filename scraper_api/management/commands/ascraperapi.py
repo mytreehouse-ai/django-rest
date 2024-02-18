@@ -3,6 +3,8 @@ import logging
 import requests
 from django.core.management.base import BaseCommand
 
+from ...serializers.create_scrapy_job_serializer import CreateScrapyJobSerializer
+
 # Configure logger for this module
 logger = logging.getLogger(__name__)
 
@@ -49,7 +51,9 @@ class Command(BaseCommand):
 
         # Attempt to parse the response as JSON and handle any parsing errors
         try:
-            response_json = response.json()
+            response_json: CreateScrapyJobSerializer = response.json()
+
+            print(response_json.get("id"))
         except ValueError:
             # Log the error if the response is not a valid JSON
             logger.error("Failed to parse response as JSON.")
