@@ -36,6 +36,10 @@ schema_view = get_schema_view(
     url=os.environ.get('DJANGO_API_URL'),
 )
 
+admin.site.site_header = "Mytreehouse Admin"
+admin.site.site_title = "Mytreehouse Admin Portal"
+admin.site.index_title = "Welcome to Mytreehouse Admin Portal"
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     re_path(r'^swagger(?P<format>\.json|\.yaml)$',
