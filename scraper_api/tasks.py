@@ -33,7 +33,7 @@ def scraperapi_process_scrapy_web():
                 "url": f"{scrapy_web.web_url}/?page={i}",
                 "callback": {
                     "type": "webhook",
-                    "url": "http://172.188.28.92:8000/scrapy-jobs/webhook/finished-job"
+                    "url": f"{os.environ.get('DJANGO_API_URL')}/scrapy-jobs/webhook/finished-job"
                 }
             }
 
