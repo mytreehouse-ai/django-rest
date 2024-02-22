@@ -99,4 +99,5 @@ class ScrapyJobService:
                 job.save(update_fields=["failed_reason"])
 
         except ScrapyJobModel.DoesNotExist:
+            logger.error(f"ScrapyJobModel with id {job_id} does not exist.")
             job = None

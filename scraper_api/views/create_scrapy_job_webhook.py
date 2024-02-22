@@ -1,6 +1,7 @@
 from logging import getLogger
 from rest_framework.generics import CreateAPIView
 from rest_framework_api_key.permissions import HasAPIKey
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
 
@@ -12,7 +13,7 @@ logger = getLogger(__name__)
 
 
 class CreateScrapyJobWebhookAPIView(CreateAPIView):
-    permission_classes = [HasAPIKey]
+    permission_classes = [HasAPIKey | IsAuthenticated]
     serializer_class = CreateScrapyJobSerializer
 
     @swagger_auto_schema(
@@ -20,13 +21,11 @@ class CreateScrapyJobWebhookAPIView(CreateAPIView):
         responses={201: ReadScrapyJobSerializer},
         operation_description="Create a new user from a webhook. Requires API key authentication.",
         operation_id="create_user_from_webhook",
-        tags=["User"],
+        tags=["Scrapy-job"],
         security=[{"ApiKeyAuth": []}]
     )
     def post(self, request, *args, **kwargs):
-        # Deserialize the incoming request data using CreateScrapyJobSerializer
         request_data_serializer = self.get_serializer(data=request.data)
-        # Validate the deserialized data, raising an exception on failure
         request_data_serializer.is_valid(raise_exception=True)
 
         job_id = request_data_serializer.validated_data.get("id")
