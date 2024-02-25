@@ -1,6 +1,7 @@
 from logging import getLogger
 from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
 from drf_yasg.utils import swagger_auto_schema
 
 from ..serializers.webhook_request_body_serializer import ScraperApiWebhookRequestBodySerializer
@@ -25,6 +26,7 @@ class WebhookResponseCatcherAPIView(CreateAPIView):
     Methods:
         post(request, *args, **kwargs): Handles POST requests. It deserializes the request data, validates it, and processes the webhook response as needed.
     """
+    permission_classes = [AllowAny]
     serializer_class = ScraperApiWebhookRequestBodySerializer
 
     @swagger_auto_schema(
