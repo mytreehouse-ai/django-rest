@@ -11,7 +11,7 @@ from ..services.scraperapi_service import ScrapyJobService
 logger = getLogger(__name__)
 
 
-class ScraperApiWebhookResponseCatcherAPIView(CreateAPIView):
+class WebhookResponseCatcherAPIView(CreateAPIView):
     """
     API view to catch and process webhook responses from the Scraper API.
 
