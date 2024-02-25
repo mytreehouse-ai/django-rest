@@ -5,7 +5,6 @@ from django.core.management.base import BaseCommand
 
 from ...serializers.create_scrapy_job_serializer import CreateScrapyJobSerializer
 
-# Configure logger for this module
 logger = logging.getLogger(__name__)
 
 
