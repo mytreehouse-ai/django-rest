@@ -4,7 +4,7 @@ from rest_framework import serializers
 logger = getLogger(__name__)
 
 
-class ScraperApiWebhookResponseDictSerializer(serializers.Serializer):
+class ScraperApiWebhookResponseBodySerializer(serializers.Serializer):
     body = serializers.CharField(required=False)
 
     class Meta:
@@ -33,7 +33,7 @@ class ScraperApiWebhookRequestBodySerializer(serializers.Serializer):
     failedReason = serializers.CharField(required=False)
     url = serializers.URLField()
     response = serializers.DictField(
-        child=ScraperApiWebhookResponseDictSerializer(),
+        child=ScraperApiWebhookResponseBodySerializer(),
         required=False
     )
 
