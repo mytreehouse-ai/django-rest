@@ -59,12 +59,18 @@ class WebhookResponseCatcherAPIView(CreateAPIView):
         job_id = serializer.validated_data.get("id")
         attempts = serializer.validated_data.get("attempts")
         status = serializer.validated_data.get("status")
+        failed_reason = serializer.validated_data.get("failedReason", None)
         response = serializer.validated_data.get("response", None)
 
         scrapy_job_service = ScrapyJobService()
 
-        if status == "finished":
-            print(response.get("body", None))
+        scrapy_job_service.update_job(
+            job_id=job_id,
+            attempts=attempts,
+            status=status,
+            html_code=response.get("body", None) if response else None,
+            failed_reason=failed_reason
+        )
 
         return Response(
             {
