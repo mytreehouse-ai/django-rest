@@ -67,7 +67,6 @@ class WebhookResponseCatcherAPIView(CreateAPIView):
             "job_id": job_id,
             "attempts": attempts,
             "status": status,
-            "html_code": response.get("body", None) if response else None,
             "failed_reason": failed_reason
         })
 
