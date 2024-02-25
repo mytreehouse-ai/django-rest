@@ -26,10 +26,7 @@ def scraperapi_process_scrapy_web():
     scrapy_webs = ScrapyJobService.get_all_scrapy_web()
 
     for scrapy_web in scrapy_webs:
-        # Adjusted to include the last page
         for i in range(1, scrapy_web.page_number):
-            print(f"{scrapy_web.web_url}/?page={i}")
-
             payload = {
                 "apiKey": os.environ.get("SCRAPER_API_KEY"),
                 "url": f"{scrapy_web.web_url}/?page={i}",
