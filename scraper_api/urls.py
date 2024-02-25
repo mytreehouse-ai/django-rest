@@ -1,6 +1,6 @@
 from django.urls import path
-from .views.scraper_api_webhook_response_catcher import ScraperApiWebhookResponseCatcherAPIView
+from .views.webhook_response_catcher import WebhookResponseCatcherAPIView
 
 urlpatterns = [
-    path("webhook/finished-job", ScraperApiWebhookResponseCatcherAPIView.as_view())
+    path("webhook/finished-job", WebhookResponseCatcherAPIView.as_view())
 ]
