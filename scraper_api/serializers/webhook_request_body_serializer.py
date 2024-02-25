@@ -16,7 +16,7 @@ class ScraperApiWebhookRequestBodySerializer(serializers.Serializer):
         status (CharField): The current status of the scraping job, limited to 100 characters. This field is read-only.
         statusUrl (URLField): The URL to check the status of the scraping job. This field is read-only.
         url (URLField): The URL that was scraped. This field is read-only.
-        response (SerializerMethodField): A method field that returns the response body of the scraping job if the job has finished.
+        response (JSONField): A JSON field that contains the response body of the scraping job if the job has finished.
     """
 
     id = serializers.UUIDField(format="hex_verbose")
@@ -24,25 +24,7 @@ class ScraperApiWebhookRequestBodySerializer(serializers.Serializer):
     status = serializers.CharField(max_length=100)
     statusUrl = serializers.URLField()
     url = serializers.URLField()
-    response = serializers.SerializerMethodField()
-
-    def get_response(self, obj):
-        """
-        Retrieves the response body of the scraping job if the job has finished.
-
-        This method checks if the status of the job is 'finished'. If so, it returns the response body. Otherwise, it returns an empty dictionary.
-
-        Args:
-            obj (dict): The object instance representing the scraping job data.
-
-        Returns:
-            dict: A dictionary containing the 'body' of the response if the job has finished, otherwise an empty dictionary.
-        """
-        if obj.get('status') == 'finished':
-            return {
-                "body": obj.get('response', {}).get('body')
-            }
-        return {}
+    response = serializers.JSONField()
 
     class Meta:
         ref_field = "Scraper-api.webhook.request-body"

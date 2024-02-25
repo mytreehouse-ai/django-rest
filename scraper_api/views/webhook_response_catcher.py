@@ -63,7 +63,8 @@ class WebhookResponseCatcherAPIView(CreateAPIView):
 
         scrapy_job_service = ScrapyJobService()
 
-        print(request.data)
+        if status == "finished":
+            print(response.get("body", None))
 
         return Response(
             {
