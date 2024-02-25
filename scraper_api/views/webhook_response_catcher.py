@@ -63,7 +63,7 @@ class WebhookResponseCatcherAPIView(CreateAPIView):
 
         scrapy_job_service = ScrapyJobService()
 
-        print(response)
+        print(request.data)
 
         return Response(
             {
