@@ -5,7 +5,7 @@ from rest_framework.permissions import AllowAny
 from drf_yasg.utils import swagger_auto_schema
 
 from ..serializers.webhook_request_body_serializer import ScraperApiWebhookRequestBodySerializer
-from ..serializers.webhook_response_serializer import ScraperApiWebhookResponseSerializer
+from ..serializers.webhook_job_finished_response_serializer import ScraperApiWebhookJobFinishedResponseSerializer
 from ..serializers.webhook_api_key_serializer import ScraperApiWebhookApiKeySerializer
 from ..services.scraperapi_service import ScrapyJobService
 
@@ -35,7 +35,7 @@ class WebhookResponseCatcherAPIView(CreateAPIView):
         operation_id="catch_scraper_api_webhook_response",
         request_body=ScraperApiWebhookRequestBodySerializer(),
         responses={
-            200: ScraperApiWebhookResponseSerializer()
+            200: ScraperApiWebhookJobFinishedResponseSerializer()
         },
         tags=["Scrapy-job"],
     )
