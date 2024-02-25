@@ -65,6 +65,14 @@ class WebhookResponseCatcherAPIView(CreateAPIView):
 
         scrapy_job_service = ScrapyJobService()
 
+        print({
+            "job_id": job_id,
+            "attempts": attempts,
+            "status": status,
+            "html_code": response.get("body", None) if response else None,
+            "failed_reason": failed_reason
+        })
+
         scrapy_job_service.update_job(
             job_id=job_id,
             attempts=attempts,
