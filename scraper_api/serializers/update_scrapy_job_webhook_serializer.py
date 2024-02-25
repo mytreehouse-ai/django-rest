@@ -18,22 +18,22 @@ class UpdateScraperJobWebhookSerializer(serializers.Serializer):
     statusUrl = serializers.URLField(required=False)
     url = serializers.URLField(required=True)
     failedReason = serializers.CharField(required=False)
-    response = serializers.JSONField(required=False)
+    response = serializers.SerializerMethodField()
 
-    def validate(self, data):
+    def get_response(self, obj):
         """
-        Custom validation to ensure that 'response' is provided for "finished" status
-        and 'failedReason' is provided for "failed" status.
+        Retrieves the response body of the scraping job if the job has finished.
+
+        This method checks if the status of the job is 'finished'. If so, it returns the response body. Otherwise, it returns an empty dictionary.
+
+        Args:
+            obj (dict): The object instance representing the scraping job data.
+
+        Returns:
+            dict: A dictionary containing the 'body' of the response if the job has finished, otherwise an empty dictionary.
         """
-        if data["status"] == "finished" and "response" not in data:
-            raise serializers.ValidationError(
-                {"response": "This field is required for status 'finished'."})
-        if data["status"] == "failed":
-            if "failedReason" not in data:
-                raise serializers.ValidationError(
-                    {"failedReason": "This field is required for status 'failed'."})
-            # Ensure 'response' is not included for "failed" status
-            if "response" in data:
-                raise serializers.ValidationError(
-                    {"response": "This field should not be included for status 'failed'."})
-        return data
+        if obj.get('status') == 'finished':
+            return {
+                "body": obj.get('response', {}).get('body')
+            }
+        return {}

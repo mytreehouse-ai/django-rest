@@ -31,6 +31,7 @@ class UpdateScrapyJobWebhookAPIView(UpdateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         job_id = serializer.validated_data.get("id")
+        attempts = serializer.validated_data.get("attempts")
         status = serializer.validated_data.get("status")
         failed_reason = serializer.validated_data.get("failedReason", None)
         response = serializer.validated_data.get("response", None)
@@ -38,10 +39,15 @@ class UpdateScrapyJobWebhookAPIView(UpdateAPIView):
         scrapy_job_service = ScrapyJobService()
         scrapy_job_service.update_job(
             job_id=job_id,
-            attempts=serializer.validated_data.get("attempts"),
+            attempts=attempts,
             status=status,
             html_code=response,
             failed_reason=failed_reason
         )
 
-        return Response({"message": "Job status updated successfully"}, status=200)
+        return Response(
+            {
+                "message": "Job status updated successfully"
+            },
+            status=200
+        )
