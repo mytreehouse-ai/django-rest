@@ -1,9 +1,6 @@
-import os
-import json
 from typing import List
 from logging import getLogger
 from django.utils import timezone
-from django.core.cache import cache
 
 from ..models.scrapy_job_model import ScrapyJobModel
 from ..models.scrapy_web_model import ScrapyWebModel
@@ -23,20 +20,7 @@ class ScrapyJobService:
             QuerySet: A QuerySet containing all instances of ScrapyWebModel, representing all URLs to be scraped.
         """
 
-        cache_result = cache.get("scrapy_webs")
-
-        if cache_result:
-            return json.loads(cache_result)
-
         scrapy_webs = ScrapyWebModel.objects.all()
-
-        cache.set(
-            key="scrapy_webs",
-            value=json.dumps(
-                scrapy_webs
-            ),
-            timeout=None
-        )
 
         return scrapy_webs
 
