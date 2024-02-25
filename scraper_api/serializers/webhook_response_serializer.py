@@ -4,7 +4,7 @@ from rest_framework import serializers
 logger = getLogger(__name__)
 
 
-class WebhookResponseSerializer(serializers.Serializer):
+class ScraperApiWebhookResponseSerializer(serializers.Serializer):
     message = serializers.CharField(max_length=255)
 
     def create(self, validated_data):

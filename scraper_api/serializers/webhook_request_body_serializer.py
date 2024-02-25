@@ -4,6 +4,13 @@ from rest_framework import serializers
 logger = getLogger(__name__)
 
 
+class ScraperApiWebhookResponseDictSerializer(serializers.Serializer):
+    body = serializers.CharField(required=False)
+
+    class Meta:
+        ref_field = "Scraper-api.webhook.response-body"
+
+
 class ScraperApiWebhookRequestBodySerializer(serializers.Serializer):
     """
     Serializer for the response of a webhook from the Scraper API.
@@ -25,7 +32,10 @@ class ScraperApiWebhookRequestBodySerializer(serializers.Serializer):
     statusUrl = serializers.URLField()
     failedReason = serializers.CharField(required=False)
     url = serializers.URLField()
-    response = serializers.JSONField()
+    response = serializers.DictField(
+        child=ScraperApiWebhookResponseDictSerializer(),
+        required=False
+    )
 
     class Meta:
         ref_field = "Scraper-api.webhook.request-body"
