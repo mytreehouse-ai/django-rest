@@ -21,11 +21,13 @@ class Command(BaseCommand):
     help = "Sends a POST request to ScraperAPI to start a scraping job."
 
     def handle(self, *args, **options):
-        scrapy_service = ScrapyJobService()
-        scrapy_webs = scrapy_service.get_all_scrapy_web()
+        scrapy_webs = ScrapyJobService.get_all_scrapy_web()
 
         for scrapy_web in scrapy_webs:
+            # Adjusted to include the last page
             for i in range(1, scrapy_web.page_number):
+                print(f"{scrapy_web.web_url}/?page={i}")
+
                 payload = {
                     "apiKey": os.environ.get("SCRAPER_API_KEY"),
                     "url": f"{scrapy_web.web_url}/?page={i}",
@@ -41,21 +43,21 @@ class Command(BaseCommand):
                     endpoint,
                     json=payload,
                     headers={
-                        "Content-Type": "application/json",
-                        "X-Api-Key": os.environ.get("SCRAPERAPI_WEBHOOK_API_KEY")
+                        "Content-Type": "application/json"
                     }
                 )
 
                 try:
                     response_json: CreateScrapyJobSerializer = response.json()
-                    scrapy_service.create_job({
-                        "id": response_json.get("id", None),
-                        "attempts": response_json.get("attempts", None),
+                    job = {
+                        "job_id": response_json.get("id", None),
+                        "domain": response_json.get("url", None),
                         "status": response_json.get("status", None),
+                        "attempts": response_json.get("attempts", None),
                         "status_url": response_json.get("status_url", None),
-                        "url": response_json.get("url", None),
                         "supposed_to_run_at": response_json.get("supposedToRunAt", None)
-                    })
+                    }
+                    ScrapyJobService.create_job(**job)
                 except ValueError:
                     logger.error("Failed to parse response as JSON.")
                     response_json = "Invalid JSON response"
@@ -68,7 +70,5 @@ class Command(BaseCommand):
                         f"Failed to start scraping job. Status code: {response.status_code}, Response: {response_json}"
                     )
 
-                # Sleep for 2 second after each page iteration to avoid overwhelming the server
+                # Sleep for 2 seconds after each page iteration to avoid overwhelming the server
                 sleep(2)
-
-                return response_json
