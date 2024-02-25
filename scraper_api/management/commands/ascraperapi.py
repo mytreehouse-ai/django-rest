@@ -37,7 +37,7 @@ class Command(BaseCommand):
             "callback": {
                 "type": "webhook",  # The type of callback, in this case, a webhook
                 # The callback URL where the results will be sent
-                "url": "https://webhook.site/43d63174-4e7d-40c4-8842-e82b1256a3c2"
+                "url": f"{os.environ.get('DJANGO_API_URL')}/scrapy-jobs/webhook/finished-job"
             }
         }
 
