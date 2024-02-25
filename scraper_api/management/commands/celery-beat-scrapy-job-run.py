@@ -25,8 +25,6 @@ class Command(BaseCommand):
 
         for scrapy_web in scrapy_webs:
             for i in range(1, scrapy_web.page_number):
-                print(f"{scrapy_web.web_url}/?page={i}")
-
                 payload = {
                     "apiKey": os.environ.get("SCRAPER_API_KEY"),
                     "url": f"{scrapy_web.web_url}/?page={i}",

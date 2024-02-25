@@ -91,18 +91,3 @@ class ScrapyJobService:
         except ScrapyJobModel.DoesNotExist:
             logger.error(f"ScrapyJobModel with id {job_id} does not exist.")
             job = None
-
-
-# Example usage of create_job method:
-# Assuming we have received a response from the ScraperAPI with the following data:
-# scraperapi_response_data = {
-#     "id": "12345",
-#     "attempts": 1,
-#     "status": "running",
-#     "url": "http://example.com",
-#     "supposed_to_run_at": timezone.now()
-# }
-
-# # We can create a new Scrapy job using the create_job method as follows:
-# new_job = ScrapyJobService.create_job(**scraperapi_response_data)
-# print(f"New Scrapy job created with ID: {new_job.id}")
