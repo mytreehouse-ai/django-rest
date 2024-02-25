@@ -18,22 +18,7 @@ class UpdateScraperJobWebhookSerializer(serializers.Serializer):
     statusUrl = serializers.URLField(required=False)
     url = serializers.URLField(required=True)
     failedReason = serializers.CharField(required=False)
-    response = serializers.SerializerMethodField()
+    response = serializers.JSONField()
 
-    def get_response(self, obj):
-        """
-        Retrieves the response body of the scraping job if the job has finished.
-
-        This method checks if the status of the job is 'finished'. If so, it returns the response body. Otherwise, it returns an empty dictionary.
-
-        Args:
-            obj (dict): The object instance representing the scraping job data.
-
-        Returns:
-            dict: A dictionary containing the 'body' of the response if the job has finished, otherwise an empty dictionary.
-        """
-        if obj.get('status') == 'finished':
-            return {
-                "body": obj.get('response', {}).get('body')
-            }
-        return {}
+    class Meta:
+        ref_field = "Scraper-api.webhook.update"

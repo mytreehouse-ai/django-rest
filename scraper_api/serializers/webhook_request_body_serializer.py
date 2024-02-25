@@ -23,6 +23,7 @@ class ScraperApiWebhookRequestBodySerializer(serializers.Serializer):
     attempts = serializers.IntegerField(min_value=0)
     status = serializers.CharField(max_length=100)
     statusUrl = serializers.URLField()
+    failedReason = serializers.CharField(required=False)
     url = serializers.URLField()
     response = serializers.JSONField()
 
