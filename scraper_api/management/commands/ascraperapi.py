@@ -46,7 +46,8 @@ class Command(BaseCommand):
 
         # Send the POST request to the ScraperAPI with the payload and headers
         response = requests.post(
-            endpoint, json=payload,
+            endpoint,
+            json=payload,
             headers={
                 "Content-Type": "application/json"
             }

@@ -10,7 +10,7 @@ logger = getLogger(__name__)
 
 class ScrapyJobService:
 
-    def get_all_scrapy_web(self) -> List[ScrapyWebModel]:
+    def get_all_scrapy_web() -> List[ScrapyWebModel]:
         """
         Retrieves all ScrapyWebModel instances from the database.
 
@@ -27,23 +27,29 @@ class ScrapyJobService:
     def job_checker():
         running_jobs = ScrapyJobModel.objects.filter(status="running")[:10]
 
-    def create_job(self, **kwargs):
+    @staticmethod
+    def create_job(**kwargs):
         """
         Creates a new Scrapy job in the database.
 
         This method takes keyword arguments that correspond to the fields of the ScrapyJobModel
-        and creates a new instance of ScrapyJobModel with these fields.
+        and creates a new instance of ScrapyJobModel with these fields. It is defined as a static method
+        to allow calling it without an instance of ScrapyJobService. It catches and logs any errors that occur during the creation of a new ScrapyJobModel instance.
 
         Args:
             **kwargs: Variable length keyword arguments. Expected to contain all necessary fields
             for creating a ScrapyJobModel instance.
 
         Returns:
-            ScrapyJobModel: The newly created ScrapyJobModel instance.
+            ScrapyJobModel: The newly created ScrapyJobModel instance or None if an error occurred.
         """
-        return ScrapyJobModel.objects.create(**kwargs)
+        try:
+            return ScrapyJobModel.objects.create(**kwargs)
+        except Exception as e:
+            logger.error(f"Failed to create ScrapyJobModel: {e}")
+            return None
 
-    def update_job(self, job_id: str, attempts: int, status: str, html_code: str | None, failed_reason: str | None) -> None:
+    def update_job(job_id: str, attempts: int, status: str, html_code: str | None, failed_reason: str | None) -> None:
         """
         Updates the details of a specific Scrapy job in the database.
 
@@ -85,3 +91,18 @@ class ScrapyJobService:
         except ScrapyJobModel.DoesNotExist:
             logger.error(f"ScrapyJobModel with id {job_id} does not exist.")
             job = None
+
+
+# Example usage of create_job method:
+# Assuming we have received a response from the ScraperAPI with the following data:
+# scraperapi_response_data = {
+#     "id": "12345",
+#     "attempts": 1,
+#     "status": "running",
+#     "url": "http://example.com",
+#     "supposed_to_run_at": timezone.now()
+# }
+
+# # We can create a new Scrapy job using the create_job method as follows:
+# new_job = ScrapyJobService.create_job(**scraperapi_response_data)
+# print(f"New Scrapy job created with ID: {new_job.id}")
