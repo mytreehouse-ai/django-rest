@@ -16,7 +16,8 @@ class ScraperApiWebhookResponseHeadersSerializer(serializers.Serializer):
     access_control_allow_credentials = serializers.CharField(required=False)
     x_robots_tag = serializers.CharField(required=False)
     set_cookie = serializers.ListField(
-        child=serializers.CharField(), required=False)
+        child=serializers.CharField(), required=False
+    )
     sa_final_url = serializers.CharField(required=False)
     sa_statuscode = serializers.CharField(required=False)
     sa_credit_cost = serializers.CharField(required=False)
@@ -40,7 +41,9 @@ class ScraperApiWebhookRequestBodySerializer(serializers.Serializer):
     """
     Serializer for the response of a webhook from the Scraper API.
 
-    This serializer is used to serialize the response data received from the Scraper API webhook. It includes fields such as the job ID, number of attempts made, the status of the job, the status URL, the URL that was scraped, and the response body if the job has finished.
+    This serializer is used to serialize the response data received from the Scraper API webhook. 
+    It includes fields such as the job ID, number of attempts made, the status of the job, the status URL, 
+    the URL that was scraped, and the response body if the job has finished.
 
     Attributes:
         id (UUIDField): The unique identifier of the scraping job, in hex_verbose format. This field is read-only.
