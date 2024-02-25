@@ -68,7 +68,7 @@ class ScrapyJobService:
             None
         """
         try:
-            job = ScrapyJobModel.objects.get(id=job_id)
+            job = ScrapyJobModel.objects.get(job_id=job_id)
             job.attempts = attempts
             job.status = status
             job.finished_processed_at = timezone.now()
