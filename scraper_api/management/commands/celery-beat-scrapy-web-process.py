@@ -32,6 +32,7 @@ class Command(BaseCommand):
 
         # Create or retrieve a PeriodicTask linked to the above CrontabSchedule.
         periodic_task, task_created = PeriodicTask.objects.get_or_create(
+            priority=0,
             crontab=every_sunday_at_3am,
             name="Scraper API Process Scrapy Web",
             task="scraper_api.tasks.scraperapi_process_scrapy_web"

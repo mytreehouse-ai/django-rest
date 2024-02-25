@@ -33,11 +33,11 @@ class Command(BaseCommand):
         payload = {
             # API key for ScraperAPI, fetched from environment variables
             "apiKey": os.environ.get("SCRAPER_API_KEY"),
-            "url": "https://www.lamudi.com.ph/commercial/warehouse/rent",  # The URL to scrape
+            "url": "https://www.lamudi.com.ph/commercial/warehouse/rent/?page=1",  # The URL to scrape
             "callback": {
                 "type": "webhook",  # The type of callback, in this case, a webhook
                 # The callback URL where the results will be sent
-                "url": "https://webhook.site/3f038b24-30f4-47fb-8669-9c32d9d9d6e5"
+                "url": "https://webhook.site/43d63174-4e7d-40c4-8842-e82b1256a3c2"
             }
         }
 
@@ -45,8 +45,12 @@ class Command(BaseCommand):
         endpoint = "https://async.scraperapi.com/jobs"
 
         # Send the POST request to the ScraperAPI with the payload and headers
-        response = requests.post(endpoint, json=payload, headers={
-                                 "Content-Type": "application/json"})
+        response = requests.post(
+            endpoint, json=payload,
+            headers={
+                "Content-Type": "application/json"
+            }
+        )
 
         # Attempt to parse the response as JSON and handle any parsing errors
         try:
@@ -62,11 +66,13 @@ class Command(BaseCommand):
         if response.status_code == 200:
             # Log the success message with the response if the status code is 200
             logger.info(
-                f"Scraping job started successfully. Response: {response_json}")
+                f"Scraping job started successfully. Response: {response_json}"
+            )
         else:
             # Log the error with the status code and response if the status code is not 200
             logger.error(
-                f"Failed to start scraping job. Status code: {response.status_code}, Response: {response_json}")
+                f"Failed to start scraping job. Status code: {response.status_code}, Response: {response_json}"
+            )
 
         # Return the JSON response or the error message as a string
         return str(response_json)
