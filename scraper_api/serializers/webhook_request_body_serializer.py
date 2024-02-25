@@ -32,7 +32,9 @@ class ScraperApiWebhookRequestBodySerializer(serializers.Serializer):
     statusUrl = serializers.URLField()
     failedReason = serializers.CharField(required=False)
     url = serializers.URLField()
-    response = serializers.JSONField()
+    response = serializers.DictField(
+        child=ScraperApiWebhookResponseBodySerializer()
+    )
 
     class Meta:
         ref_field = "Scraper-api.webhook.request-body"
