@@ -25,17 +25,47 @@ class ScrapyJobModel(BaseModel):
         html_code (TextField): The raw HTML code retrieved by the scraping job, if applicable.
     """
 
-    id = models.AutoField(primary_key=True)
-    job_id = models.CharField(max_length=100, unique=True, blank=False)
-    domain = models.URLField(blank=False, null=True)
-    status = models.CharField(max_length=100, default="running")
-    attempts = models.IntegerField(default=0)
-    status_url = models.URLField(blank=False, null=True)
-    supposed_to_run_at = models.DateTimeField(null=True, blank=True)
-    is_processed = models.BooleanField(default=False)
-    finished_processed_at = models.DateTimeField(null=True, blank=True)
-    failed_reason = models.TextField(null=True)
-    html_code = models.TextField(blank=False, null=True)
+    id = models.AutoField(
+        primary_key=True
+    )
+    job_id = models.CharField(
+        max_length=100,
+        unique=True,
+        blank=False
+    )
+    domain = models.URLField(
+        blank=False,
+        null=True
+    )
+    status = models.CharField(
+        max_length=100,
+        default="running"
+    )
+    attempts = models.IntegerField(
+        default=0
+    )
+    status_url = models.URLField(
+        blank=False,
+        null=True
+    )
+    supposed_to_run_at = models.DateTimeField(
+        null=True,
+        blank=True
+    )
+    is_processed = models.BooleanField(
+        default=False
+    )
+    finished_processed_at = models.DateTimeField(
+        null=True,
+        blank=True
+    )
+    failed_reason = models.TextField(
+        null=True
+    )
+    html_code = models.TextField(
+        blank=False,
+        null=True
+    )
 
     def __str__(self) -> str:
         """
