@@ -8,6 +8,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from drf_yasg.utils import swagger_auto_schema
 
 from ..services.scraperapi_service import ScrapyJobService
+from ..serializers.read_scrapy_job_serializer import ReadScrapyJobSerializer
 
 logger = getLogger(__name__)
 
@@ -20,4 +21,5 @@ class ReadScrapyJobAPIView(ListAPIView):
         filters.OrderingFilter
     ]
     search_fields = ["domain", "status", "attempts"]
+    serializer_class = ReadScrapyJobSerializer
     pagination_class = PageNumberPagination
