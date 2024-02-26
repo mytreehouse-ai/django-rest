@@ -14,7 +14,8 @@ class ScrapyJobService:
         """
         Retrieves all ScrapyWebModel instances from the database.
 
-        This method queries the database for all instances of ScrapyWebModel, which store the URLs to be scraped by the Scrapy service, and returns them. It is essential for identifying all the target URLs that the Scrapy service will process.
+        This method queries the database for all instances of ScrapyWebModel, which store the URLs to be scraped by the Scrapy service, and returns them. 
+        It is essential for identifying all the target URLs that the Scrapy service will process.
 
         Returns:
             QuerySet: A QuerySet containing all instances of ScrapyWebModel, representing all URLs to be scraped.
@@ -24,8 +25,18 @@ class ScrapyJobService:
 
         return scrapy_webs
 
-    def job_checker():
-        running_jobs = ScrapyJobModel.objects.filter(status="running")[:10]
+    def get_all_scrapy_job() -> List[ScrapyJobModel]:
+        """
+        Retrieves all ScrapyJobModel instances from the database.
+
+        This method queries the database for all instances of ScrapyJobModel, which represent individual 
+        scraping jobs that have been initiated or completed. It is crucial for monitoring, managing, and 
+        analyzing the performance and outcomes of the scraping jobs.
+
+        Returns:
+            List[ScrapyJobModel]: A list containing all instances of ScrapyJobModel limited by 5 records, representing all scraping jobs.
+        """
+        return ScrapyJobModel.objects.filter(status="finished", is_processed=False)[:5]
 
     @staticmethod
     def create_job(**kwargs):

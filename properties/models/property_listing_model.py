@@ -41,8 +41,10 @@ class PropertyListingModel(BaseModel):
         on_delete=models.SET_NULL,
         verbose_name="Property Status"
     )
-    price = models.FloatField(
-        null=True,
+    price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0.0,
         verbose_name="Price"
     )
     is_active = models.BooleanField(
