@@ -3,10 +3,21 @@ from domain.models.base_model import BaseModel
 
 
 class PropertyModel(BaseModel):
-    id = models.AutoField(primary_key=True)
-    lot_size = models.FloatField(null=True, verbose_name="Lot Size")
-    floor_size = models.FloatField(null=True, verbose_name="Floor Size")
-    building_size = models.FloatField(null=True, verbose_name="Building Size")
+    id = models.AutoField(
+        primary_key=True
+    )
+    lot_size = models.FloatField(
+        null=True,
+        verbose_name="Lot Size"
+    )
+    floor_size = models.FloatField(
+        null=True,
+        verbose_name="Floor Size"
+    )
+    building_size = models.FloatField(
+        null=True,
+        verbose_name="Building Size"
+    )
     num_bedrooms = models.IntegerField(
         default=0,
         verbose_name="Number of Bedrooms"
@@ -46,10 +57,22 @@ class PropertyModel(BaseModel):
         default=False,
         verbose_name="Central Business District"
     )
-    longitude = models.FloatField(null=True, verbose_name="Longitude")
-    latitude = models.FloatField(null=True, verbose_name="Latitude")
-    year_built = models.IntegerField(null=True, verbose_name="Year Built")
-    description = models.TextField(null=True, verbose_name="Description")
+    longitude = models.FloatField(
+        null=True,
+        verbose_name="Longitude"
+    )
+    latitude = models.FloatField(
+        null=True,
+        verbose_name="Latitude"
+    )
+    year_built = models.IntegerField(
+        null=True,
+        verbose_name="Year Built"
+    )
+    description = models.TextField(
+        null=True,
+        verbose_name="Description"
+    )
 
     def __str__(self) -> str:
         return str(self.id)

@@ -14,8 +14,21 @@ class Command(BaseCommand):
     """
     Django management command to send a POST request to ScraperAPI to initiate a scraping job.
 
-    This command constructs a payload with the necessary parameters and sends a POST request
-    to the ScraperAPI endpoint. It handles the response and logs the outcome of the request.
+    This command is designed to automate the process of initiating scraping jobs through the ScraperAPI. 
+    It iterates over all configured scraping websites, constructing and sending a POST request for each page 
+    that needs to be scraped. The request includes a payload with the API key, the target URL with the page 
+    number, and a callback URL for webhook notifications upon job completion.
+
+    The response from the ScraperAPI is processed to extract job details, which are then used to create a 
+    new scraping job record in the database. Errors during the request or response handling are logged 
+    appropriately.
+
+    Attributes:
+        help (str): Provides a brief description of the command's purpose.
+
+    Methods:
+        handle(*args, **options): The main entry point for the command. It retrieves all scraping website 
+        configurations, constructs the necessary requests to the ScraperAPI, and handles the responses.
     """
 
     help = "Sends a POST request to ScraperAPI to start a scraping job."

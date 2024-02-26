@@ -3,7 +3,9 @@ from domain.models.base_model import BaseModel
 
 
 class PropertyListingModel(BaseModel):
-    id = models.AutoField(primary_key=True)
+    id = models.AutoField(
+        primary_key=True
+    )
     listing_title = models.CharField(
         max_length=255,
         unique=True,
@@ -39,8 +41,14 @@ class PropertyListingModel(BaseModel):
         on_delete=models.SET_NULL,
         verbose_name="Property Status"
     )
-    price = models.FloatField(null=True, verbose_name="Price")
-    is_active = models.BooleanField(default=False, verbose_name="Is Active")
+    price = models.FloatField(
+        null=True,
+        verbose_name="Price"
+    )
+    is_active = models.BooleanField(
+        default=False,
+        verbose_name="Is Active"
+    )
 
     def __str__(self) -> str:
         return self.listing_title

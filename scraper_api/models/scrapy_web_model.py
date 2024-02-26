@@ -20,10 +20,18 @@ class ScrapyWebModel(BaseModel):
         is_active (BooleanField): Flag indicating whether the web page is active for scraping. Defaults to True.
     """
 
-    id = models.AutoField(primary_key=True)
-    web_url = models.URLField(unique=True)
-    page_number = models.IntegerField(default=1)
-    is_active = models.BooleanField(default=True)
+    id = models.AutoField(
+        primary_key=True
+    )
+    web_url = models.URLField(
+        unique=True
+    )
+    page_number = models.IntegerField(
+        default=1
+    )
+    is_active = models.BooleanField(
+        default=True
+    )
 
     def __str__(self) -> str:
         """
