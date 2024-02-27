@@ -108,7 +108,7 @@ def lamudi_scraper():
             property_type = PropertyTypeModel.objects.filter(
                 description__icontains=category
             ).first()
-            print(property_type)
+            print(property_type.description)
             details_dict = {
                 'title': element.find('a', class_='js-listing-link')['title'] if element.find('a', class_='js-listing-link') else 'n/a',
                 'price': float(get_attribute(element, 'data-price')) if get_attribute(element, 'data-price') != 'n/a' else 'n/a',
