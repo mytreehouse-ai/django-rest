@@ -38,6 +38,22 @@ class ScrapyJobService:
         """
         return ScrapyJobModel.objects.filter(status="finished", is_processed=False)[:5]
 
+    def get_scrapy_job(id: int) -> ScrapyJobModel:
+        """
+        Retrieves a single ScrapyJobModel instance from the database by its ID.
+
+        This method queries the database for a ScrapyJobModel instance by its unique identifier. It is used
+        to fetch detailed information about a specific scraping job, including its status, attempts, and
+        other relevant data.
+
+        Args:
+            id (int): The unique identifier of the ScrapyJobModel to retrieve.
+
+        Returns:
+            ScrapyJobModel: An instance of ScrapyJobModel corresponding to the provided ID.
+        """
+        return ScrapyJobModel.objects.get(id=id)
+
     @staticmethod
     def create_job(**kwargs):
         """

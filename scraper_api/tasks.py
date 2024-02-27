@@ -101,14 +101,18 @@ def lamudi_scraper():
 
     scrapy_jobs = ScrapyJobService.get_all_scrapy_job()
 
+    current_scrapy_job_id = None
+    condominium = PropertyTypeModel.objects.get(id=1)
+    house = PropertyTypeModel.objects.get(id=2)
+    apartment = PropertyTypeModel.objects.get(id=3)
+    warehouse = PropertyTypeModel.objects.get(id=4)
+    land = PropertyTypeModel.objects.get(id=5)
+
     for scrapy_job in scrapy_jobs:
+        current_scrapy_job_id = scrapy_job.id
         info_elements = extract_html(html_data=scrapy_job.html_code)
         for element in info_elements:
             category = get_attribute(element, 'data-category')
-            property_type = PropertyTypeModel.objects.filter(
-                description__icontains=category
-            ).first()
-            print(property_type.description)
             details_dict = {
                 'title': element.find('a', class_='js-listing-link')['title'] if element.find('a', class_='js-listing-link') else 'n/a',
                 'price': float(get_attribute(element, 'data-price')) if get_attribute(element, 'data-price') != 'n/a' else 'n/a',
@@ -124,9 +128,9 @@ def lamudi_scraper():
                 'bedrooms': int(get_attribute(element, 'data-bedrooms')) if get_attribute(element, 'data-bedrooms').isdigit() else 'n/a',
                 'bathrooms': int(get_attribute(element, 'data-bathrooms')) if get_attribute(element, 'data-bathrooms').isdigit() else 'n/a',
                 # floor area
-                'building_size': float(get_attribute(element, 'data-building_size')) if get_attribute(element, 'data-building_size') != 'n/a' else 'n/a',
+                'building_size': float(get_attribute(element, 'data-building_size')) if get_attribute(element, 'data-building_size') != 'n/a' else 0.0,
                 # sqm
-                'land_size': float(get_attribute(element, 'data-land_size')) if get_attribute(element, 'data-land_size') != 'n/a' else 'n/a',
+                'land_size': float(get_attribute(element, 'data-land_size')) if get_attribute(element, 'data-land_size') != 'n/a' else 0.0,
                 'furnished': get_attribute(element, 'data-furnished'),
                 'classification': get_attribute(element, 'data-classification'),
                 'block': get_attribute(element, 'data-block'),
@@ -139,3 +143,41 @@ def lamudi_scraper():
             }
 
             property_details.append(details_dict)
+
+    if current_scrapy_job_id:
+        scrapy_job = ScrapyJobService.get_scrapy_job(id=current_scrapy_job_id)
+
+        scrapy_job.html_code = None
+        scrapy_job.is_processed = True
+        scrapy_job.finished_processed_at = timezone.now()
+        scrapy_job.save(
+            update_fields=[
+                "html_code",
+                "is_processed",
+                "finished_processed_at"
+            ]
+        )
+
+        current_scrapy_job_id = None
+
+    for property in property_details:
+        if property.get("category") == "warehouse":
+            new_listing, created = PropertyListingModel.objects.get_or_create(
+                listing_title=property.get("title"),
+                listing_url=property.get("listing_link"),
+                property_type=warehouse,
+                price=property.get("price"),
+                is_active=True
+            )
+
+            if created:
+                new_warehouse = PropertyModel.objects.create(
+                    subdivision_name=property.get("subdivision_name", None),
+                    lot_size=property.get("land_size", None),
+                    building_size=property.get("building_size", None),
+                    longitude=property.get("geo_point", [None])[0],
+                    latitude=property.get("geo_point", [None])[1]
+                )
+
+                new_listing.estate = new_warehouse
+                new_listing.save(update_fields=["estate"])

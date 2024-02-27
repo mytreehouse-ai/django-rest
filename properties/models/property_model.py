@@ -6,6 +6,16 @@ class PropertyModel(BaseModel):
     id = models.AutoField(
         primary_key=True
     )
+    building_name = models.CharField(
+        null=True,
+        max_length=200,
+        verbose_name="Building Name"
+    )
+    subdivision_name = models.CharField(
+        null=True,
+        max_length=200,
+        verbose_name="Building Name"
+    )
     lot_size = models.FloatField(
         null=True,
         verbose_name="Lot Size"

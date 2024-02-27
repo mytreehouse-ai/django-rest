@@ -9,13 +9,15 @@ from .models.property_status_model import PropertyStatusModel
 @admin.register(PropertyModel)
 class PropertyModelAdmin(admin.ModelAdmin):
     list_display = (
-        "id", "lot_size", "floor_size", "building_size", "num_bedrooms",
-        "num_bathrooms", "num_carspaces", "address_line1", "address_line2",
-        "city", "region", "central_business_district", "longitude", "latitude",
-        "year_built", "description", "created_at", "updated_at"
+        "id", "building_name", "subdivision_name", "lot_size", "floor_size",
+        "building_size", "num_bedrooms", "num_bathrooms", "num_carspaces",
+        "address_line1", "address_line2", "city", "region",
+        "central_business_district", "longitude", "latitude", "year_built",
+        "description", "created_at", "updated_at"
     )
     search_fields = (
-        "address_line1", "address_line2", "city__name", "description"
+        "building_name", "subdivision_name", "address_line1", "address_line2",
+        "city__name", "description"
     )
 
 
