@@ -17,10 +17,10 @@ class PropertyListingModel(BaseModel):
     )
     estate = models.ForeignKey(
         "PropertyModel",
+        null=True,
         related_name="estate",
         on_delete=models.CASCADE,
-        verbose_name="Estate",
-        null=True
+        verbose_name="Estate"
     )
     property_type = models.ForeignKey(
         "PropertyTypeModel",
