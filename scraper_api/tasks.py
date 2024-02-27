@@ -162,22 +162,29 @@ def lamudi_scraper():
 
     for property in property_details:
         if property.get("category") == "commercial":
+            # Ensure price does not cause numeric field overflow
+            price = min(property.get("price", 0), 99999999.99)
             new_listing, created = PropertyListingModel.objects.get_or_create(
                 listing_title=property.get("listing_title"),
                 defaults={
                     'listing_url': property.get("listing_url"),
                     'property_type': warehouse,
-                    'price': property.get("price"),
+                    'price': price,
                     'is_active': True
                 }
             )
             if created:
+                # Extract geo_point safely
+                geo_point = property.get("geo_point", [None, None])
+                longitude = geo_point[0] if len(geo_point) > 0 else None
+                latitude = geo_point[1] if len(geo_point) > 1 else None
+
                 new_warehouse = PropertyModel.objects.create(
                     subdivision_name=property.get("subdivision_name", None),
                     lot_size=property.get("land_size", None),
                     building_size=property.get("building_size", None),
-                    longitude=property.get("geo_point", [None])[0],
-                    latitude=property.get("geo_point", [None])[1]
+                    longitude=longitude,
+                    latitude=latitude
                 )
 
                 new_listing.estate = new_warehouse

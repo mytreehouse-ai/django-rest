@@ -43,7 +43,7 @@ class PropertyListingModel(BaseModel):
         verbose_name="Property Status"
     )
     price = models.DecimalField(
-        max_digits=10,
+        max_digits=12,
         decimal_places=2,
         default=0.0,
         verbose_name="Price"
