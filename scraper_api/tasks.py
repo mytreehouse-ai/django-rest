@@ -176,8 +176,8 @@ def lamudi_scraper():
             if created:
                 # Extract geo_point safely
                 geo_point = property.get("geo_point", [None, None])
-                longitude = geo_point[0] if len(geo_point) > 0 else None
-                latitude = geo_point[1] if len(geo_point) > 1 else None
+                longitude = geo_point[0] if len(geo_point) > 0 else 0.0
+                latitude = geo_point[1] if len(geo_point) > 1 else 0.0
 
                 new_warehouse = PropertyModel.objects.create(
                     subdivision_name=property.get("subdivision_name", None),
