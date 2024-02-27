@@ -104,6 +104,7 @@ def lamudi_scraper():
     for scrapy_job in scrapy_jobs:
         if scrapy_job.html_code:
             info_elements = extract_html(html_data=scrapy_job.html_code)
+            print(info_elements)
             for element in info_elements:
                 details_dict = {
                     'title': element.find('a', class_='js-listing-link')['title'] if element.find('a', class_='js-listing-link') else 'n/a',
