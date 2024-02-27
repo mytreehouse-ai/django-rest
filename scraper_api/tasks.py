@@ -77,8 +77,8 @@ def scraperapi_process_scrapy_web():
                     f"Failed to start scraping job. Status code: {response.status_code}, Response: {response_json}"
                 )
 
-            # Sleep for 2 seconds after each page iteration to avoid overwhelming the server
-            sleep(2)
+            # Sleep for 1 second after each page iteration to avoid overwhelming the server
+            sleep(1)
 
 
 @shared_task()
@@ -116,9 +116,9 @@ def lamudi_scraper():
                 'condo_name': get_attribute(element, 'data-condominiumname'),
                 # For warehouse
                 'subdivision_name': get_attribute(element, 'data-subdivisionname'),
-                'car_spaces': int(get_attribute(element, 'data-car_spaces')) if get_attribute(element, 'data-car_spaces') != 'n/a' else 'n/a',
-                'bedrooms': int(get_attribute(element, 'data-bedrooms')) if get_attribute(element, 'data-bedrooms') != 'n/a' else 'n/a',
-                'bathrooms': int(get_attribute(element, 'data-bathrooms')) if get_attribute(element, 'data-bathrooms') != 'n/a' else 'n/a',
+                'car_spaces': int(get_attribute(element, 'data-car_spaces')) if get_attribute(element, 'data-car_spaces').isdigit() else 'n/a',
+                'bedrooms': int(get_attribute(element, 'data-bedrooms')) if get_attribute(element, 'data-bedrooms').isdigit() else 'n/a',
+                'bathrooms': int(get_attribute(element, 'data-bathrooms')) if get_attribute(element, 'data-bathrooms').isdigit() else 'n/a',
                 # floor area
                 'building_size': float(get_attribute(element, 'data-building_size')) if get_attribute(element, 'data-building_size') != 'n/a' else 'n/a',
                 # sqm
