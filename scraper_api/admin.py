@@ -15,5 +15,8 @@ class ScrapyJobModelAdmin(admin.ModelAdmin):
 
 @admin.register(ScrapyWebModel)
 class ScrapyWebModel(admin.ModelAdmin):
-    list_display = ("web_url", "page_number", "created_at", "updated_at")
+    list_display = (
+        "web_url", "page_number", "is_active",
+        "created_at", "updated_at"
+    )
     search_fields = ("web_url",)
