@@ -102,41 +102,39 @@ def lamudi_scraper():
     scrapy_jobs = ScrapyJobService.get_all_scrapy_job()
 
     for scrapy_job in scrapy_jobs:
-        print(scrapy_job.html_code)
-        if scrapy_job.html_code:
-            info_elements = extract_html(html_data=scrapy_job.html_code)
-            for element in info_elements:
-                details_dict = {
-                    'title': element.find('a', class_='js-listing-link')['title'] if element.find('a', class_='js-listing-link') else 'n/a',
-                    'price': float(get_attribute(element, 'data-price')) if get_attribute(element, 'data-price') != 'n/a' else 'n/a',
-                    # Seen in warehouse
-                    'price_condition': get_attribute(element, 'data-price_conditions'),
-                    'category': get_attribute(element, 'data-category'),
-                    'subcategories': json.loads(get_attribute(element, 'data-subcategories')),
-                    'year_built': get_attribute(element, 'data-year_built'),
-                    'condo_name': get_attribute(element, 'data-condominiumname'),
-                    # For warehouse
-                    'subdivision_name': get_attribute(element, 'data-subdivisionname'),
-                    'car_spaces': int(get_attribute(element, 'data-car_spaces')) if get_attribute(element, 'data-car_spaces') != 'n/a' else 'n/a',
-                    'bedrooms': int(get_attribute(element, 'data-bedrooms')) if get_attribute(element, 'data-bedrooms') != 'n/a' else 'n/a',
-                    'bathrooms': int(get_attribute(element, 'data-bathrooms')) if get_attribute(element, 'data-bathrooms') != 'n/a' else 'n/a',
-                    # floor area
-                    'building_size': float(get_attribute(element, 'data-building_size')) if get_attribute(element, 'data-building_size') != 'n/a' else 'n/a',
-                    # sqm
-                    'land_size': float(get_attribute(element, 'data-land_size')) if get_attribute(element, 'data-land_size') != 'n/a' else 'n/a',
-                    'furnished': get_attribute(element, 'data-furnished'),
-                    'classification': get_attribute(element, 'data-classification'),
-                    'block': get_attribute(element, 'data-block'),
-                    'subdivision_name': get_attribute(element, 'data-subdivisionname'),
-                    'sku': get_attribute(element, 'data-sku'),
-                    'geo_point': [
-                        float(coord.strip('[]')) for coord in get_attribute(element, 'data-geo-point').split(',')
-                    ] if get_attribute(element, 'data-geo-point') != 'n/a' else 'n/a',
-                    'listing_link': element.find('a', class_='js-listing-link')['href'] if element.find('a', class_='js-listing-link') else None
-                }
+        info_elements = extract_html(html_data=scrapy_job.html_code)
+        for element in info_elements:
+            details_dict = {
+                'title': element.find('a', class_='js-listing-link')['title'] if element.find('a', class_='js-listing-link') else 'n/a',
+                'price': float(get_attribute(element, 'data-price')) if get_attribute(element, 'data-price') != 'n/a' else 'n/a',
+                # Seen in warehouse
+                'price_condition': get_attribute(element, 'data-price_conditions'),
+                'category': get_attribute(element, 'data-category'),
+                'subcategories': json.loads(get_attribute(element, 'data-subcategories')),
+                'year_built': get_attribute(element, 'data-year_built'),
+                'condo_name': get_attribute(element, 'data-condominiumname'),
+                # For warehouse
+                'subdivision_name': get_attribute(element, 'data-subdivisionname'),
+                'car_spaces': int(get_attribute(element, 'data-car_spaces')) if get_attribute(element, 'data-car_spaces') != 'n/a' else 'n/a',
+                'bedrooms': int(get_attribute(element, 'data-bedrooms')) if get_attribute(element, 'data-bedrooms') != 'n/a' else 'n/a',
+                'bathrooms': int(get_attribute(element, 'data-bathrooms')) if get_attribute(element, 'data-bathrooms') != 'n/a' else 'n/a',
+                # floor area
+                'building_size': float(get_attribute(element, 'data-building_size')) if get_attribute(element, 'data-building_size') != 'n/a' else 'n/a',
+                # sqm
+                'land_size': float(get_attribute(element, 'data-land_size')) if get_attribute(element, 'data-land_size') != 'n/a' else 'n/a',
+                'furnished': get_attribute(element, 'data-furnished'),
+                'classification': get_attribute(element, 'data-classification'),
+                'block': get_attribute(element, 'data-block'),
+                'subdivision_name': get_attribute(element, 'data-subdivisionname'),
+                'sku': get_attribute(element, 'data-sku'),
+                'geo_point': [
+                    float(coord.strip('[]')) for coord in get_attribute(element, 'data-geo-point').split(',')
+                ] if get_attribute(element, 'data-geo-point') != 'n/a' else 'n/a',
+                'listing_link': element.find('a', class_='js-listing-link')['href'] if element.find('a', class_='js-listing-link') else None
+            }
 
-                print(json.dumps(details_dict, indent=4))
+            print(json.dumps(details_dict, indent=4))
 
-                property_details.append(details_dict)
+            property_details.append(details_dict)
 
     print(json.dumps(property_details, indent=4))
