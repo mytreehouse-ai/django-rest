@@ -139,7 +139,7 @@ def lamudi_scraper():
                 'geo_point': [
                     float(coord.strip('[]')) for coord in get_attribute(element, 'data-geo-point').split(',')
                 ] if get_attribute(element, 'data-geo-point') != 'n/a' else 'n/a',
-                'listing_link': element.find('a', class_='js-listing-link')['href'] if element.find('a', class_='js-listing-link') else None
+                'listing_url': element.find('a', class_='js-listing-link')['href'] if element.find('a', class_='js-listing-link') else None
             }
 
             property_details.append(details_dict)
@@ -165,7 +165,7 @@ def lamudi_scraper():
             new_listing, created = PropertyListingModel.objects.get_or_create(
                 listing_title=property.get("listing_title"),
                 defaults={
-                    'listing_url': property.get("listing_link"),
+                    'listing_url': property.get("listing_url"),
                     'property_type': warehouse,
                     'price': property.get("price"),
                     'is_active': True
