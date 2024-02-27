@@ -139,5 +139,3 @@ def lamudi_scraper():
             }
 
             property_details.append(details_dict)
-
-    print(json.dumps(property_details, indent=4))
