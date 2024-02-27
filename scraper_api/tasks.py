@@ -102,8 +102,8 @@ def lamudi_scraper():
     scrapy_jobs = ScrapyJobService.get_all_scrapy_job()
 
     current_scrapy_job_id = None
-    for_sale = PropertyListingModel.objects.get(id=1)
-    for_rent = PropertyListingModel.objects.get(id=2)
+    for_sale = ListingTypeModel.objects.get(id=1)
+    for_rent = ListingTypeModel.objects.get(id=2)
     condominium = PropertyTypeModel.objects.get(id=1)
     house = PropertyTypeModel.objects.get(id=2)
     apartment = PropertyTypeModel.objects.get(id=3)
@@ -112,12 +112,12 @@ def lamudi_scraper():
 
     for scrapy_job in scrapy_jobs:
         current_scrapy_job_id = scrapy_job.id
-
         info_elements = extract_html(html_data=scrapy_job.html_code)
         for element in info_elements:
             category = get_attribute(element, 'data-category')
             details_dict = {
                 'listing_title': element.find('a', class_='js-listing-link')['title'] if element.find('a', class_='js-listing-link') else 'n/a',
+                'listing_type': "",
                 'price': float(get_attribute(element, 'data-price')) if get_attribute(element, 'data-price') != 'n/a' else 'n/a',
                 # Seen in warehouse
                 'price_condition': get_attribute(element, 'data-price_conditions'),
