@@ -172,7 +172,7 @@ def lamudi_scraper():
                 listing_title=property.get("listing_title"),
                 defaults={
                     'listing_url': property.get("listing_url"),
-                    'listing_type': for_sale if property.get("listing_type") == "buy" else for_rent,
+                    'listing_type': for_sale if property.get("listing_type") == "for-sale" else for_rent,
                     'property_type': warehouse,
                     'price': price,
                     'is_active': True

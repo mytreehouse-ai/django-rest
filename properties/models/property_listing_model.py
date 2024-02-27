@@ -38,6 +38,7 @@ class PropertyListingModel(BaseModel):
     property_status = models.ForeignKey(
         "PropertyStatusModel",
         null=True,
+        blank=True,
         related_name="property_status",
         on_delete=models.SET_NULL,
         verbose_name="Property Status"
