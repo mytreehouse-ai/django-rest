@@ -102,7 +102,6 @@ def lamudi_scraper():
     scrapy_jobs = ScrapyJobService.get_all_scrapy_job()
 
     for scrapy_job in scrapy_jobs:
-        print(scrapy_job.id)
         info_elements = extract_html(html_data=scrapy_job.html_code)
         for element in info_elements:
             details_dict = {
@@ -133,8 +132,6 @@ def lamudi_scraper():
                 ] if get_attribute(element, 'data-geo-point') != 'n/a' else 'n/a',
                 'listing_link': element.find('a', class_='js-listing-link')['href'] if element.find('a', class_='js-listing-link') else None
             }
-
-            print(json.dumps(details_dict, indent=4))
 
             property_details.append(details_dict)
 
