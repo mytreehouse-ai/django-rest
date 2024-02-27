@@ -1,9 +1,21 @@
 from django.contrib import admin
 
 from .models.property_model import PropertyModel
+from .models.property_listing_model import PropertyListingModel
 from .models.property_type_model import PropertyTypeModel
 from .models.listing_type_model import ListingTypeModel
 from .models.property_status_model import PropertyStatusModel
+
+
+@admin.register(PropertyListingModel)
+class PropertyListingModelAdmin(admin.ModelAdmin):
+    list_display = (
+        "id", "listing_title", "listing_url", "price",
+        "is_active", "created_at", "updated_at"
+    )
+    search_fields = (
+        "listing_title", "listing_url"
+    )
 
 
 @admin.register(PropertyModel)
