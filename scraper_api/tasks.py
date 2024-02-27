@@ -134,6 +134,8 @@ def lamudi_scraper():
                     'listing_link': element.find('a', class_='js-listing-link')['href'] if element.find('a', class_='js-listing-link') else None
                 }
 
+                print(json.dumps(details_dict, indent=4))
+
                 property_details.append(details_dict)
 
     print(json.dumps(property_details, indent=4))
