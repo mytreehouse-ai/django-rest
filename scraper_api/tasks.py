@@ -102,6 +102,7 @@ def lamudi_scraper():
     scrapy_jobs = ScrapyJobService.get_all_scrapy_job()
 
     for scrapy_job in scrapy_jobs:
+        print(scrapy_job.id)
         info_elements = extract_html(html_data=scrapy_job.html_code)
         for element in info_elements:
             details_dict = {
