@@ -163,7 +163,7 @@ def lamudi_scraper():
     for property in property_details:
         if property.get("category") == "commercial":
             # Ensure price does not cause numeric field overflow
-            price = min(property.get("price", 0), 99999999.99)
+            price = min(property.get("price", 0), 999999999999.99)
             new_listing, created = PropertyListingModel.objects.get_or_create(
                 listing_title=property.get("listing_title"),
                 defaults={
