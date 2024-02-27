@@ -19,7 +19,8 @@ class PropertyListingModel(BaseModel):
         "PropertyModel",
         related_name="estate",
         on_delete=models.CASCADE,
-        verbose_name="Estate"
+        verbose_name="Estate",
+        null=True
     )
     property_type = models.ForeignKey(
         "PropertyTypeModel",
