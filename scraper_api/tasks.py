@@ -188,6 +188,6 @@ def lamudi_scraper():
                 new_listing.estate = new_warehouse
                 new_listing.save(update_fields=["estate"])
 
-                print(new_listing.listing_url)
+                print(f"New listing added: {new_listing.listing_url}")
 
     property_details = []
