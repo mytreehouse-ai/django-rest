@@ -187,4 +187,6 @@ def lamudi_scraper():
             else:
                 print(f"Listing already exists: {new_listing.listing_url}")
 
+        sleep(1)
+
     property_details = []
