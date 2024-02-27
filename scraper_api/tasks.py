@@ -144,21 +144,23 @@ def lamudi_scraper():
 
             property_details.append(details_dict)
 
-    if current_scrapy_job_id:
-        scrapy_job = ScrapyJobService.get_scrapy_job(id=current_scrapy_job_id)
+    # if current_scrapy_job_id:
+    #     scrapy_job = ScrapyJobService.get_scrapy_job(id=current_scrapy_job_id)
 
-        scrapy_job.html_code = None
-        scrapy_job.is_processed = True
-        scrapy_job.finished_processed_at = timezone.now()
-        scrapy_job.save(
-            update_fields=[
-                "html_code",
-                "is_processed",
-                "finished_processed_at"
-            ]
-        )
+    #     scrapy_job.html_code = None
+    #     scrapy_job.is_processed = True
+    #     scrapy_job.finished_processed_at = timezone.now()
+    #     scrapy_job.save(
+    #         update_fields=[
+    #             "html_code",
+    #             "is_processed",
+    #             "finished_processed_at"
+    #         ]
+    #     )
 
-        current_scrapy_job_id = None
+    #     current_scrapy_job_id = None
+
+    print(property_details)
 
     for property in property_details:
         if property.get("category") == "warehouse":
