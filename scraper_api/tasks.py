@@ -1,4 +1,5 @@
 import os
+import json
 import requests
 from time import sleep
 from logging import getLogger
@@ -110,7 +111,7 @@ def lamudi_scraper():
                     # Seen in warehouse
                     'price_condition': get_attribute(element, 'data-price_conditions'),
                     'category': get_attribute(element, 'data-category'),
-                    'subcategories': get_attribute(element, 'data-subcategories'),
+                    'subcategories': json.loads(get_attribute(element, 'data-subcategories')),
                     'year_built': get_attribute(element, 'data-year_built'),
                     'condo_name': get_attribute(element, 'data-condominiumname'),
                     # For warehouse
@@ -132,4 +133,7 @@ def lamudi_scraper():
                     ] if get_attribute(element, 'data-geo-point') != 'n/a' else 'n/a',
                     'listing_link': element.find('a', class_='js-listing-link')['href'] if element.find('a', class_='js-listing-link') else None
                 }
+
                 property_details.append(details_dict)
+
+    print(json.dumps(property_details, indent=4))
