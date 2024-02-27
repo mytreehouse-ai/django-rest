@@ -29,6 +29,15 @@ class ScrapyWebModel(BaseModel):
     page_number = models.IntegerField(
         default=1
     )
+    listing_type = models.CharField(
+        max_length=10,
+        choices=[
+            ('for-sale', 'For Sale'),
+            ('for-rent', 'For Rent')
+        ],
+        default='for-sale',
+        verbose_name="Listing Type",
+    )
     is_active = models.BooleanField(
         default=True
     )
