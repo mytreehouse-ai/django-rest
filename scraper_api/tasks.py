@@ -114,7 +114,7 @@ def lamudi_scraper():
         for element in info_elements:
             category = get_attribute(element, 'data-category')
             details_dict = {
-                'title': element.find('a', class_='js-listing-link')['title'] if element.find('a', class_='js-listing-link') else 'n/a',
+                'listing_title': element.find('a', class_='js-listing-link')['title'] if element.find('a', class_='js-listing-link') else 'n/a',
                 'price': float(get_attribute(element, 'data-price')) if get_attribute(element, 'data-price') != 'n/a' else 'n/a',
                 # Seen in warehouse
                 'price_condition': get_attribute(element, 'data-price_conditions'),
@@ -162,21 +162,16 @@ def lamudi_scraper():
 
     for property in property_details:
         if property.get("category") == "commercial":
-            try:
-                new_listing = PropertyListingModel.objects.get(
-                    listing_title=property.get("title"),
-                    listing_url=property.get("listing_link")
-                )
-                print(f"Listing already exists: {new_listing.listing_url}")
-            except PropertyListingModel.DoesNotExist:
-                new_listing = PropertyListingModel.objects.create(
-                    listing_title=property.get("title"),
-                    listing_url=property.get("listing_link"),
-                    property_type=warehouse,
-                    price=property.get("price"),
-                    is_active=True
-                )
-
+            new_listing, created = PropertyListingModel.objects.get_or_create(
+                listing_title=property.get("listing_title"),
+                defaults={
+                    'listing_url': property.get("listing_link"),
+                    'property_type': warehouse,
+                    'price': property.get("price"),
+                    'is_active': True
+                }
+            )
+            if created:
                 new_warehouse = PropertyModel.objects.create(
                     subdivision_name=property.get("subdivision_name", None),
                     lot_size=property.get("land_size", None),
@@ -189,5 +184,7 @@ def lamudi_scraper():
                 new_listing.save(update_fields=["estate"])
 
                 print(f"New listing added: {new_listing.listing_url}")
+            else:
+                print(f"Listing already exists: {new_listing.listing_url}")
 
     property_details = []
