@@ -144,26 +144,24 @@ def lamudi_scraper():
 
             property_details.append(details_dict)
 
-    # if current_scrapy_job_id:
-    #     scrapy_job = ScrapyJobService.get_scrapy_job(id=current_scrapy_job_id)
+    if current_scrapy_job_id:
+        scrapy_job = ScrapyJobService.get_scrapy_job(id=current_scrapy_job_id)
 
-    #     scrapy_job.html_code = None
-    #     scrapy_job.is_processed = True
-    #     scrapy_job.finished_processed_at = timezone.now()
-    #     scrapy_job.save(
-    #         update_fields=[
-    #             "html_code",
-    #             "is_processed",
-    #             "finished_processed_at"
-    #         ]
-    #     )
+        scrapy_job.html_code = None
+        scrapy_job.is_processed = True
+        scrapy_job.finished_processed_at = timezone.now()
+        scrapy_job.save(
+            update_fields=[
+                "html_code",
+                "is_processed",
+                "finished_processed_at"
+            ]
+        )
 
-    #     current_scrapy_job_id = None
-
-    print(property_details)
+        current_scrapy_job_id = None
 
     for property in property_details:
-        if property.get("category") == "warehouse":
+        if property.get("category") == "commercial":
             new_listing, created = PropertyListingModel.objects.get_or_create(
                 listing_title=property.get("title"),
                 listing_url=property.get("listing_link"),
@@ -171,6 +169,8 @@ def lamudi_scraper():
                 price=property.get("price"),
                 is_active=True
             )
+
+            print(new_listing.listing_url)
 
             if created:
                 new_warehouse = PropertyModel.objects.create(
