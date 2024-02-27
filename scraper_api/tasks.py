@@ -162,17 +162,21 @@ def lamudi_scraper():
 
     for property in property_details:
         if property.get("category") == "commercial":
-            new_listing, created = PropertyListingModel.objects.get_or_create(
-                listing_title=property.get("title"),
-                listing_url=property.get("listing_link"),
-                property_type=warehouse,
-                price=property.get("price"),
-                is_active=True
-            )
+            try:
+                new_listing = PropertyListingModel.objects.get(
+                    listing_title=property.get("title"),
+                    listing_url=property.get("listing_link")
+                )
+                print(f"Listing already exists: {new_listing.listing_url}")
+            except PropertyListingModel.DoesNotExist:
+                new_listing = PropertyListingModel.objects.create(
+                    listing_title=property.get("title"),
+                    listing_url=property.get("listing_link"),
+                    property_type=warehouse,
+                    price=property.get("price"),
+                    is_active=True
+                )
 
-            print(new_listing.listing_url)
-
-            if created:
                 new_warehouse = PropertyModel.objects.create(
                     subdivision_name=property.get("subdivision_name", None),
                     lot_size=property.get("land_size", None),
@@ -183,5 +187,7 @@ def lamudi_scraper():
 
                 new_listing.estate = new_warehouse
                 new_listing.save(update_fields=["estate"])
+
+                print(new_listing.listing_url)
 
     property_details = []
