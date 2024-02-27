@@ -181,3 +181,5 @@ def lamudi_scraper():
 
                 new_listing.estate = new_warehouse
                 new_listing.save(update_fields=["estate"])
+
+    property_details = []
