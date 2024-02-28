@@ -199,6 +199,54 @@ def lamudi_scraper():
             else:
                 print(f"Listing already exists: {new_listing.listing_url}")
 
+        if property.get("category") == "condominium":
+            # Ensure price does not cause numeric field overflow
+            price = min(property.get("price", 0), 999999999999.99)
+            new_listing, created = PropertyListingModel.objects.get_or_create(
+                listing_title=property.get("listing_title"),
+                defaults={
+                    'listing_url': property.get("listing_url"),
+                    'listing_type': for_sale if property.get("listing_type") == "for-sale" else for_rent,
+                    'property_type': condominium,
+                    'price': price,
+                    'is_active': True
+                }
+            )
+            if created:
+                # Extract geo_point safely
+                geo_point = property.get("geo_point", [None, None])
+                longitude = geo_point[0] if len(geo_point) > 0 else 0.0
+                latitude = geo_point[1] if len(geo_point) > 1 else 0.0
+
+                new_condominium = PropertyModel.objects.create(
+                    building_name=property.get("building_name", None),
+                    lot_size=property.get("land_size", None),
+                    floor_size=property.get("building_size", None),
+                    num_bedrooms=property.get("bedrooms", 0),
+                    num_bathrooms=property.get("bathrooms", 0),
+                    num_carspaces=property.get("car_spaces", 0),
+                    year_built=property.get("year_built", None),
+                    central_business_district=False,
+                    longitude=longitude,
+                    latitude=latitude
+                )
+
+                new_listing.estate = new_condominium
+                new_listing.save(update_fields=["estate"])
+
+                print(f"New listing added: {new_listing.listing_url}")
+            else:
+                print(f"Listing already exists: {new_listing.listing_url}")
+
+        if property.get("category") == "house":
+            pass
+
+        if property.get("category") == "apartment":
+            pass
+
+        if property.get("category") == "land":
+            pass
+
         sleep(1)
 
     property_details = []
