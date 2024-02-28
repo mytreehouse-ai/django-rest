@@ -244,7 +244,7 @@ def lamudi_scraper():
                 new_listing.estate.floor_size = property.get("building_size")
                 new_listing.estate.num_bedrooms = property.get("bedrooms")
                 new_listing.estate.num_bathrooms = property.get("bathrooms")
-                new_listing.estate.num_carspaces = property.get("carspaces")
+                new_listing.estate.num_carspaces = property.get("car_spaces")
                 new_listing.estate.year_built = property.get(
                     "year_built"
                 )
