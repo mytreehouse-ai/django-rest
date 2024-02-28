@@ -1,6 +1,4 @@
-import os
 import json
-import requests
 from time import sleep
 from logging import getLogger
 from bs4 import BeautifulSoup
@@ -15,6 +13,7 @@ from properties.models.listing_type_model import ListingTypeModel
 from properties.models.property_listing_model import PropertyListingModel
 from properties.models.property_model import PropertyModel
 from properties.models.price_history_model import PriceHistoryModel
+from django_celery_beat.models import IntervalSchedule, PeriodicTask
 
 
 logger = getLogger(__name__)
@@ -36,23 +35,8 @@ def scraperapi_process_scrapy_web():
 
     for scrapy_web in scrapy_webs:
         for i in range(1, scrapy_web.page_number + 1):
-            payload = {
-                "apiKey": os.environ.get("SCRAPER_API_KEY"),
-                "url": f"{scrapy_web.web_url}/?page={i}",
-                "callback": {
-                    "type": "webhook",
-                    "url": f"{os.environ.get('DJANGO_API_URL')}/scrapy-jobs/webhook/finished-job"
-                }
-            }
-
-            endpoint = "https://async.scraperapi.com/jobs"
-
-            response = requests.post(
-                endpoint,
-                json=payload,
-                headers={
-                    "Content-Type": "application/json"
-                }
+            response = ScrapyJobService.scraper_api(
+                scrapy_web=f"{scrapy_web.web_url}/?page={i}"
             )
 
             try:
@@ -110,6 +94,11 @@ def lamudi_multi_page_scraper_task():
     apartment = PropertyTypeModel.objects.get(id=3)
     warehouse = PropertyTypeModel.objects.get(id=4)
     land = PropertyTypeModel.objects.get(id=5)
+
+    every_one_minute, created = IntervalSchedule.objects.get_or_create(
+        every=1,
+        period=IntervalSchedule.MINUTES
+    )
 
     for scrapy_job in scrapy_jobs:
         current_scrapy_job_id = scrapy_job.job_id
@@ -181,6 +170,34 @@ def lamudi_multi_page_scraper_task():
                 }
             )
 
+            if new_listing or created:
+                response = ScrapyJobService.scraper_api(
+                    scrapy_web=property.get("listing_url")
+                )
+
+                try:
+                    response_json: CreateScrapyJobSerializer = response.json()
+                    job = {
+                        "job_id": response_json.get("id", None),
+                        "domain": response_json.get("url", None),
+                        "status": response_json.get("status", None),
+                        "attempts": response_json.get("attempts", None),
+                        "status_url": response_json.get("status_url", None),
+                        "supposed_to_run_at": response_json.get("supposedToRunAt", None)
+                    }
+                    ScrapyJobService.create_job(**job)
+                except ValueError:
+                    logger.error("Failed to parse response as JSON.")
+                    response_json = "Invalid JSON response"
+                if response.status_code == 200:
+                    logger.info(
+                        f"Scraping job started successfully. Response: {response_json}"
+                    )
+                else:
+                    logger.error(
+                        f"Failed to start scraping job. Status code: {response.status_code}, Response: {response_json}"
+                    )
+
             # Extract geo_point safely
             geo_point = property.get("geo_point", [None, None])
             longitude = geo_point[0] if len(geo_point) > 0 else 0.0
@@ -249,6 +266,34 @@ def lamudi_multi_page_scraper_task():
                     'is_active': True
                 }
             )
+
+            if new_listing or created:
+                response = ScrapyJobService.scraper_api(
+                    scrapy_web=property.get("listing_url")
+                )
+
+                try:
+                    response_json: CreateScrapyJobSerializer = response.json()
+                    job = {
+                        "job_id": response_json.get("id", None),
+                        "domain": response_json.get("url", None),
+                        "status": response_json.get("status", None),
+                        "attempts": response_json.get("attempts", None),
+                        "status_url": response_json.get("status_url", None),
+                        "supposed_to_run_at": response_json.get("supposedToRunAt", None)
+                    }
+                    ScrapyJobService.create_job(**job)
+                except ValueError:
+                    logger.error("Failed to parse response as JSON.")
+                    response_json = "Invalid JSON response"
+                if response.status_code == 200:
+                    logger.info(
+                        f"Scraping job started successfully. Response: {response_json}"
+                    )
+                else:
+                    logger.error(
+                        f"Failed to start scraping job. Status code: {response.status_code}, Response: {response_json}"
+                    )
 
             # Extract geo_point safely
             geo_point = property.get("geo_point", [None, None])
@@ -336,6 +381,34 @@ def lamudi_multi_page_scraper_task():
                 }
             )
 
+            if new_listing or created:
+                response = ScrapyJobService.scraper_api(
+                    scrapy_web=property.get("listing_url")
+                )
+
+                try:
+                    response_json: CreateScrapyJobSerializer = response.json()
+                    job = {
+                        "job_id": response_json.get("id", None),
+                        "domain": response_json.get("url", None),
+                        "status": response_json.get("status", None),
+                        "attempts": response_json.get("attempts", None),
+                        "status_url": response_json.get("status_url", None),
+                        "supposed_to_run_at": response_json.get("supposedToRunAt", None)
+                    }
+                    ScrapyJobService.create_job(**job)
+                except ValueError:
+                    logger.error("Failed to parse response as JSON.")
+                    response_json = "Invalid JSON response"
+                if response.status_code == 200:
+                    logger.info(
+                        f"Scraping job started successfully. Response: {response_json}"
+                    )
+                else:
+                    logger.error(
+                        f"Failed to start scraping job. Status code: {response.status_code}, Response: {response_json}"
+                    )
+
             # Extract geo_point safely
             geo_point = property.get("geo_point", [None, None])
             longitude = geo_point[0] if len(geo_point) > 0 else 0.0
@@ -417,6 +490,34 @@ def lamudi_multi_page_scraper_task():
                 }
             )
 
+            if new_listing or created:
+                response = ScrapyJobService.scraper_api(
+                    scrapy_web=property.get("listing_url")
+                )
+
+                try:
+                    response_json: CreateScrapyJobSerializer = response.json()
+                    job = {
+                        "job_id": response_json.get("id", None),
+                        "domain": response_json.get("url", None),
+                        "status": response_json.get("status", None),
+                        "attempts": response_json.get("attempts", None),
+                        "status_url": response_json.get("status_url", None),
+                        "supposed_to_run_at": response_json.get("supposedToRunAt", None)
+                    }
+                    ScrapyJobService.create_job(**job)
+                except ValueError:
+                    logger.error("Failed to parse response as JSON.")
+                    response_json = "Invalid JSON response"
+                if response.status_code == 200:
+                    logger.info(
+                        f"Scraping job started successfully. Response: {response_json}"
+                    )
+                else:
+                    logger.error(
+                        f"Failed to start scraping job. Status code: {response.status_code}, Response: {response_json}"
+                    )
+
             # Extract geo_point safely
             geo_point = property.get("geo_point", [None, None])
             longitude = geo_point[0] if len(geo_point) > 0 else 0.0
@@ -485,7 +586,101 @@ def lamudi_multi_page_scraper_task():
                 print(f"Listing already exists: {new_listing.listing_url}")
 
         if property.get("category") == "land":
-            pass
+            # Ensure price does not cause numeric field overflow
+            price = min(property.get("price", 0), 999999999999.99)
+            new_listing, created = PropertyListingModel.objects.get_or_create(
+                listing_title=property.get("listing_title"),
+                defaults={
+                    'listing_url': property.get("listing_url"),
+                    'listing_type': for_sale if property.get("listing_type") == "for-sale" else for_rent,
+                    'property_type': land,
+                    'price': price,
+                    'is_active': True
+                }
+            )
+
+            if new_listing or created:
+                response = ScrapyJobService.scraper_api(
+                    scrapy_web=property.get("listing_url")
+                )
+
+                try:
+                    response_json: CreateScrapyJobSerializer = response.json()
+                    job = {
+                        "job_id": response_json.get("id", None),
+                        "domain": response_json.get("url", None),
+                        "status": response_json.get("status", None),
+                        "attempts": response_json.get("attempts", None),
+                        "status_url": response_json.get("status_url", None),
+                        "supposed_to_run_at": response_json.get("supposedToRunAt", None)
+                    }
+                    ScrapyJobService.create_job(**job)
+                except ValueError:
+                    logger.error("Failed to parse response as JSON.")
+                    response_json = "Invalid JSON response"
+                if response.status_code == 200:
+                    logger.info(
+                        f"Scraping job started successfully. Response: {response_json}"
+                    )
+                else:
+                    logger.error(
+                        f"Failed to start scraping job. Status code: {response.status_code}, Response: {response_json}"
+                    )
+
+            # Extract geo_point safely
+            geo_point = property.get("geo_point", [None, None])
+            longitude = geo_point[0] if len(geo_point) > 0 else 0.0
+            latitude = geo_point[1] if len(geo_point) > 1 else 0.0
+
+            if not created and new_listing.price != price:
+                # If the listing already exists and the price has changed, save the historical price
+                PriceHistoryModel.objects.create(
+                    property_listing=new_listing,
+                    price=new_listing.price,
+                    date_recorded=timezone.now()
+                )
+                # Update the listing with the new price
+                new_listing.price = price
+                new_listing.save(update_fields=["price"])
+
+            if created:
+                new_land = PropertyModel.objects.create(
+                    subdivision_name=property.get("subdivision_name"),
+                    lot_size=property.get("land_size"),
+                    building_size=property.get("building_size"),
+                    longitude=longitude,
+                    latitude=latitude
+                )
+
+                new_listing.estate = new_land
+                new_listing.save(update_fields=["estate"])
+
+                print(f"New listing added: {new_listing.listing_url}")
+            else:
+                if new_listing.estate:
+                    new_listing.estate.subdivision_name = property.get(
+                        "subdivision_name"
+                    )
+                    new_listing.estate.lot_size = property.get("land_size")
+                    new_listing.estate.building_size = property.get(
+                        "building_size"
+                    )
+                    new_listing.estate.longitude = longitude
+                    new_listing.estate.latitude = latitude
+                    new_listing.estate.save(
+                        update_fields=[
+                            "subdivision_name",
+                            "lot_size",
+                            "building_size",
+                            "longitude",
+                            "latitude"
+                        ]
+                    )
+                    print(f"Listing already exists: {new_listing.listing_url}")
+                else:
+                    print(
+                        f"Failed to update listing as estate does not exist: {new_listing.listing_url}"
+                    )
 
         sleep(0.5)
 
