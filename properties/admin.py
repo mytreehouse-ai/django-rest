@@ -54,8 +54,8 @@ class PropertyStatusModelAdmin(admin.ModelAdmin):
 
 @admin.register(PriceHistoryModel)
 class PriceHistoryModelAdmin(admin.ModelAdmin):
-    list_display = ("id", "price" "date_recorded", "created_at", "updated_at")
+    list_display = ("id", "price", "date_recorded", "created_at", "updated_at")
     search_fields = (
-        "price", "property_listing__listing_title",
+        "property_listing__listing_title",
         "property_listing__listing_url"
     )
