@@ -1,3 +1,5 @@
+import os
+import requests
 from typing import List, Optional
 from logging import getLogger
 from django.utils import timezone
@@ -9,6 +11,29 @@ logger = getLogger(__name__)
 
 
 class ScrapyJobService:
+
+    @staticmethod
+    def scraper_api(scrapy_web: str):
+        payload = {
+            "apiKey": os.environ.get("SCRAPER_API_KEY"),
+            "url": scrapy_web,
+            "callback": {
+                "type": "webhook",
+                "url": f"{os.environ.get('DJANGO_API_URL')}/scrapy-jobs/webhook/finished-job"
+            }
+        }
+
+        endpoint = "https://async.scraperapi.com/jobs"
+
+        response = requests.post(
+            endpoint,
+            json=payload,
+            headers={
+                "Content-Type": "application/json"
+            }
+        )
+
+        return response
 
     @staticmethod
     def get_all_scrapy_web() -> List[ScrapyWebModel]:
@@ -27,7 +52,7 @@ class ScrapyJobService:
         return list(scrapy_webs)
 
     @staticmethod
-    def get_all_scrapy_job() -> List[ScrapyJobModel]:
+    def get_all_scrapy_job(single_page: Optional[bool] = False) -> List[ScrapyJobModel]:
         """
         Retrieves all ScrapyJobModel instances from the database.
 
@@ -38,7 +63,7 @@ class ScrapyJobService:
         Returns:
             List[ScrapyJobModel]: A list containing all instances of ScrapyJobModel limited by 10 records, representing all scraping jobs.
         """
-        return ScrapyJobModel.objects.filter(status="finished", is_processed=False)[:10]
+        return ScrapyJobModel.objects.filter(status="finished", is_processed=False, single_page=single_page)[:10]
 
     @staticmethod
     def get_scrapy_job(job_id: int) -> ScrapyJobModel:
@@ -80,7 +105,7 @@ class ScrapyJobService:
             return None
 
     @staticmethod
-    def update_job(job_id: str, attempts: int, status: str, html_code: Optional[str] = None, failed_reason: Optional[str] = None) -> None:
+    def update_job(job_id: str, attempts: int, status: str, single_page: Optional[bool] = False, html_code: Optional[str] = None, failed_reason: Optional[str] = None) -> None:
         """
         Updates the details of a specific Scrapy job in the database.
 
@@ -102,9 +127,15 @@ class ScrapyJobService:
             job = ScrapyJobModel.objects.get(job_id=job_id)
             job.attempts = attempts
             job.status = status
+            job.single_page = single_page
             job.finished_processed_at = timezone.now()
 
-            update_fields = ["attempts", "status", "finished_processed_at"]
+            update_fields = [
+                "attempts",
+                "status",
+                "single_page",
+                "finished_processed_at"
+            ]
 
             if html_code is not None:
                 job.html_code = html_code
