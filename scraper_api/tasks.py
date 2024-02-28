@@ -141,11 +141,11 @@ def lamudi_multi_page_scraper_task():
                     'subdivision_name': get_attribute(element, 'data-subdivisionname'),
                     'sku': get_attribute(element, 'data-sku'),
                     'geo_point': [
-                        float(coord.strip('[]')) for coord in get_attribute(element, 'data-geo-point').split(',')
-                    ] if get_attribute(element, 'data-geo-point') != 'n/a' else 'n/a',
+                        float(coord.strip('[]')) for coord in get_attribute(element, 'data-geo-point').split(',') if coord.strip('[]') != 'null'
+                    ] if get_attribute(element, 'data-geo-point') not in ['n/a', 'null', ''] else 'n/a',
                     'listing_url': element.find('a', class_='js-listing-link')['href'] if element.find('a', class_='js-listing-link') else None
                 }
-                print(json.dumps(details_dict, indent=4))
+                print(details_dict.get("geo_point", None))
                 property_details.append(details_dict)
 
     if current_scrapy_job_id:
