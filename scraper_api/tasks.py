@@ -142,7 +142,7 @@ def lamudi_multi_page_scraper_task():
                     'sku': get_attribute(element, 'data-sku'),
                     'geo_point': [
                         float(coord.strip('[]')) for coord in get_attribute(element, 'data-geo-point').split(',') if coord.strip('[]') != 'null'
-                    ] if get_attribute(element, 'data-geo-point') not in ['n/a', 'null', ''] else [],
+                    ] if get_attribute(element, 'data-geo-point') not in ['n/a', 'null', ''] else [0.0, 0.0],
                     'listing_url': element.find('a', class_='js-listing-link')['href'] if element.find('a', class_='js-listing-link') else None
                 }
                 print(details_dict.get("geo_point", None))
