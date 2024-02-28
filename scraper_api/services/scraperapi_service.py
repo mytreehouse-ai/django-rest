@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 from logging import getLogger
 from django.utils import timezone
 
@@ -10,6 +10,7 @@ logger = getLogger(__name__)
 
 class ScrapyJobService:
 
+    @staticmethod
     def get_all_scrapy_web() -> List[ScrapyWebModel]:
         """
         Retrieves all ScrapyWebModel instances from the database.
@@ -18,13 +19,14 @@ class ScrapyJobService:
         It is essential for identifying all the target URLs that the Scrapy service will process.
 
         Returns:
-            QuerySet: A QuerySet containing all instances of ScrapyWebModel, representing all URLs to be scraped.
+            List[ScrapyWebModel]: A list containing all instances of ScrapyWebModel, representing all URLs to be scraped.
         """
 
         scrapy_webs = ScrapyWebModel.objects.filter(is_active=True)
 
-        return scrapy_webs
+        return list(scrapy_webs)
 
+    @staticmethod
     def get_all_scrapy_job() -> List[ScrapyJobModel]:
         """
         Retrieves all ScrapyJobModel instances from the database.
@@ -34,25 +36,26 @@ class ScrapyJobService:
         analyzing the performance and outcomes of the scraping jobs.
 
         Returns:
-            List[ScrapyJobModel]: A list containing all instances of ScrapyJobModel limited by 5 records, representing all scraping jobs.
+            List[ScrapyJobModel]: A list containing all instances of ScrapyJobModel limited by 10 records, representing all scraping jobs.
         """
-        return ScrapyJobModel.objects.filter(status="finished", is_processed=False)[:5]
+        return ScrapyJobModel.objects.filter(status="finished", is_processed=False)[:10]
 
-    def get_scrapy_job(id: int) -> ScrapyJobModel:
+    @staticmethod
+    def get_scrapy_job(job_id: int) -> ScrapyJobModel:
         """
-        Retrieves a single ScrapyJobModel instance from the database by its ID.
+        Retrieves a single ScrapyJobModel instance from the database by its job ID.
 
-        This method queries the database for a ScrapyJobModel instance by its unique identifier. It is used
+        This method queries the database for a ScrapyJobModel instance by its unique job identifier. It is used
         to fetch detailed information about a specific scraping job, including its status, attempts, and
         other relevant data.
 
         Args:
-            id (int): The unique identifier of the ScrapyJobModel to retrieve.
+            job_id (int): The unique job identifier of the ScrapyJobModel to retrieve.
 
         Returns:
-            ScrapyJobModel: An instance of ScrapyJobModel corresponding to the provided ID.
+            ScrapyJobModel: An instance of ScrapyJobModel corresponding to the provided job ID.
         """
-        return ScrapyJobModel.objects.get(id=id)
+        return ScrapyJobModel.objects.get(job_id=job_id)
 
     @staticmethod
     def create_job(**kwargs):
@@ -76,7 +79,7 @@ class ScrapyJobService:
             logger.error(f"Failed to create ScrapyJobModel: {e}")
             return None
 
-    def update_job(job_id: str, attempts: int, status: str, html_code: str | None, failed_reason: str | None) -> None:
+    def update_job(self, job_id: str, attempts: int, status: str, html_code: Optional[str] = None, failed_reason: Optional[str] = None) -> None:
         """
         Updates the details of a specific Scrapy job in the database.
 
@@ -88,8 +91,8 @@ class ScrapyJobService:
             job_id (str): The unique identifier of the Scrapy job to update.
             attempts (int): The number of attempts made for the Scrapy job.
             status (str): The new status of the Scrapy job.
-            html_code (str | None): The HTML code retrieved by the Scrapy job, if applicable.
-            failed_reason (str | None): The reason the Scrapy job failed, if applicable.
+            html_code (Optional[str]): The HTML code retrieved by the Scrapy job, if applicable.
+            failed_reason (Optional[str]): The reason the Scrapy job failed, if applicable.
 
         Returns:
             None
@@ -99,21 +102,18 @@ class ScrapyJobService:
             job.attempts = attempts
             job.status = status
             job.finished_processed_at = timezone.now()
-            job.save(
-                update_fields=[
-                    "attempts",
-                    "status",
-                    "finished_processed_at"
-                ]
-            )
 
-            if html_code:
+            update_fields = ["attempts", "status", "finished_processed_at"]
+
+            if html_code is not None:
                 job.html_code = html_code
-                job.save(update_fields=["html_code"])
+                update_fields.append("html_code")
 
-            if failed_reason:
+            if failed_reason is not None:
                 job.failed_reason = failed_reason
-                job.save(update_fields=["failed_reason"])
+                update_fields.append("failed_reason")
+
+            job.save(update_fields=update_fields)
 
         except ScrapyJobModel.DoesNotExist:
             logger.error(f"ScrapyJobModel with id {job_id} does not exist.")
