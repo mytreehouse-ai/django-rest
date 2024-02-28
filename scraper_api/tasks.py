@@ -116,14 +116,13 @@ def lamudi_scraper():
             info_elements = extract_html(html_data=scrapy_job.html_code)
             listing_type = "for-sale" if "buy" in scrapy_job.domain else "for-rent"
             for element in info_elements:
-                category = get_attribute(element, 'data-category')
                 details_dict = {
                     'listing_title': element.find('a', class_='js-listing-link')['title'] if element.find('a', class_='js-listing-link') else 'n/a',
                     'listing_type': listing_type,
                     'price': float(get_attribute(element, 'data-price')) if get_attribute(element, 'data-price') != 'n/a' else 0.0,
                     # Seen in warehouse
                     'price_condition': get_attribute(element, 'data-price_conditions'),
-                    'category': category,
+                    'category': get_attribute(element, 'data-category'),
                     'subcategories': json.loads(get_attribute(element, 'data-subcategories')),
                     'year_built': int(get_attribute(element, 'data-year_built')) if get_attribute(element, 'data-year_built') != 'n/a' else None,
                     'building_name': get_attribute(element, 'data-condominiumname') if get_attribute(element, 'data-condominiumname') != 'n/a' else None,
@@ -146,7 +145,7 @@ def lamudi_scraper():
                     ] if get_attribute(element, 'data-geo-point') != 'n/a' else 'n/a',
                     'listing_url': element.find('a', class_='js-listing-link')['href'] if element.find('a', class_='js-listing-link') else None
                 }
-
+                print(json.dumps(details_dict, indent=4))
                 property_details.append(details_dict)
 
     if current_scrapy_job_id:

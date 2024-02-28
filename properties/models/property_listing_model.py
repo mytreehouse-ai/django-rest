@@ -49,6 +49,12 @@ class PropertyListingModel(BaseModel):
         default=0.0,
         verbose_name="Price"
     )
+    images = models.JSONField(
+        default=list,
+        null=True,
+        blank=True,
+        verbose_name="Images"
+    )
     is_active = models.BooleanField(
         default=False,
         verbose_name="Is Active"
