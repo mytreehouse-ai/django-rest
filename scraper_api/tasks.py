@@ -112,41 +112,42 @@ def lamudi_scraper():
 
     for scrapy_job in scrapy_jobs:
         current_scrapy_job_id = scrapy_job.id
-        info_elements = extract_html(html_data=scrapy_job.html_code)
-        listing_type = "for-sale" if "buy" in scrapy_job.domain else "for-rent"
-        for element in info_elements:
-            category = get_attribute(element, 'data-category')
-            details_dict = {
-                'listing_title': element.find('a', class_='js-listing-link')['title'] if element.find('a', class_='js-listing-link') else 'n/a',
-                'listing_type': listing_type,
-                'price': float(get_attribute(element, 'data-price')) if get_attribute(element, 'data-price') != 'n/a' else 0.0,
-                # Seen in warehouse
-                'price_condition': get_attribute(element, 'data-price_conditions'),
-                'category': category,
-                'subcategories': json.loads(get_attribute(element, 'data-subcategories')),
-                'year_built': int(get_attribute(element, 'data-year_built')) if get_attribute(element, 'data-year_built') != 'n/a' else None,
-                'building_name': get_attribute(element, 'data-condominiumname') if get_attribute(element, 'data-condominiumname') != 'n/a' else None,
-                # For warehouse
-                'subdivision_name': get_attribute(element, 'data-subdivisionname') if get_attribute(element, 'data-subdivisionname') != 'n/a' else None,
-                'car_spaces': int(get_attribute(element, 'data-car_spaces')) if get_attribute(element, 'data-car_spaces').isdigit() else 0,
-                'bedrooms': int(get_attribute(element, 'data-bedrooms')) if get_attribute(element, 'data-bedrooms').isdigit() else 0,
-                'bathrooms': int(get_attribute(element, 'data-bathrooms')) if get_attribute(element, 'data-bathrooms').isdigit() else 0,
-                # floor area
-                'building_size': float(get_attribute(element, 'data-building_size')) if get_attribute(element, 'data-building_size') != 'n/a' else 0.0,
-                # sqm
-                'land_size': float(get_attribute(element, 'data-land_size')) if get_attribute(element, 'data-land_size') != 'n/a' else 0.0,
-                'furnished': get_attribute(element, 'data-furnished'),
-                'classification': get_attribute(element, 'data-classification'),
-                'block': get_attribute(element, 'data-block'),
-                'subdivision_name': get_attribute(element, 'data-subdivisionname'),
-                'sku': get_attribute(element, 'data-sku'),
-                'geo_point': [
-                    float(coord.strip('[]')) for coord in get_attribute(element, 'data-geo-point').split(',')
-                ] if get_attribute(element, 'data-geo-point') != 'n/a' else 'n/a',
-                'listing_url': element.find('a', class_='js-listing-link')['href'] if element.find('a', class_='js-listing-link') else None
-            }
+        if scrapy_job.html_code:
+            info_elements = extract_html(html_data=scrapy_job.html_code)
+            listing_type = "for-sale" if "buy" in scrapy_job.domain else "for-rent"
+            for element in info_elements:
+                category = get_attribute(element, 'data-category')
+                details_dict = {
+                    'listing_title': element.find('a', class_='js-listing-link')['title'] if element.find('a', class_='js-listing-link') else 'n/a',
+                    'listing_type': listing_type,
+                    'price': float(get_attribute(element, 'data-price')) if get_attribute(element, 'data-price') != 'n/a' else 0.0,
+                    # Seen in warehouse
+                    'price_condition': get_attribute(element, 'data-price_conditions'),
+                    'category': category,
+                    'subcategories': json.loads(get_attribute(element, 'data-subcategories')),
+                    'year_built': int(get_attribute(element, 'data-year_built')) if get_attribute(element, 'data-year_built') != 'n/a' else None,
+                    'building_name': get_attribute(element, 'data-condominiumname') if get_attribute(element, 'data-condominiumname') != 'n/a' else None,
+                    # For warehouse
+                    'subdivision_name': get_attribute(element, 'data-subdivisionname') if get_attribute(element, 'data-subdivisionname') != 'n/a' else None,
+                    'car_spaces': int(get_attribute(element, 'data-car_spaces')) if get_attribute(element, 'data-car_spaces').isdigit() else 0,
+                    'bedrooms': int(get_attribute(element, 'data-bedrooms')) if get_attribute(element, 'data-bedrooms').isdigit() else 0,
+                    'bathrooms': int(get_attribute(element, 'data-bathrooms')) if get_attribute(element, 'data-bathrooms').isdigit() else 0,
+                    # floor area
+                    'building_size': float(get_attribute(element, 'data-building_size')) if get_attribute(element, 'data-building_size') != 'n/a' else 0.0,
+                    # sqm
+                    'land_size': float(get_attribute(element, 'data-land_size')) if get_attribute(element, 'data-land_size') != 'n/a' else 0.0,
+                    'furnished': get_attribute(element, 'data-furnished'),
+                    'classification': get_attribute(element, 'data-classification'),
+                    'block': get_attribute(element, 'data-block'),
+                    'subdivision_name': get_attribute(element, 'data-subdivisionname'),
+                    'sku': get_attribute(element, 'data-sku'),
+                    'geo_point': [
+                        float(coord.strip('[]')) for coord in get_attribute(element, 'data-geo-point').split(',')
+                    ] if get_attribute(element, 'data-geo-point') != 'n/a' else 'n/a',
+                    'listing_url': element.find('a', class_='js-listing-link')['href'] if element.find('a', class_='js-listing-link') else None
+                }
 
-            property_details.append(details_dict)
+                property_details.append(details_dict)
 
     if current_scrapy_job_id:
         scrapy_job = ScrapyJobService.get_scrapy_job(id=current_scrapy_job_id)
@@ -198,9 +199,6 @@ def lamudi_scraper():
 
                 print(f"New listing added: {new_listing.listing_url}")
             else:
-                new_listing.estate.subdivision_name = property.get(
-                    "subdivision_name"
-                )
                 new_listing.estate.lot_size = property.get("land_size")
                 new_listing.estate.building_size = property.get(
                     "building_size"
@@ -209,7 +207,6 @@ def lamudi_scraper():
                 new_listing.estate.latitude = latitude
                 new_listing.estate.save(
                     update_fields=[
-                        "subdivision_name",
                         "lot_size",
                         "building_size",
                         "longitude",
@@ -256,9 +253,6 @@ def lamudi_scraper():
 
                 print(f"New listing added: {new_listing.listing_url}")
             else:
-                new_listing.estate.building_name = property.get(
-                    "building_name"
-                )
                 new_listing.estate.lot_size = property.get("land_size")
                 new_listing.estate.floor_size = property.get("building_size")
                 new_listing.estate.num_bedrooms = property.get("bedrooms")
@@ -269,7 +263,6 @@ def lamudi_scraper():
                 new_listing.estate.latitude = latitude
                 new_listing.estate.save(
                     update_fields=[
-                        "building_name",
                         "lot_size",
                         "floor_size",
                         "num_bedrooms",
