@@ -145,7 +145,6 @@ def lamudi_multi_page_scraper_task():
                     ] if get_attribute(element, 'data-geo-point') not in ['n/a', 'null', ''] else [0.0, 0.0],
                     'listing_url': element.find('a', class_='js-listing-link')['href'] if element.find('a', class_='js-listing-link') else None
                 }
-                print(details_dict.get("geo_point", None))
                 property_details.append(details_dict)
 
     if current_scrapy_job_id:
