@@ -125,7 +125,7 @@ def lamudi_scraper():
                 'category': category,
                 'subcategories': json.loads(get_attribute(element, 'data-subcategories')),
                 'year_built': int(get_attribute(element, 'data-year_built')) if get_attribute(element, 'data-year_built') != 'n/a' else None,
-                'building_name': get_attribute(element, 'data-condominiumname'),
+                'building_name': get_attribute(element, 'data-condominiumname') if get_attribute(element, 'data-condominiumname') != 'n/a' else None,
                 # For warehouse
                 'subdivision_name': get_attribute(element, 'data-subdivisionname'),
                 'car_spaces': int(get_attribute(element, 'data-car_spaces')) if get_attribute(element, 'data-car_spaces').isdigit() else 0,
@@ -220,7 +220,7 @@ def lamudi_scraper():
 
             if created:
                 new_condominium = PropertyModel.objects.create(
-                    building_name=property.get("building_name", None),
+                    building_name=property.get("building_name"),
                     lot_size=property.get("land_size"),
                     floor_size=property.get("building_size"),
                     num_bedrooms=property.get("bedrooms"),
@@ -245,9 +245,7 @@ def lamudi_scraper():
                 new_listing.estate.num_bedrooms = property.get("bedrooms")
                 new_listing.estate.num_bathrooms = property.get("bathrooms")
                 new_listing.estate.num_carspaces = property.get("car_spaces")
-                new_listing.estate.year_built = property.get(
-                    "year_built"
-                )
+                new_listing.estate.year_built = property.get("year_built")
                 new_listing.estate.longitude = longitude
                 new_listing.estate.latitude = latitude
                 new_listing.estate.save(
