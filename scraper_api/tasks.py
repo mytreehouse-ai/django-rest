@@ -128,9 +128,9 @@ def lamudi_scraper():
                 'condo_name': get_attribute(element, 'data-condominiumname'),
                 # For warehouse
                 'subdivision_name': get_attribute(element, 'data-subdivisionname'),
-                'car_spaces': int(get_attribute(element, 'data-car_spaces')) if get_attribute(element, 'data-car_spaces').isdigit() else 'n/a',
-                'bedrooms': int(get_attribute(element, 'data-bedrooms')) if get_attribute(element, 'data-bedrooms').isdigit() else 'n/a',
-                'bathrooms': int(get_attribute(element, 'data-bathrooms')) if get_attribute(element, 'data-bathrooms').isdigit() else 'n/a',
+                'car_spaces': int(get_attribute(element, 'data-car_spaces')) if get_attribute(element, 'data-car_spaces').isdigit() else 0,
+                'bedrooms': int(get_attribute(element, 'data-bedrooms')) if get_attribute(element, 'data-bedrooms').isdigit() else 0,
+                'bathrooms': int(get_attribute(element, 'data-bathrooms')) if get_attribute(element, 'data-bathrooms').isdigit() else 0,
                 # floor area
                 'building_size': float(get_attribute(element, 'data-building_size')) if get_attribute(element, 'data-building_size') != 'n/a' else 0.0,
                 # sqm
@@ -222,9 +222,9 @@ def lamudi_scraper():
                     building_name=property.get("building_name", None),
                     lot_size=property.get("land_size", None),
                     floor_size=property.get("building_size", None),
-                    num_bedrooms=property.get("bedrooms", 0),
-                    num_bathrooms=property.get("bathrooms", 0),
-                    num_carspaces=property.get("car_spaces", 0),
+                    num_bedrooms=property.get("bedrooms"),
+                    num_bathrooms=property.get("bathrooms"),
+                    num_carspaces=property.get("car_spaces"),
                     year_built=property.get("year_built", None),
                     central_business_district=False,
                     longitude=longitude,
