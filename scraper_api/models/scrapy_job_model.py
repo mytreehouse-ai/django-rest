@@ -52,6 +52,9 @@ class ScrapyJobModel(BaseModel):
         null=True,
         blank=True
     )
+    single_page = models.BooleanField(
+        default=False,
+    )
     is_processed = models.BooleanField(
         default=False
     )
