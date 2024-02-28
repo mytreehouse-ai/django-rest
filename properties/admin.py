@@ -5,6 +5,7 @@ from .models.property_listing_model import PropertyListingModel
 from .models.property_type_model import PropertyTypeModel
 from .models.listing_type_model import ListingTypeModel
 from .models.property_status_model import PropertyStatusModel
+from .models.price_history_model import PriceHistoryModel
 
 
 @admin.register(PropertyListingModel)
@@ -49,3 +50,12 @@ class ListingTypeModelAdmin(admin.ModelAdmin):
 class PropertyStatusModelAdmin(admin.ModelAdmin):
     list_display = ("id", "description")
     search_fields = ("description",)
+
+
+@admin.register(PriceHistoryModel)
+class PriceHistoryModelAdmin(admin.ModelAdmin):
+    list_display = ("id", "price" "date_recorded", "created_at", "updated_at")
+    search_fields = (
+        "price", "property_listing__listing_title",
+        "property_listing__listing_url"
+    )
