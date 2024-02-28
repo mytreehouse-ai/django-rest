@@ -119,7 +119,7 @@ def lamudi_scraper():
             details_dict = {
                 'listing_title': element.find('a', class_='js-listing-link')['title'] if element.find('a', class_='js-listing-link') else 'n/a',
                 'listing_type': listing_type,
-                'price': float(get_attribute(element, 'data-price')) if get_attribute(element, 'data-price') != 'n/a' else 'n/a',
+                'price': float(get_attribute(element, 'data-price')) if get_attribute(element, 'data-price') != 'n/a' else 0.0,
                 # Seen in warehouse
                 'price_condition': get_attribute(element, 'data-price_conditions'),
                 'category': category,
