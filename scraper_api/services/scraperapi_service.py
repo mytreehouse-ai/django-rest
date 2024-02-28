@@ -79,7 +79,8 @@ class ScrapyJobService:
             logger.error(f"Failed to create ScrapyJobModel: {e}")
             return None
 
-    def update_job(self, job_id: str, attempts: int, status: str, html_code: Optional[str] = None, failed_reason: Optional[str] = None) -> None:
+    @staticmethod
+    def update_job(job_id: str, attempts: int, status: str, html_code: Optional[str] = None, failed_reason: Optional[str] = None) -> None:
         """
         Updates the details of a specific Scrapy job in the database.
 
