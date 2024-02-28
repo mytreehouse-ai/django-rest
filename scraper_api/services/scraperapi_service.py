@@ -36,9 +36,9 @@ class ScrapyJobService:
         analyzing the performance and outcomes of the scraping jobs.
 
         Returns:
-            List[ScrapyJobModel]: A list containing all instances of ScrapyJobModel limited by 5 records, representing all scraping jobs.
+            List[ScrapyJobModel]: A list containing all instances of ScrapyJobModel limited by 10 records, representing all scraping jobs.
         """
-        return ScrapyJobModel.objects.filter(status="finished", is_processed=False)[:5]
+        return ScrapyJobModel.objects.filter(status="finished", is_processed=False)[:10]
 
     @staticmethod
     def get_scrapy_job(job_id: int) -> ScrapyJobModel:

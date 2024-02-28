@@ -441,6 +441,6 @@ def lamudi_multi_page_scraper_task():
         if property.get("category") == "land":
             pass
 
-        sleep(1)
+        sleep(0.5)
 
     property_details = []
