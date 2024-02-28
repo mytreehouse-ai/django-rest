@@ -20,14 +20,17 @@ class PropertyModel(BaseModel):
     )
     lot_size = models.FloatField(
         null=True,
+        blank=True,
         verbose_name="Lot Size"
     )
     floor_size = models.FloatField(
         null=True,
+        blank=True,
         verbose_name="Floor Size"
     )
     building_size = models.FloatField(
         null=True,
+        blank=True,
         verbose_name="Building Size"
     )
     num_bedrooms = models.IntegerField(
@@ -45,16 +48,19 @@ class PropertyModel(BaseModel):
     address_line1 = models.CharField(
         max_length=255,
         null=True,
+        blank=True,
         verbose_name="Address Line 1"
     )
     address_line2 = models.CharField(
         max_length=255,
         null=True,
+        blank=True,
         verbose_name="Address Line 2"
     )
     city = models.ForeignKey(
         "domain.CityModel",
         null=True,
+        blank=True,
         related_name="city",
         on_delete=models.SET_NULL,
         verbose_name="City"
@@ -71,18 +77,22 @@ class PropertyModel(BaseModel):
     )
     longitude = models.FloatField(
         null=True,
+        blank=True,
         verbose_name="Longitude"
     )
     latitude = models.FloatField(
         null=True,
+        blank=True,
         verbose_name="Latitude"
     )
     year_built = models.IntegerField(
         null=True,
+        blank=True,
         verbose_name="Year Built"
     )
     description = models.TextField(
         null=True,
+        blank=True,
         verbose_name="Description"
     )
 
