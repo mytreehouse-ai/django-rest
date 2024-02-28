@@ -111,7 +111,7 @@ def lamudi_multi_page_scraper_task():
     land = PropertyTypeModel.objects.get(id=5)
 
     for scrapy_job in scrapy_jobs:
-        current_scrapy_job_id = scrapy_job.id
+        current_scrapy_job_id = scrapy_job.job_id
         if scrapy_job.html_code:
             info_elements = extract_html(html_data=scrapy_job.html_code)
             listing_type = "for-sale" if "buy" in scrapy_job.domain else "for-rent"
