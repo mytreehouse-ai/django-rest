@@ -90,6 +90,23 @@ class PropertyModel(BaseModel):
         blank=True,
         verbose_name="Year Built"
     )
+    images = models.JSONField(
+        default=list,
+        null=True,
+        blank=True,
+        verbose_name="Images"
+    )
+    amenities = models.JSONField(
+        default=list,
+        null=True,
+        blank=True,
+        verbose_name="Amenities"
+    )
+    other_details = models.JSONField(
+        null=True,
+        blank=True,
+        verbose_name="Other Details"
+    )
     description = models.TextField(
         null=True,
         blank=True,
