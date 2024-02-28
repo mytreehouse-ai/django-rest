@@ -199,6 +199,9 @@ def lamudi_scraper():
 
                 print(f"New listing added: {new_listing.listing_url}")
             else:
+                new_listing.estate.subdivision_name = property.get(
+                    "subdivision_name"
+                )
                 new_listing.estate.lot_size = property.get("land_size")
                 new_listing.estate.building_size = property.get(
                     "building_size"
@@ -207,6 +210,7 @@ def lamudi_scraper():
                 new_listing.estate.latitude = latitude
                 new_listing.estate.save(
                     update_fields=[
+                        "subdivision_name",
                         "lot_size",
                         "building_size",
                         "longitude",
