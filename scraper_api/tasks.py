@@ -14,6 +14,7 @@ from properties.models.property_status_model import PropertyStatusModel
 from properties.models.listing_type_model import ListingTypeModel
 from properties.models.property_listing_model import PropertyListingModel
 from properties.models.property_model import PropertyModel
+from properties.models.price_history_model import PriceHistoryModel
 
 
 logger = getLogger(__name__)
@@ -185,6 +186,17 @@ def lamudi_multi_page_scraper_task():
             longitude = geo_point[0] if len(geo_point) > 0 else 0.0
             latitude = geo_point[1] if len(geo_point) > 1 else 0.0
 
+            if not created and new_listing.price != price:
+                # If the listing already exists and the price has changed, save the historical price
+                PriceHistoryModel.objects.create(
+                    property_listing=new_listing,
+                    price=new_listing.price,
+                    date_recorded=timezone.now()
+                )
+                # Update the listing with the new price
+                new_listing.price = price
+                new_listing.save(update_fields=["price"])
+
             if created:
                 new_warehouse = PropertyModel.objects.create(
                     subdivision_name=property.get("subdivision_name"),
@@ -242,6 +254,17 @@ def lamudi_multi_page_scraper_task():
             geo_point = property.get("geo_point", [None, None])
             longitude = geo_point[0] if len(geo_point) > 0 else 0.0
             latitude = geo_point[1] if len(geo_point) > 1 else 0.0
+
+            if not created and new_listing.price != price:
+                # If the listing already exists and the price has changed, save the historical price
+                PriceHistoryModel.objects.create(
+                    property_listing=new_listing,
+                    price=new_listing.price,
+                    date_recorded=timezone.now()
+                )
+                # Update the listing with the new price
+                new_listing.price = price
+                new_listing.save(update_fields=["price"])
 
             if created:
                 new_condominium = PropertyModel.objects.create(
@@ -318,6 +341,17 @@ def lamudi_multi_page_scraper_task():
             longitude = geo_point[0] if len(geo_point) > 0 else 0.0
             latitude = geo_point[1] if len(geo_point) > 1 else 0.0
 
+            if not created and new_listing.price != price:
+                # If the listing already exists and the price has changed, save the historical price
+                PriceHistoryModel.objects.create(
+                    property_listing=new_listing,
+                    price=new_listing.price,
+                    date_recorded=timezone.now()
+                )
+                # Update the listing with the new price
+                new_listing.price = price
+                new_listing.save(update_fields=["price"])
+
             if created:
                 new_house = PropertyModel.objects.create(
                     lot_size=property.get("land_size"),
@@ -387,6 +421,17 @@ def lamudi_multi_page_scraper_task():
             geo_point = property.get("geo_point", [None, None])
             longitude = geo_point[0] if len(geo_point) > 0 else 0.0
             latitude = geo_point[1] if len(geo_point) > 1 else 0.0
+
+            if not created and new_listing.price != price:
+                # If the listing already exists and the price has changed, save the historical price
+                PriceHistoryModel.objects.create(
+                    property_listing=new_listing,
+                    price=new_listing.price,
+                    date_recorded=timezone.now()
+                )
+                # Update the listing with the new price
+                new_listing.price = price
+                new_listing.save(update_fields=["price"])
 
             if created:
                 new_apartment = PropertyModel.objects.create(
