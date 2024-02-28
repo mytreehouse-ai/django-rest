@@ -255,7 +255,7 @@ def lamudi_scraper():
                 new_listing.estate.longitude = longitude
                 new_listing.estate.latitude = latitude
                 new_listing.estate.save(
-                    updated_fields=[
+                    update_fields=[
                         "building_name",
                         "lot_size",
                         "floor_size",

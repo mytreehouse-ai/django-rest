@@ -34,6 +34,15 @@ class PropertyModelAdmin(admin.ModelAdmin):
     )
 
 
+@admin.register(PriceHistoryModel)
+class PriceHistoryModelAdmin(admin.ModelAdmin):
+    list_display = ("id", "price", "date_recorded", "created_at", "updated_at")
+    search_fields = (
+        "property_listing__listing_title",
+        "property_listing__listing_url"
+    )
+
+
 @admin.register(PropertyTypeModel)
 class PropertyTypeModelAdmin(admin.ModelAdmin):
     list_display = ("id", "description")
@@ -50,12 +59,3 @@ class ListingTypeModelAdmin(admin.ModelAdmin):
 class PropertyStatusModelAdmin(admin.ModelAdmin):
     list_display = ("id", "description")
     search_fields = ("description",)
-
-
-@admin.register(PriceHistoryModel)
-class PriceHistoryModelAdmin(admin.ModelAdmin):
-    list_display = ("id", "price", "date_recorded", "created_at", "updated_at")
-    search_fields = (
-        "property_listing__listing_title",
-        "property_listing__listing_url"
-    )
