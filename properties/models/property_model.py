@@ -8,11 +8,13 @@ class PropertyModel(BaseModel):
     )
     building_name = models.CharField(
         null=True,
+        blank=True,
         max_length=200,
         verbose_name="Building Name"
     )
     subdivision_name = models.CharField(
         null=True,
+        blank=True,
         max_length=200,
         verbose_name="Subdivision Name"
     )
