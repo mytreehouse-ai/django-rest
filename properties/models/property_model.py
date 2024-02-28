@@ -14,7 +14,7 @@ class PropertyModel(BaseModel):
     subdivision_name = models.CharField(
         null=True,
         max_length=200,
-        verbose_name="Building Name"
+        verbose_name="Subdivision Name"
     )
     lot_size = models.FloatField(
         null=True,
