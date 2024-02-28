@@ -212,12 +212,13 @@ def lamudi_scraper():
                     'is_active': True
                 }
             )
-            if created:
-                # Extract geo_point safely
-                geo_point = property.get("geo_point", [None, None])
-                longitude = geo_point[0] if len(geo_point) > 0 else 0.0
-                latitude = geo_point[1] if len(geo_point) > 1 else 0.0
 
+            # Extract geo_point safely
+            geo_point = property.get("geo_point", [None, None])
+            longitude = geo_point[0] if len(geo_point) > 0 else 0.0
+            latitude = geo_point[1] if len(geo_point) > 1 else 0.0
+
+            if created:
                 new_condominium = PropertyModel.objects.create(
                     building_name=property.get("building_name", None),
                     lot_size=property.get("land_size"),
@@ -236,6 +237,36 @@ def lamudi_scraper():
 
                 print(f"New listing added: {new_listing.listing_url}")
             else:
+                new_listing.estate.building_name = property.get(
+                    "building_name"
+                )
+                new_listing.estate.lot_size = property.get("land_size")
+                new_listing.estate.floor_size = property.get("building_size")
+                new_listing.estate.num_bedrooms = property.get("bedrooms")
+                new_listing.estate.num_bathrooms = property.get(
+                    "num_bathrooms"
+                )
+                new_listing.estate.num_carspaces = property.get(
+                    "num_carspaces"
+                )
+                new_listing.estate.year_built = property.get(
+                    "year_built"
+                )
+                new_listing.estate.longitude = longitude
+                new_listing.estate.latitude = latitude
+                new_listing.estate.save(
+                    updated_fields=[
+                        "building_name",
+                        "lot_size",
+                        "floor_size",
+                        "num_bedrooms",
+                        "num_bathrooms",
+                        "num_carspaces",
+                        "year_built",
+                        "longitude",
+                        "latitude"
+                    ]
+                )
                 print(f"Listing already exists: {new_listing.listing_url}")
 
         if property.get("category") == "house":
