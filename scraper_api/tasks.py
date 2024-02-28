@@ -199,25 +199,30 @@ def lamudi_scraper():
 
                 print(f"New listing added: {new_listing.listing_url}")
             else:
-                new_listing.estate.subdivision_name = property.get(
-                    "subdivision_name"
-                )
-                new_listing.estate.lot_size = property.get("land_size")
-                new_listing.estate.building_size = property.get(
-                    "building_size"
-                )
-                new_listing.estate.longitude = longitude
-                new_listing.estate.latitude = latitude
-                new_listing.estate.save(
-                    update_fields=[
-                        "subdivision_name",
-                        "lot_size",
-                        "building_size",
-                        "longitude",
-                        "latitude"
-                    ]
-                )
-                print(f"Listing already exists: {new_listing.listing_url}")
+                if new_listing.estate:
+                    new_listing.estate.subdivision_name = property.get(
+                        "subdivision_name"
+                    )
+                    new_listing.estate.lot_size = property.get("land_size")
+                    new_listing.estate.building_size = property.get(
+                        "building_size"
+                    )
+                    new_listing.estate.longitude = longitude
+                    new_listing.estate.latitude = latitude
+                    new_listing.estate.save(
+                        update_fields=[
+                            "subdivision_name",
+                            "lot_size",
+                            "building_size",
+                            "longitude",
+                            "latitude"
+                        ]
+                    )
+                    print(f"Listing already exists: {new_listing.listing_url}")
+                else:
+                    print(
+                        f"Failed to update listing as estate does not exist: {new_listing.listing_url}"
+                    )
 
         if property.get("category") == "condominium":
             # Ensure price does not cause numeric field overflow
@@ -257,26 +262,40 @@ def lamudi_scraper():
 
                 print(f"New listing added: {new_listing.listing_url}")
             else:
-                new_listing.estate.lot_size = property.get("land_size")
-                new_listing.estate.floor_size = property.get("building_size")
-                new_listing.estate.num_bedrooms = property.get("bedrooms")
-                new_listing.estate.num_bathrooms = property.get("bathrooms")
-                new_listing.estate.num_carspaces = property.get("car_spaces")
-                new_listing.estate.year_built = property.get("year_built")
-                new_listing.estate.longitude = longitude
-                new_listing.estate.latitude = latitude
-                new_listing.estate.save(
-                    update_fields=[
-                        "lot_size",
-                        "floor_size",
-                        "num_bedrooms",
-                        "num_bathrooms",
-                        "num_carspaces",
-                        "year_built",
-                        "longitude",
-                        "latitude"
-                    ]
-                )
+                if new_listing.estate:
+                    new_listing.estate.building_name = property.get(
+                        "building_name"
+                    )
+                    new_listing.estate.lot_size = property.get("land_size")
+                    new_listing.estate.floor_size = property.get(
+                        "building_size"
+                    )
+                    new_listing.estate.num_bedrooms = property.get("bedrooms")
+                    new_listing.estate.num_bathrooms = property.get(
+                        "bathrooms"
+                    )
+                    new_listing.estate.num_carspaces = property.get(
+                        "car_spaces"
+                    )
+                    new_listing.estate.year_built = property.get("year_built")
+                    new_listing.estate.longitude = longitude
+                    new_listing.estate.latitude = latitude
+                    new_listing.estate.save(
+                        update_fields=[
+                            "lot_size",
+                            "floor_size",
+                            "num_bedrooms",
+                            "num_bathrooms",
+                            "num_carspaces",
+                            "year_built",
+                            "longitude",
+                            "latitude"
+                        ]
+                    )
+                else:
+                    print(
+                        f"Error: Estate for listing {new_listing.listing_url} is None."
+                    )
                 print(f"Listing already exists: {new_listing.listing_url}")
 
         if property.get("category") == "house":
