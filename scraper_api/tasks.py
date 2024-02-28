@@ -149,7 +149,9 @@ def lamudi_multi_page_scraper_task():
                 property_details.append(details_dict)
 
     if current_scrapy_job_id:
-        scrapy_job = ScrapyJobService.get_scrapy_job(id=current_scrapy_job_id)
+        scrapy_job = ScrapyJobService.get_scrapy_job(
+            job_id=current_scrapy_job_id
+        )
 
         scrapy_job.html_code = None
         scrapy_job.is_processed = True
