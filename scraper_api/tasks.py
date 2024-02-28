@@ -186,8 +186,8 @@ def lamudi_scraper():
 
                 new_warehouse = PropertyModel.objects.create(
                     subdivision_name=property.get("subdivision_name", None),
-                    lot_size=property.get("land_size", None),
-                    building_size=property.get("building_size", None),
+                    lot_size=property.get("land_size"),
+                    building_size=property.get("building_size"),
                     longitude=longitude,
                     latitude=latitude
                 )
@@ -220,12 +220,12 @@ def lamudi_scraper():
 
                 new_condominium = PropertyModel.objects.create(
                     building_name=property.get("building_name", None),
-                    lot_size=property.get("land_size", None),
-                    floor_size=property.get("building_size", None),
+                    lot_size=property.get("land_size"),
+                    floor_size=property.get("building_size"),
                     num_bedrooms=property.get("bedrooms"),
                     num_bathrooms=property.get("bathrooms"),
                     num_carspaces=property.get("car_spaces"),
-                    year_built=property.get("year_built", None),
+                    year_built=property.get("year_built"),
                     central_business_district=False,
                     longitude=longitude,
                     latitude=latitude
