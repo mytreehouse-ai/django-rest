@@ -21,7 +21,10 @@ class ScrapyJobService:
             QuerySet: A QuerySet containing all instances of ScrapyWebModel, representing all URLs to be scraped.
         """
 
-        scrapy_webs = ScrapyWebModel.objects.filter(is_active=True)
+        scrapy_webs = ScrapyWebModel.objects.filter(
+            is_active=True,
+            single_page=False
+        )
 
         return scrapy_webs
 
