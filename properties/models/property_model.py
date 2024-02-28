@@ -97,7 +97,7 @@ class PropertyModel(BaseModel):
     )
 
     def __str__(self) -> str:
-        return str(self.id)
+        return self.building_name if self.building_name else self.subdivision_name
 
     class Meta:
         db_table = "properties"
