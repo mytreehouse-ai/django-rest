@@ -12,7 +12,7 @@ class Command(BaseCommand):
     A Django management command intended to be run periodically to ensure that a specific
     Celery beat schedule is set up in the database. This command creates an IntervalSchedule
     to run every five minutes if it does not already exist. It then ensures a PeriodicTask
-    is associated with this schedule to execute the 'scraper_api.tasks.lamudi_scraper' task.
+    is associated with this schedule to execute the 'scraper_api.tasks.lamudi_multi_page_scraper_task' task.
 
     The command outputs the details of the IntervalSchedule and PeriodicTask to the console,
     indicating whether each was created or retrieved from the existing entries.
@@ -28,7 +28,7 @@ class Command(BaseCommand):
         periodic_task, task_created = PeriodicTask.objects.get_or_create(
             interval=every_five_minutes,
             name="Scraper API Lamudi Scraper",
-            task="scraper_api.tasks.lamudi_scraper"
+            task="scraper_api.tasks.lamudi_multi_page_scraper_task"
         )
 
         # Print the details of the IntervalSchedule and PeriodicTask to the console.

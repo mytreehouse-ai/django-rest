@@ -87,7 +87,7 @@ def scraperapi_job_checker():
 
 
 @shared_task()
-def lamudi_scraper():
+def lamudi_multi_page_scraper_task():
     property_details = []
 
     def get_attribute(element, attribute):
@@ -369,7 +369,74 @@ def lamudi_scraper():
                 print(f"Listing already exists: {new_listing.listing_url}")
 
         if property.get("category") == "apartment":
-            pass
+            # Ensure price does not cause numeric field overflow
+            price = min(property.get("price", 0), 999999999999.99)
+            new_listing, created = PropertyListingModel.objects.get_or_create(
+                listing_title=property.get("listing_title"),
+                defaults={
+                    'listing_url': property.get("listing_url"),
+                    'listing_type': for_sale if property.get("listing_type") == "for-sale" else for_rent,
+                    'property_type': apartment,
+                    'price': price,
+                    'is_active': True
+                }
+            )
+
+            # Extract geo_point safely
+            geo_point = property.get("geo_point", [None, None])
+            longitude = geo_point[0] if len(geo_point) > 0 else 0.0
+            latitude = geo_point[1] if len(geo_point) > 1 else 0.0
+
+            if created:
+                new_apartment = PropertyModel.objects.create(
+                    lot_size=property.get("land_size"),
+                    floor_size=property.get("building_size"),
+                    num_bedrooms=property.get("bedrooms"),
+                    num_bathrooms=property.get("bathrooms"),
+                    num_carspaces=property.get("car_spaces"),
+                    year_built=property.get("year_built"),
+                    central_business_district=False,
+                    longitude=longitude,
+                    latitude=latitude
+                )
+
+                new_listing.estate = new_apartment
+                new_listing.save(update_fields=["estate"])
+
+                print(f"New listing added: {new_listing.listing_url}")
+            else:
+                if new_listing.estate:
+                    new_listing.estate.lot_size = property.get("land_size")
+                    new_listing.estate.floor_size = property.get(
+                        "building_size"
+                    )
+                    new_listing.estate.num_bedrooms = property.get("bedrooms")
+                    new_listing.estate.num_bathrooms = property.get(
+                        "bathrooms"
+                    )
+                    new_listing.estate.num_carspaces = property.get(
+                        "car_spaces"
+                    )
+                    new_listing.estate.year_built = property.get("year_built")
+                    new_listing.estate.longitude = longitude
+                    new_listing.estate.latitude = latitude
+                    new_listing.estate.save(
+                        update_fields=[
+                            "lot_size",
+                            "floor_size",
+                            "num_bedrooms",
+                            "num_bathrooms",
+                            "num_carspaces",
+                            "year_built",
+                            "longitude",
+                            "latitude"
+                        ]
+                    )
+                else:
+                    print(
+                        f"Error: Estate for listing {new_listing.listing_url} is None."
+                    )
+                print(f"Listing already exists: {new_listing.listing_url}")
 
         if property.get("category") == "land":
             pass
