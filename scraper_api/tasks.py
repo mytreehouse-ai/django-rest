@@ -127,7 +127,7 @@ def lamudi_scraper():
                 'year_built': int(get_attribute(element, 'data-year_built')) if get_attribute(element, 'data-year_built') != 'n/a' else None,
                 'building_name': get_attribute(element, 'data-condominiumname') if get_attribute(element, 'data-condominiumname') != 'n/a' else None,
                 # For warehouse
-                'subdivision_name': get_attribute(element, 'data-subdivisionname'),
+                'subdivision_name': get_attribute(element, 'data-subdivisionname') if get_attribute(element, 'data-subdivisionname') != 'n/a' else None,
                 'car_spaces': int(get_attribute(element, 'data-car_spaces')) if get_attribute(element, 'data-car_spaces').isdigit() else 0,
                 'bedrooms': int(get_attribute(element, 'data-bedrooms')) if get_attribute(element, 'data-bedrooms').isdigit() else 0,
                 'bathrooms': int(get_attribute(element, 'data-bathrooms')) if get_attribute(element, 'data-bathrooms').isdigit() else 0,
@@ -185,7 +185,7 @@ def lamudi_scraper():
                 latitude = geo_point[1] if len(geo_point) > 1 else 0.0
 
                 new_warehouse = PropertyModel.objects.create(
-                    subdivision_name=property.get("subdivision_name", None),
+                    subdivision_name=property.get("subdivision_name"),
                     lot_size=property.get("land_size"),
                     building_size=property.get("building_size"),
                     longitude=longitude,
@@ -197,6 +197,24 @@ def lamudi_scraper():
 
                 print(f"New listing added: {new_listing.listing_url}")
             else:
+                new_listing.estate.subdivision_name = property.get(
+                    "subdivision_name"
+                )
+                new_listing.estate.lot_size = property.get("land_size")
+                new_listing.estate.building_size = property.get(
+                    "building_size"
+                )
+                new_listing.estate.longitude = longitude
+                new_listing.estate.latitude = latitude
+                new_listing.estate.save(
+                    update_fields=[
+                        "subdivision_name",
+                        "lot_size",
+                        "building_size",
+                        "longitude",
+                        "latitude"
+                    ]
+                )
                 print(f"Listing already exists: {new_listing.listing_url}")
 
         if property.get("category") == "condominium":
