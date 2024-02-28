@@ -125,7 +125,7 @@ def lamudi_scraper():
                 'category': category,
                 'subcategories': json.loads(get_attribute(element, 'data-subcategories')),
                 'year_built': int(get_attribute(element, 'data-year_built')) if get_attribute(element, 'data-year_built') != 'n/a' else None,
-                'condo_name': get_attribute(element, 'data-condominiumname'),
+                'building_name': get_attribute(element, 'data-condominiumname'),
                 # For warehouse
                 'subdivision_name': get_attribute(element, 'data-subdivisionname'),
                 'car_spaces': int(get_attribute(element, 'data-car_spaces')) if get_attribute(element, 'data-car_spaces').isdigit() else 0,
