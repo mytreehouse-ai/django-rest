@@ -90,7 +90,7 @@ def lamudi_single_page_scraper_task():
         description_div = soup.find(
             'div',
             {
-                'class': 'listing-section listing-description ViewMore js-ViewMoreSection'
+                'class': 'listing-section listing-description'
             }
         )
         description_text = description_div.find(
@@ -100,7 +100,7 @@ def lamudi_single_page_scraper_task():
             }
         ) if description_div else None
 
-        return description_text.text if description_text else 'n/a'
+        return description_text.get_text(separator=" ", strip=True) if description_text else 'n/a'
 
     def extract_images(soup):
         images = []
