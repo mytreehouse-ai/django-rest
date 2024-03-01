@@ -12,6 +12,7 @@ from properties.models.property_status_model import PropertyStatusModel
 from properties.models.listing_type_model import ListingTypeModel
 from properties.models.property_listing_model import PropertyListingModel
 from properties.models.property_model import PropertyModel
+from domain.models.city_model import CityModel
 from properties.models.price_history_model import PriceHistoryModel
 from django_celery_beat.models import IntervalSchedule, PeriodicTask
 
@@ -84,7 +85,13 @@ def lamudi_single_page_scraper_task():
             }
         )
 
-        return address.text.strip() if address else 'n/a'
+        if address:
+            address_text = address.text.strip()
+            clean_address = address_text.encode('latin1').decode(
+                'unicode_escape').encode('latin1').decode('utf-8')
+            return clean_address
+        else:
+            return 'n/a'
 
     def extract_description(soup):
         description_div = soup.find(
@@ -163,8 +170,16 @@ def lamudi_single_page_scraper_task():
     def extract_property_details(html_code: str):
         soup = BeautifulSoup(html_code, 'html.parser')
 
+        address = extract_address(soup)
+
+        if address != "n/a":
+            city = CityModel.objects.filter(
+                name__icontains=address
+            )
+
         property_details = {
-            "address": extract_address(soup),
+            "address": address,
+            "city": city.name,
             "description": extract_description(soup),
             "images": extract_images(soup),
             "details": extract_property_details_div(soup),
