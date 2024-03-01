@@ -194,6 +194,7 @@ def lamudi_single_page_scraper_task():
 
     for scrapy_job in scrapy_jobs:
         property_details = extract_property_details(scrapy_job.html_code)
+        print(scrapy_job.id)
         print(json.dumps(property_details, indent=4))
 
 
