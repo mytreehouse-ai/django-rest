@@ -79,15 +79,16 @@ def lamudi_single_page_scraper_task():
     scrapy_jobs = ScrapyJobService.get_all_scrapy_job(single_page=True)
 
     def extract_address(soup):
-        address = soup.find(
+        address_tag = soup.find(
             'h3',
             {
                 'class': 'Title-pdp-address'
             }
         )
 
-        if address:
-            clean_address = re.sub(r'[\ufffd\u00f1]', 'ñ', address)
+        if address_tag:
+            address_text = address_tag.get_text(strip=True)
+            clean_address = re.sub(r'[\ufffd\u00f1]', 'ñ', address_text)
             return clean_address
         else:
             return 'n/a'
