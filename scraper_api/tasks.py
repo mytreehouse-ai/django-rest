@@ -179,7 +179,7 @@ def lamudi_single_page_scraper_task():
 
         property_details = {
             "address": address,
-            "city": city.name,
+            "city": city,
             "description": extract_description(soup),
             "images": extract_images(soup),
             "details": extract_property_details_div(soup),
