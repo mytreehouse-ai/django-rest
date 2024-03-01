@@ -87,8 +87,11 @@ def lamudi_single_page_scraper_task():
 
         if address:
             address_text = address.text.strip()
-            clean_address = address_text.encode('latin1').decode(
-                'unicode_escape').encode('latin1').decode('utf-8')
+            try:
+                clean_address = address_text.encode('latin1').decode('utf-8')
+            except UnicodeDecodeError:
+                clean_address = address_text.encode(
+                    'latin1', 'replace').decode('utf-8', 'replace')
             return clean_address
         else:
             return 'n/a'
