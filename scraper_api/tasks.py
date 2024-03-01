@@ -170,25 +170,27 @@ def lamudi_single_page_scraper_task():
         soup = BeautifulSoup(html_code, 'html.parser')
 
         address = extract_address(soup)
-        address = address.replace("\ufffd", "")  # Remove unknown characters
-        address = address.replace("\u00f1", "ñ")  # Replace ñ
-        address = address.replace("\u00d1", "Ñ")  # Replace Ñ
 
-        if address != "n/a":
-            city = CityModel.objects.filter(
-                name__icontains=address
-            )
+        if address == "Para\u00f1aque":
+            # Remove unknown characters
+            address = address.replace("\ufffd", "")
+            address = address.replace("\u00f1", "ñ")
+            address = address.replace("\u00d1", "Ñ")
+            if address != "n/a":
+                city = CityModel.objects.filter(
+                    name__icontains=address
+                )
 
-        property_details = {
-            "address": address,
-            "city": city.first().name if city.exists() else "Unknown",
-            "description": extract_description(soup),
-            "images": extract_images(soup),
-            "details": extract_property_details_div(soup),
-            "amenities": extract_amenities(soup)
-        }
+            property_details = {
+                "address": address,
+                "city": city.first().name if city.exists() else "Unknown",
+                "description": extract_description(soup),
+                "images": extract_images(soup),
+                "details": extract_property_details_div(soup),
+                "amenities": extract_amenities(soup)
+            }
 
-        return property_details
+            return property_details
 
     for scrapy_job in scrapy_jobs:
         property_details = extract_property_details(scrapy_job.html_code)
