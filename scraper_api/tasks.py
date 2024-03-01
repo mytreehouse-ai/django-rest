@@ -87,8 +87,7 @@ def lamudi_single_page_scraper_task():
         )
 
         if address:
-            address_text = address.text.strip()
-            clean_address = re.sub(r'[\ufffd\u00f1]', 'ñ', address_text)
+            clean_address = re.sub(r'[\ufffd\u00f1]', 'ñ', address)
             return clean_address
         else:
             return 'n/a'
