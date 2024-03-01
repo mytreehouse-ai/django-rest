@@ -72,6 +72,109 @@ def scraperapi_job_checker():
 
 
 @shared_task()
+def lamudi_single_page_scraper_task():
+    property_details = []
+    scrapy_jobs = ScrapyJobService.get_all_scrapy_job(single_page=True)
+
+    def extract_address(soup):
+        address = soup.find(
+            'h3',
+            {
+                'class': 'Title-pdp-address'
+            }
+        )
+
+        return address.text.strip() if address else 'n/a'
+
+    def extract_description(soup):
+        description_div = soup.find(
+            'div',
+            {
+                'class': 'listing-section listing-description ViewMore js-ViewMoreSection'
+            }
+        )
+        description_text = description_div.find(
+            'div',
+            {
+                'class': 'ViewMore-text-description'
+            }
+        ) if description_div else None
+
+        return description_text.text if description_text else 'n/a'
+
+    def extract_images(soup):
+        images = []
+        divs = soup.find_all(
+            'div',
+            {
+                'class': 'Banner-Images'
+            }
+        )
+
+        for div_tag in divs:
+            img_tag = div_tag.find('img')
+            if img_tag:
+                data_src = img_tag.get('data-src')
+                if data_src and data_src.endswith('.webp'):
+                    images.append(data_src)
+
+        return images
+
+    def extract_amenities(soup):
+        amenities_div = soup.find(
+            'div',
+            {
+                'class': 'listing-amenities-list'
+            }
+        )
+        amenities_span = amenities_div.find_all(
+            'span',
+            {
+                'class': 'listing-amenities-name'
+            }
+        )
+        amenities_list = [span.text.strip() for span in amenities_span]
+
+        return amenities_list if amenities_div else []
+
+    def extract_property_details_div(soup):
+        details_div = soup.find(
+            'div', {'class': 'listing-section listing-details'})
+        details = {}
+        if details_div:
+            rows = details_div.find_all('div', {'class': 'row'})
+            for row in rows:
+                columns = row.find_all(
+                    'div', {'class': 'columns medium-6 small-6 striped'})
+                for column in columns:
+                    items = column.find_all('div', {'class': 'columns-2'})
+                    for item in items:
+                        key = item.find('div', {'class': 'ellipsis'}).get(
+                            'data-attr-name', 'n/a').strip()
+                        value = item.find(
+                            'div', {'class': 'last'}).text.strip()
+                        details[key] = value
+        return details
+
+    def extract_property_details(html_code: str):
+        soup = BeautifulSoup(html_code, 'html.parser')
+
+        property_details = {
+            "address": extract_address(soup),
+            "description": extract_description(soup),
+            "images": extract_images(soup),
+            "details": extract_property_details_div(soup),
+            "amenities": extract_amenities(soup)
+        }
+
+        return property_details
+
+    for scrapy_job in scrapy_jobs:
+        property_details = extract_property_details(scrapy_job.html_code)
+        print(json.dumps(property_details, indent=4))
+
+
+@shared_task()
 def lamudi_multi_page_scraper_task():
     property_details = []
 
@@ -116,8 +219,6 @@ def lamudi_multi_page_scraper_task():
                     'subcategories': json.loads(get_attribute(element, 'data-subcategories')),
                     'year_built': int(get_attribute(element, 'data-year_built')) if get_attribute(element, 'data-year_built') != 'n/a' else None,
                     'building_name': get_attribute(element, 'data-condominiumname') if get_attribute(element, 'data-condominiumname') != 'n/a' else None,
-                    # For warehouse
-                    'subdivision_name': get_attribute(element, 'data-subdivisionname') if get_attribute(element, 'data-subdivisionname') != 'n/a' else None,
                     'car_spaces': int(get_attribute(element, 'data-car_spaces')) if get_attribute(element, 'data-car_spaces').isdigit() else 0,
                     'bedrooms': int(get_attribute(element, 'data-bedrooms')) if get_attribute(element, 'data-bedrooms').isdigit() else 0,
                     'bathrooms': int(get_attribute(element, 'data-bathrooms')) if get_attribute(element, 'data-bathrooms').isdigit() else 0,
@@ -128,7 +229,8 @@ def lamudi_multi_page_scraper_task():
                     'furnished': get_attribute(element, 'data-furnished'),
                     'classification': get_attribute(element, 'data-classification'),
                     'block': get_attribute(element, 'data-block'),
-                    'subdivision_name': get_attribute(element, 'data-subdivisionname'),
+                    # For warehouse
+                    'subdivision_name': get_attribute(element, 'data-subdivisionname') if get_attribute(element, 'data-subdivisionname') != 'n/a' else None,
                     'sku': get_attribute(element, 'data-sku'),
                     'geo_point': [
                         float(coord.strip('[]')) for coord in get_attribute(element, 'data-geo-point').split(',') if coord.strip('[]') != 'null'
