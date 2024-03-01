@@ -175,7 +175,7 @@ def lamudi_single_page_scraper_task():
         if address != "n/a":
             city = CityModel.objects.filter(
                 name__icontains=address
-            )
+            ).first()
 
         property_details = {
             "address": address,
