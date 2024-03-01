@@ -104,38 +104,42 @@ def lamudi_single_page_scraper_task():
 
     def extract_images(soup):
         images = []
-        divs = soup.find_all(
-            'div',
-            {
-                'class': 'Banner-Images'
-            }
-        )
+        if soup:  # Check if soup object is not None
+            divs = soup.find_all(
+                'div',
+                {
+                    'class': 'Banner-Images'
+                }
+            )
 
-        for div_tag in divs:
-            img_tag = div_tag.find('img')
-            if img_tag:
-                data_src = img_tag.get('data-src')
-                if data_src and data_src.endswith('.webp'):
-                    images.append(data_src)
+            for div_tag in divs:
+                img_tag = div_tag.find('img')
+                if img_tag:
+                    data_src = img_tag.get('data-src')
+                    if data_src and data_src.endswith('.webp'):
+                        images.append(data_src)
+        else:
+            return ['n/a']  # Return a list with 'n/a' if soup is None
 
         return images
 
     def extract_amenities(soup):
+        amenities_list = []
         amenities_div = soup.find(
             'div',
             {
                 'class': 'listing-amenities-list'
             }
         )
-        amenities_span = amenities_div.find_all(
-            'span',
-            {
-                'class': 'listing-amenities-name'
-            }
-        )
-        amenities_list = [span.text.strip() for span in amenities_span]
-
-        return amenities_list if amenities_div else []
+        if amenities_div:
+            amenities_span = amenities_div.find_all(
+                'span',
+                {
+                    'class': 'listing-amenities-name'
+                }
+            )
+            amenities_list = [span.text.strip() for span in amenities_span]
+        return amenities_list
 
     def extract_property_details_div(soup):
         details_div = soup.find(
