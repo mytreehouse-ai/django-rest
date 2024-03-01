@@ -169,6 +169,7 @@ def lamudi_single_page_scraper_task():
     def extract_property_details(html_code: str):
         soup = BeautifulSoup(html_code, 'html.parser')
 
+        address = extract_address(soup)
         address = address.replace("\ufffd", "")  # Remove unknown characters
         address = address.replace("\u00f1", "ñ")  # Replace ñ
         address = address.replace("\u00d1", "Ñ")  # Replace Ñ
