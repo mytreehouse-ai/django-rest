@@ -11,7 +11,7 @@ class Command(BaseCommand):
             reader = csv.reader(csvfile)
             for row in reader:
                 _, created = CityModel.objects.get_or_create(
-                    name=row[2].title()
+                    name=row[2].capitalize()
                 )
                 if created:
                     self.stdout.write(self.style.SUCCESS(
