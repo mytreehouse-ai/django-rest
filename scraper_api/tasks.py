@@ -1,3 +1,4 @@
+import re
 import json
 from time import sleep
 from logging import getLogger
@@ -89,9 +90,13 @@ def lamudi_single_page_scraper_task():
             address_text = address.text.strip()
             try:
                 clean_address = address_text.encode('latin1').decode('utf-8')
+                # Using regex to replace \ufffd with ñ
+                clean_address = re.sub(r'\ufffd', 'ñ', clean_address)
             except UnicodeDecodeError:
                 clean_address = address_text.encode(
                     'latin1', 'replace').decode('utf-8', 'replace')
+                # Applying the same replacement in case of UnicodeDecodeError
+                clean_address = re.sub(r'\ufffd', 'ñ', clean_address)
             return clean_address
         else:
             return 'n/a'
