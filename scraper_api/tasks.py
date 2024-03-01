@@ -1,4 +1,3 @@
-import re
 import json
 from time import sleep
 from logging import getLogger
