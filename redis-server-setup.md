@@ -75,6 +75,46 @@ To verify that the password has been set correctly, try accessing the Redis serv
 
    If the password is correct, you should see a response of `PONG`, indicating that the connection was successful.
 
+
+3. **Configure Redis for Remote Access:**
+
+   After setting the password, you'll need to configure Redis to allow remote connections. This involves editing the Redis configuration file.
+
+   Open the Redis configuration file in your preferred text editor:
+
+   ```bash
+   sudo nano /etc/redis/redis.conf
+   ```
+
+   Find the following lines and make the corresponding changes:
+
+   - Locate the `requirepass` directive and set your password, replacing `<password_here>` with the password you chose earlier:
+
+     ```
+     requirepass "<password_here>"
+     ```
+
+   - To allow Redis to accept connections from any IP address, find the `bind` directive and change it to:
+
+     ```
+     bind 0.0.0.0
+     ```
+
+   - Disable protected mode by finding the `protected-mode` directive and setting it to no:
+
+     ```
+     protected-mode no
+     ```
+
+   After making these changes, save and close the file. Then, restart the Redis service to apply the changes:
+
+   ```bash
+   sudo systemctl restart redis-server
+   ```
+
+   Your Redis server is now configured to accept remote connections with the specified password.
+
+
 ## Conclusion
 
 You have now successfully installed and configured a Redis server on your Linux system with authentication. Ensure to keep your password secure and regularly update it to maintain the security of your Redis server.
