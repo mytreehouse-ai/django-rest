@@ -178,11 +178,11 @@ def lamudi_single_page_scraper_task():
         if address != "n/a":
             city = CityModel.objects.filter(
                 name__icontains=address
-            ).first()
+            )
 
         property_details = {
             "address": address,
-            "city": city,
+            "city": city.first().name if city.exists() else "Unknown",
             "description": extract_description(soup),
             "images": extract_images(soup),
             "details": extract_property_details_div(soup),
