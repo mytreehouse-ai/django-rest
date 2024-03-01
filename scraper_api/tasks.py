@@ -88,13 +88,7 @@ def lamudi_single_page_scraper_task():
 
         if address_tag:
             address_text = address_tag.get_text(strip=True)
-            clean_address = re.sub(
-                r'[\ufffd\u00f1\u00d1]',
-                'ñ',
-                address_text,
-                flags=re.IGNORECASE
-            )
-            return clean_address
+            return address_text
         else:
             return 'n/a'
 
@@ -175,7 +169,12 @@ def lamudi_single_page_scraper_task():
     def extract_property_details(html_code: str):
         soup = BeautifulSoup(html_code, 'html.parser')
 
-        address = extract_address(soup)
+        address = re.sub(
+            r'[\ufffd\u00f1\u00d1]',
+            'ñ',
+            extract_address(soup),
+            flags=re.IGNORECASE
+        )
 
         if address != "n/a":
             city = CityModel.objects.filter(
