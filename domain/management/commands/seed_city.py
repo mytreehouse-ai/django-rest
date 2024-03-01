@@ -7,7 +7,7 @@ class Command(BaseCommand):
     help = 'Seed cities from CSV file'
 
     def handle(self, *args, **options):
-        with open('../../csv/refcitymun.csv', mode='r', encoding='utf-8') as csvfile:
+        with open('domain/csv/refcitymun.csv', mode='r', encoding='utf-8') as csvfile:
             reader = csv.reader(csvfile)
             for row in reader:
                 _, created = CityModel.objects.get_or_create(
