@@ -67,7 +67,7 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
         json_fields = serializer.validated_data.get("json_fields", None)
 
         if json_fields:
-            print(json_fields.get("attributes", None))
+            print(json.dumps(json_fields.get("attributes", None), indent=4))
 
         return Response(
             {
