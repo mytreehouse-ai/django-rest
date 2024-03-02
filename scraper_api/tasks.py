@@ -156,296 +156,316 @@ def lamudi_multi_page_scraper_task():
 
     for property in property_details:
         if property.get("category") == "commercial":
-            # Ensure price does not cause numeric field overflow
-            price = min(property.get("price", 0), 999999999999.99)
-            new_listing, created = PropertyListingModel.objects.update_or_create(
-                listing_title=property.get("listing_title"),
-                defaults={
-                    'listing_url': property.get("listing_url"),
-                    'listing_type': for_sale if property.get("listing_type") == "for-sale" else for_rent,
-                    'property_type': warehouse,
-                    'price': price
-                }
+            listing_url = PropertyListingModel.objects.get(
+                listing_url=listing_url
             )
-
-            if new_listing or created:
-                generated_uuid = str(uuid.uuid4())
-                ScrapyJobModel.objects.get_or_create(
-                    domain=property.get("listing_url"),
+            if listing_url is None:
+                # Ensure price does not cause numeric field overflow
+                price = min(property.get("price", 0), 999999999999.99)
+                new_listing, created = PropertyListingModel.objects.update_or_create(
+                    listing_title=property.get("listing_title"),
                     defaults={
-                        "job_id": generated_uuid,
-                        "status": "finished",
-                        "attempts": 0,
-                        "single_page": True,
-                        "status_url": f"https://api.mytree.house/status/{generated_uuid}",
-                        "supposed_to_run_at": timezone.now()
+                        'listing_url': property.get("listing_url"),
+                        'listing_type': for_sale if property.get("listing_type") == "for-sale" else for_rent,
+                        'property_type': warehouse,
+                        'price': price
                     }
                 )
 
-            # Extract geo_point safely
-            geo_point = property.get("geo_point", [None, None])
-            longitude = geo_point[0] if len(geo_point) > 0 else 0.0
-            latitude = geo_point[1] if len(geo_point) > 1 else 0.0
+                if new_listing or created:
+                    generated_uuid = str(uuid.uuid4())
+                    ScrapyJobModel.objects.get_or_create(
+                        domain=property.get("listing_url"),
+                        defaults={
+                            "job_id": generated_uuid,
+                            "status": "finished",
+                            "attempts": 0,
+                            "single_page": True,
+                            "status_url": f"https://api.mytree.house/status/{generated_uuid}",
+                            "supposed_to_run_at": timezone.now()
+                        }
+                    )
 
-            if not created and new_listing.price != price:
-                # If the listing already exists and the price has changed, save the historical price
-                PriceHistoryModel.objects.create(
-                    property_listing=new_listing,
-                    price=new_listing.price,
-                    date_recorded=timezone.now()
-                )
-                # Update the listing with the new price
-                new_listing.price = price
-                new_listing.save(update_fields=["price"])
+                # Extract geo_point safely
+                geo_point = property.get("geo_point", [None, None])
+                longitude = geo_point[0] if len(geo_point) > 0 else 0.0
+                latitude = geo_point[1] if len(geo_point) > 1 else 0.0
 
-            if created:
-                new_warehouse = PropertyModel.objects.create(
-                    subdivision_name=property.get("subdivision_name"),
-                    lot_size=property.get("land_size"),
-                    building_size=property.get("building_size"),
-                    longitude=longitude,
-                    latitude=latitude
-                )
+                if not created and new_listing.price != price:
+                    # If the listing already exists and the price has changed, save the historical price
+                    PriceHistoryModel.objects.create(
+                        property_listing=new_listing,
+                        price=new_listing.price,
+                        date_recorded=timezone.now()
+                    )
+                    # Update the listing with the new price
+                    new_listing.price = price
+                    new_listing.save(update_fields=["price"])
 
-                new_listing.estate = new_warehouse
-                new_listing.save(update_fields=["estate"])
+                if created:
+                    new_warehouse = PropertyModel.objects.create(
+                        subdivision_name=property.get("subdivision_name"),
+                        lot_size=property.get("land_size"),
+                        building_size=property.get("building_size"),
+                        longitude=longitude,
+                        latitude=latitude
+                    )
 
-                print(f"New listing added: {new_listing.listing_url}")
+                    new_listing.estate = new_warehouse
+                    new_listing.save(update_fields=["estate"])
+
+                    print(f"New listing added: {new_listing.listing_url}")
 
         if property.get("category") == "condominium":
-            # Ensure price does not cause numeric field overflow
-            price = min(property.get("price", 0), 999999999999.99)
-            new_listing, created = PropertyListingModel.objects.update_or_create(
-                listing_title=property.get("listing_title"),
-                defaults={
-                    'listing_url': property.get("listing_url"),
-                    'listing_type': for_sale if property.get("listing_type") == "for-sale" else for_rent,
-                    'property_type': condominium,
-                    'price': price
-                }
+            listing_url = PropertyListingModel.objects.get(
+                listing_url=listing_url
             )
-
-            if new_listing or created:
-                generated_uuid = str(uuid.uuid4())
-                ScrapyJobModel.objects.get_or_create(
-                    domain=property.get("listing_url"),
+            if listing_url is None:
+                # Ensure price does not cause numeric field overflow
+                price = min(property.get("price", 0), 999999999999.99)
+                new_listing, created = PropertyListingModel.objects.update_or_create(
+                    listing_title=property.get("listing_title"),
                     defaults={
-                        "job_id": generated_uuid,
-                        "status": "finished",
-                        "attempts": 0,
-                        "single_page": True,
-                        "status_url": f"https://api.mytree.house/status/{generated_uuid}",
-                        "supposed_to_run_at": timezone.now()
+                        'listing_url': property.get("listing_url"),
+                        'listing_type': for_sale if property.get("listing_type") == "for-sale" else for_rent,
+                        'property_type': condominium,
+                        'price': price
                     }
                 )
 
-            # Extract geo_point safely
-            geo_point = property.get("geo_point", [None, None])
-            longitude = geo_point[0] if len(geo_point) > 0 else 0.0
-            latitude = geo_point[1] if len(geo_point) > 1 else 0.0
+                if new_listing or created:
+                    generated_uuid = str(uuid.uuid4())
+                    ScrapyJobModel.objects.get_or_create(
+                        domain=property.get("listing_url"),
+                        defaults={
+                            "job_id": generated_uuid,
+                            "status": "finished",
+                            "attempts": 0,
+                            "single_page": True,
+                            "status_url": f"https://api.mytree.house/status/{generated_uuid}",
+                            "supposed_to_run_at": timezone.now()
+                        }
+                    )
 
-            if not created and new_listing.price != price:
-                # If the listing already exists and the price has changed, save the historical price
-                PriceHistoryModel.objects.create(
-                    property_listing=new_listing,
-                    price=new_listing.price,
-                    date_recorded=timezone.now()
-                )
-                # Update the listing with the new price
-                new_listing.price = price
-                new_listing.save(update_fields=["price"])
+                # Extract geo_point safely
+                geo_point = property.get("geo_point", [None, None])
+                longitude = geo_point[0] if len(geo_point) > 0 else 0.0
+                latitude = geo_point[1] if len(geo_point) > 1 else 0.0
 
-            if created:
-                new_condominium = PropertyModel.objects.create(
-                    building_name=property.get("building_name"),
-                    lot_size=property.get("land_size"),
-                    floor_size=property.get("building_size"),
-                    num_bedrooms=property.get("bedrooms"),
-                    num_bathrooms=property.get("bathrooms"),
-                    num_carspaces=property.get("car_spaces"),
-                    longitude=longitude,
-                    latitude=latitude
-                )
+                if not created and new_listing.price != price:
+                    # If the listing already exists and the price has changed, save the historical price
+                    PriceHistoryModel.objects.create(
+                        property_listing=new_listing,
+                        price=new_listing.price,
+                        date_recorded=timezone.now()
+                    )
+                    # Update the listing with the new price
+                    new_listing.price = price
+                    new_listing.save(update_fields=["price"])
 
-                new_listing.estate = new_condominium
-                new_listing.save(update_fields=["estate"])
+                if created:
+                    new_condominium = PropertyModel.objects.create(
+                        building_name=property.get("building_name"),
+                        lot_size=property.get("land_size"),
+                        floor_size=property.get("building_size"),
+                        num_bedrooms=property.get("bedrooms"),
+                        num_bathrooms=property.get("bathrooms"),
+                        num_carspaces=property.get("car_spaces"),
+                        longitude=longitude,
+                        latitude=latitude
+                    )
 
-                print(f"New listing added: {new_listing.listing_url}")
+                    new_listing.estate = new_condominium
+                    new_listing.save(update_fields=["estate"])
+
+                    print(f"New listing added: {new_listing.listing_url}")
 
         if property.get("category") == "house":
-            # Ensure price does not cause numeric field overflow
-            price = min(property.get("price", 0), 999999999999.99)
-            new_listing, created = PropertyListingModel.objects.update_or_create(
-                listing_title=property.get("listing_title"),
-                defaults={
-                    'listing_url': property.get("listing_url"),
-                    'listing_type': for_sale if property.get("listing_type") == "for-sale" else for_rent,
-                    'property_type': house,
-                    'price': price
-                }
+            listing_url = PropertyListingModel.objects.get(
+                listing_url=listing_url
             )
-
-            if new_listing or created:
-                generated_uuid = str(uuid.uuid4())
-                ScrapyJobModel.objects.get_or_create(
-                    domain=property.get("listing_url"),
+            if listing_url is None:
+                # Ensure price does not cause numeric field overflow
+                price = min(property.get("price", 0), 999999999999.99)
+                new_listing, created = PropertyListingModel.objects.update_or_create(
+                    listing_title=property.get("listing_title"),
                     defaults={
-                        "job_id": generated_uuid,
-                        "status": "finished",
-                        "attempts": 0,
-                        "single_page": True,
-                        "status_url": f"https://api.mytree.house/status/{generated_uuid}",
-                        "supposed_to_run_at": timezone.now()
+                        'listing_url': property.get("listing_url"),
+                        'listing_type': for_sale if property.get("listing_type") == "for-sale" else for_rent,
+                        'property_type': house,
+                        'price': price
                     }
                 )
 
-            # Extract geo_point safely
-            geo_point = property.get("geo_point", [None, None])
-            longitude = geo_point[0] if len(geo_point) > 0 else 0.0
-            latitude = geo_point[1] if len(geo_point) > 1 else 0.0
+                if new_listing or created:
+                    generated_uuid = str(uuid.uuid4())
+                    ScrapyJobModel.objects.get_or_create(
+                        domain=property.get("listing_url"),
+                        defaults={
+                            "job_id": generated_uuid,
+                            "status": "finished",
+                            "attempts": 0,
+                            "single_page": True,
+                            "status_url": f"https://api.mytree.house/status/{generated_uuid}",
+                            "supposed_to_run_at": timezone.now()
+                        }
+                    )
 
-            if not created and new_listing.price != price:
-                # If the listing already exists and the price has changed, save the historical price
-                PriceHistoryModel.objects.create(
-                    property_listing=new_listing,
-                    price=new_listing.price,
-                    date_recorded=timezone.now()
-                )
-                # Update the listing with the new price
-                new_listing.price = price
-                new_listing.save(update_fields=["price"])
+                # Extract geo_point safely
+                geo_point = property.get("geo_point", [None, None])
+                longitude = geo_point[0] if len(geo_point) > 0 else 0.0
+                latitude = geo_point[1] if len(geo_point) > 1 else 0.0
 
-            if created:
-                new_house = PropertyModel.objects.create(
-                    lot_size=property.get("land_size"),
-                    floor_size=property.get("building_size"),
-                    num_bedrooms=property.get("bedrooms"),
-                    num_bathrooms=property.get("bathrooms"),
-                    num_carspaces=property.get("car_spaces"),
-                    longitude=longitude,
-                    latitude=latitude
-                )
+                if not created and new_listing.price != price:
+                    # If the listing already exists and the price has changed, save the historical price
+                    PriceHistoryModel.objects.create(
+                        property_listing=new_listing,
+                        price=new_listing.price,
+                        date_recorded=timezone.now()
+                    )
+                    # Update the listing with the new price
+                    new_listing.price = price
+                    new_listing.save(update_fields=["price"])
 
-                new_listing.estate = new_house
-                new_listing.save(update_fields=["estate"])
+                if created:
+                    new_house = PropertyModel.objects.create(
+                        lot_size=property.get("land_size"),
+                        floor_size=property.get("building_size"),
+                        num_bedrooms=property.get("bedrooms"),
+                        num_bathrooms=property.get("bathrooms"),
+                        num_carspaces=property.get("car_spaces"),
+                        longitude=longitude,
+                        latitude=latitude
+                    )
 
-                print(f"New listing added: {new_listing.listing_url}")
+                    new_listing.estate = new_house
+                    new_listing.save(update_fields=["estate"])
+
+                    print(f"New listing added: {new_listing.listing_url}")
 
         if property.get("category") == "apartment":
-            # Ensure price does not cause numeric field overflow
-            price = min(property.get("price", 0), 999999999999.99)
-            new_listing, created = PropertyListingModel.objects.update_or_create(
-                listing_title=property.get("listing_title"),
-                defaults={
-                    'listing_url': property.get("listing_url"),
-                    'listing_type': for_sale if property.get("listing_type") == "for-sale" else for_rent,
-                    'property_type': apartment,
-                    'price': price
-                }
+            listing_url = PropertyListingModel.objects.get(
+                listing_url=listing_url
             )
-
-            if new_listing or created:
-                generated_uuid = str(uuid.uuid4())
-                ScrapyJobModel.objects.get_or_create(
-                    domain=property.get("listing_url"),
+            if listing_url is None:
+                # Ensure price does not cause numeric field overflow
+                price = min(property.get("price", 0), 999999999999.99)
+                new_listing, created = PropertyListingModel.objects.update_or_create(
+                    listing_title=property.get("listing_title"),
                     defaults={
-                        "job_id": generated_uuid,
-                        "status": "finished",
-                        "attempts": 0,
-                        "single_page": True,
-                        "status_url": f"https://api.mytree.house/status/{generated_uuid}",
-                        "supposed_to_run_at": timezone.now()
+                        'listing_url': property.get("listing_url"),
+                        'listing_type': for_sale if property.get("listing_type") == "for-sale" else for_rent,
+                        'property_type': apartment,
+                        'price': price
                     }
                 )
 
-            # Extract geo_point safely
-            geo_point = property.get("geo_point", [None, None])
-            longitude = geo_point[0] if len(geo_point) > 0 else 0.0
-            latitude = geo_point[1] if len(geo_point) > 1 else 0.0
+                if new_listing or created:
+                    generated_uuid = str(uuid.uuid4())
+                    ScrapyJobModel.objects.get_or_create(
+                        domain=property.get("listing_url"),
+                        defaults={
+                            "job_id": generated_uuid,
+                            "status": "finished",
+                            "attempts": 0,
+                            "single_page": True,
+                            "status_url": f"https://api.mytree.house/status/{generated_uuid}",
+                            "supposed_to_run_at": timezone.now()
+                        }
+                    )
 
-            if not created and new_listing.price != price:
-                # If the listing already exists and the price has changed, save the historical price
-                PriceHistoryModel.objects.create(
-                    property_listing=new_listing,
-                    price=new_listing.price,
-                    date_recorded=timezone.now()
-                )
-                # Update the listing with the new price
-                new_listing.price = price
-                new_listing.save(update_fields=["price"])
+                # Extract geo_point safely
+                geo_point = property.get("geo_point", [None, None])
+                longitude = geo_point[0] if len(geo_point) > 0 else 0.0
+                latitude = geo_point[1] if len(geo_point) > 1 else 0.0
 
-            if created:
-                new_apartment = PropertyModel.objects.create(
-                    lot_size=property.get("land_size"),
-                    floor_size=property.get("building_size"),
-                    num_bedrooms=property.get("bedrooms"),
-                    num_bathrooms=property.get("bathrooms"),
-                    num_carspaces=property.get("car_spaces"),
-                    longitude=longitude,
-                    latitude=latitude
-                )
+                if not created and new_listing.price != price:
+                    # If the listing already exists and the price has changed, save the historical price
+                    PriceHistoryModel.objects.create(
+                        property_listing=new_listing,
+                        price=new_listing.price,
+                        date_recorded=timezone.now()
+                    )
+                    # Update the listing with the new price
+                    new_listing.price = price
+                    new_listing.save(update_fields=["price"])
 
-                new_listing.estate = new_apartment
-                new_listing.save(update_fields=["estate"])
+                if created:
+                    new_apartment = PropertyModel.objects.create(
+                        lot_size=property.get("land_size"),
+                        floor_size=property.get("building_size"),
+                        num_bedrooms=property.get("bedrooms"),
+                        num_bathrooms=property.get("bathrooms"),
+                        num_carspaces=property.get("car_spaces"),
+                        longitude=longitude,
+                        latitude=latitude
+                    )
 
-                print(f"New listing added: {new_listing.listing_url}")
+                    new_listing.estate = new_apartment
+                    new_listing.save(update_fields=["estate"])
+
+                    print(f"New listing added: {new_listing.listing_url}")
 
         if property.get("category") == "land":
-            # Ensure price does not cause numeric field overflow
-            price = min(property.get("price", 0), 999999999999.99)
-            new_listing, created = PropertyListingModel.objects.update_or_create(
-                listing_title=property.get("listing_title"),
-                defaults={
-                    'listing_url': property.get("listing_url"),
-                    'listing_type': for_sale if property.get("listing_type") == "for-sale" else for_rent,
-                    'property_type': land,
-                    'price': price
-                }
+            listing_url = PropertyListingModel.objects.get(
+                listing_url=listing_url
             )
-
-            if new_listing or created:
-                generated_uuid = str(uuid.uuid4())
-                ScrapyJobModel.objects.get_or_create(
-                    domain=property.get("listing_url"),
+            if listing_url is None:
+                # Ensure price does not cause numeric field overflow
+                price = min(property.get("price", 0), 999999999999.99)
+                new_listing, created = PropertyListingModel.objects.update_or_create(
+                    listing_title=property.get("listing_title"),
                     defaults={
-                        "job_id": generated_uuid,
-                        "status": "finished",
-                        "attempts": 0,
-                        "single_page": True,
-                        "status_url": f"https://api.mytree.house/status/{generated_uuid}",
-                        "supposed_to_run_at": timezone.now()
+                        'listing_url': property.get("listing_url"),
+                        'listing_type': for_sale if property.get("listing_type") == "for-sale" else for_rent,
+                        'property_type': land,
+                        'price': price
                     }
                 )
 
-            # Extract geo_point safely
-            geo_point = property.get("geo_point", [None, None])
-            longitude = geo_point[0] if len(geo_point) > 0 else 0.0
-            latitude = geo_point[1] if len(geo_point) > 1 else 0.0
+                if new_listing or created:
+                    generated_uuid = str(uuid.uuid4())
+                    ScrapyJobModel.objects.get_or_create(
+                        domain=property.get("listing_url"),
+                        defaults={
+                            "job_id": generated_uuid,
+                            "status": "finished",
+                            "attempts": 0,
+                            "single_page": True,
+                            "status_url": f"https://api.mytree.house/status/{generated_uuid}",
+                            "supposed_to_run_at": timezone.now()
+                        }
+                    )
 
-            if not created and new_listing.price != price:
-                # If the listing already exists and the price has changed, save the historical price
-                PriceHistoryModel.objects.create(
-                    property_listing=new_listing,
-                    price=new_listing.price,
-                    date_recorded=timezone.now()
-                )
-                # Update the listing with the new price
-                new_listing.price = price
-                new_listing.save(update_fields=["price"])
+                # Extract geo_point safely
+                geo_point = property.get("geo_point", [None, None])
+                longitude = geo_point[0] if len(geo_point) > 0 else 0.0
+                latitude = geo_point[1] if len(geo_point) > 1 else 0.0
 
-            if created:
-                new_land = PropertyModel.objects.create(
-                    subdivision_name=property.get("subdivision_name"),
-                    lot_size=property.get("land_size"),
-                    building_size=property.get("building_size"),
-                    longitude=longitude,
-                    latitude=latitude
-                )
+                if not created and new_listing.price != price:
+                    # If the listing already exists and the price has changed, save the historical price
+                    PriceHistoryModel.objects.create(
+                        property_listing=new_listing,
+                        price=new_listing.price,
+                        date_recorded=timezone.now()
+                    )
+                    # Update the listing with the new price
+                    new_listing.price = price
+                    new_listing.save(update_fields=["price"])
 
-                new_listing.estate = new_land
-                new_listing.save(update_fields=["estate"])
+                if created:
+                    new_land = PropertyModel.objects.create(
+                        subdivision_name=property.get("subdivision_name"),
+                        lot_size=property.get("land_size"),
+                        building_size=property.get("building_size"),
+                        longitude=longitude,
+                        latitude=latitude
+                    )
 
-                print(f"New listing added: {new_listing.listing_url}")
+                    new_listing.estate = new_land
+                    new_listing.save(update_fields=["estate"])
+
+                    print(f"New listing added: {new_listing.listing_url}")
 
         sleep(0.5)
 
