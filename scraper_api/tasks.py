@@ -182,7 +182,13 @@ def lamudi_multi_page_scraper_task():
                     )
                     # Update the listing with the new price
                     new_listing.price = price
-                    new_listing.save(update_fields=["price"])
+                    new_listing.price_formatted = f"₱{price:,.2f}"
+                    new_listing.save(
+                        update_fields=[
+                            "price",
+                            "price_formatted"
+                        ]
+                    )
 
                 if created:
                     new_warehouse = PropertyModel.objects.create(
@@ -241,7 +247,13 @@ def lamudi_multi_page_scraper_task():
                     )
                     # Update the listing with the new price
                     new_listing.price = price
-                    new_listing.save(update_fields=["price"])
+                    new_listing.price_formatted = f"₱{price:,.2f}"
+                    new_listing.save(
+                        update_fields=[
+                            "price",
+                            "price_formatted"
+                        ]
+                    )
 
                 if created:
                     new_condominium = PropertyModel.objects.create(
@@ -303,7 +315,13 @@ def lamudi_multi_page_scraper_task():
                     )
                     # Update the listing with the new price
                     new_listing.price = price
-                    new_listing.save(update_fields=["price"])
+                    new_listing.price_formatted = f"₱{price:,.2f}"
+                    new_listing.save(
+                        update_fields=[
+                            "price",
+                            "price_formatted"
+                        ]
+                    )
 
                 if created:
                     new_house = PropertyModel.objects.create(
@@ -364,7 +382,13 @@ def lamudi_multi_page_scraper_task():
                     )
                     # Update the listing with the new price
                     new_listing.price = price
-                    new_listing.save(update_fields=["price"])
+                    new_listing.price_formatted = f"₱{price:,.2f}"
+                    new_listing.save(
+                        update_fields=[
+                            "price",
+                            "price_formatted"
+                        ]
+                    )
 
                 if created:
                     new_apartment = PropertyModel.objects.create(
@@ -425,7 +449,13 @@ def lamudi_multi_page_scraper_task():
                     )
                     # Update the listing with the new price
                     new_listing.price = price
-                    new_listing.save(update_fields=["price"])
+                    new_listing.price_formatted = f"₱{price:,.2f}"
+                    new_listing.save(
+                        update_fields=[
+                            "price",
+                            "price_formatted"
+                        ]
+                    )
 
                 if created:
                     new_land = PropertyModel.objects.create(
