@@ -1,0 +1,43 @@
+name: Trigger auto deployment for celery-worker
+
+# When this action will be executed
+on:
+  # Automatically trigger it when detected changes in repo
+  push:
+    branches: 
+      [ main ]
+    paths:
+    - '**'
+    - '.github/workflows/celery-worker-AutoDeployTrigger-a60c63e3-14e4-44c0-a687-5fced2d6199b.yml'
+
+  # Allow manual trigger 
+  workflow_dispatch:
+      
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout to the branch
+        uses: actions/checkout@v2
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.CELERYWORKER_AZURE_CREDENTIALS }}
+
+      - name: Build and push container image to registry
+        uses: azure/container-apps-deploy-action@v2
+        with:
+          appSourcePath: ${{ github.workspace }} 
+          registryUrl: mytreehouse.azurecr.io
+          registryUsername: ${{ secrets.CELERYWORKER_REGISTRY_USERNAME }}
+          registryPassword: ${{ secrets.CELERYWORKER_REGISTRY_PASSWORD }}
+          containerAppName: celery-worker
+          resourceGroup: CONTAINER_APPS
+          imageToBuild: mytreehouse.azurecr.io/celery-worker:${{ github.sha }}
+          
+            
+
+     
+
