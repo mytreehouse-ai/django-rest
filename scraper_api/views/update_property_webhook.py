@@ -1,3 +1,4 @@
+import json
 from logging import getLogger
 from rest_framework.generics import UpdateAPIView
 from rest_framework_api_key.permissions import HasAPIKey
@@ -63,11 +64,10 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        attributes = serializer.validated_data.get("attributes", None)
+        json_fields = serializer.validated_data.get("json_fields", None)
 
-        if attributes:
-            print(attributes.get("offer_type", None))
-            print(attributes.get("location", None))
+        if json_fields:
+            print(json_fields.get("attributes", None))
 
         return Response(
             {
