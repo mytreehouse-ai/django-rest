@@ -69,7 +69,6 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
         listing_url = serializer.validated_data.get("listing_url")
         json_fields = serializer.validated_data.get("json_fields")
 
-        print(f"title: {json_fields.get('title', None)}")
         # print(json.dumps(json_fields.get("attributes", {}), indent=4))
         # print(json.dumps(json_fields.get("description", {}), indent=4))
         # print(json.dumps(json_fields.get("location", {}), indent=4))
@@ -77,6 +76,7 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
         attributes = json_fields.get("attributes", None)
 
         if attributes:
+            title = json_fields.get('title', None)
             price_formatted = attributes.get("price_formatted", None)
             offer_type = attributes.get("offer_type", None)
 
@@ -89,26 +89,23 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
                     description="For Rent"
                 )
 
-            print(price_formatted)
-            print(listing_type)
-
             if attributes.get("listing_city_id", None) and attributes.get("listing_city", None):
                 city, created = CityModel.objects.get_or_create(
                     id=int(attributes.get("listing_city_id")),
                     name=attributes.get("listing_city")
                 )
 
-                print(city)
-
             try:
                 property_listing = PropertyListingModel.objects.get(
                     listing_url=listing_url
                 )
 
+                property_listing.listing_title = title
                 property_listing.listing_type = listing_type
                 property_listing.price_formatted = price_formatted
                 property_listing.save(
                     update_fields=[
+                        "title",
                         "listing_type",
                         "price_formatted"
                     ]
@@ -121,7 +118,9 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
                     ]
                 )
 
-                print(f"Property listing found: {property_listing}")
+                print(
+                    f"Property listing found: {property_listing.listing_url}"
+                )
             except PropertyListingModel.DoesNotExist:
                 print(f"No property listing found for URL: {listing_url}")
 
