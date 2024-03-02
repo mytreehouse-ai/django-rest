@@ -68,7 +68,10 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
         json_fields = serializer.validated_data.get("json_fields")
 
         print(listing_url)
+        print(f"title: {json_fields.get('title', None)}")
         print(json.dumps(json_fields.get("attributes", {}), indent=4))
+        print(json.dumps(json_fields.get("description", {}), indent=4))
+        print(json.dumps(json_fields.get("location", {}), indent=4))
 
         return Response(
             {
