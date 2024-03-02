@@ -65,7 +65,7 @@ class ResponseCatcherWebhookAPIView(CreateAPIView):
         response = serializer.validated_data.get("response", None)
 
         ScrapyJobService.update_job(
-            job_id=job_id,
+            domain=url,
             attempts=attempts,
             status=status,
             html_code=response.get("body", None) if response else None,
