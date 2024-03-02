@@ -158,7 +158,7 @@ def lamudi_multi_page_scraper_task():
         if property.get("category") == "commercial":
             # Ensure price does not cause numeric field overflow
             price = min(property.get("price", 0), 999999999999.99)
-            new_listing, created = PropertyListingModel.objects.get_or_create(
+            new_listing, created = PropertyListingModel.objects.update_or_create(
                 listing_title=property.get("listing_title"),
                 defaults={
                     'listing_url': property.get("listing_url"),
@@ -216,7 +216,7 @@ def lamudi_multi_page_scraper_task():
         if property.get("category") == "condominium":
             # Ensure price does not cause numeric field overflow
             price = min(property.get("price", 0), 999999999999.99)
-            new_listing, created = PropertyListingModel.objects.get_or_create(
+            new_listing, created = PropertyListingModel.objects.update_or_create(
                 listing_title=property.get("listing_title"),
                 defaults={
                     'listing_url': property.get("listing_url"),
@@ -277,7 +277,7 @@ def lamudi_multi_page_scraper_task():
         if property.get("category") == "house":
             # Ensure price does not cause numeric field overflow
             price = min(property.get("price", 0), 999999999999.99)
-            new_listing, created = PropertyListingModel.objects.get_or_create(
+            new_listing, created = PropertyListingModel.objects.update_or_create(
                 listing_title=property.get("listing_title"),
                 defaults={
                     'listing_url': property.get("listing_url"),
@@ -337,7 +337,7 @@ def lamudi_multi_page_scraper_task():
         if property.get("category") == "apartment":
             # Ensure price does not cause numeric field overflow
             price = min(property.get("price", 0), 999999999999.99)
-            new_listing, created = PropertyListingModel.objects.get_or_create(
+            new_listing, created = PropertyListingModel.objects.update_or_create(
                 listing_title=property.get("listing_title"),
                 defaults={
                     'listing_url': property.get("listing_url"),
@@ -397,7 +397,7 @@ def lamudi_multi_page_scraper_task():
         if property.get("category") == "land":
             # Ensure price does not cause numeric field overflow
             price = min(property.get("price", 0), 999999999999.99)
-            new_listing, created = PropertyListingModel.objects.get_or_create(
+            new_listing, created = PropertyListingModel.objects.update_or_create(
                 listing_title=property.get("listing_title"),
                 defaults={
                     'listing_url': property.get("listing_url"),
