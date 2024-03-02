@@ -147,6 +147,7 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
                 property_listing.estate.description = description.get(
                     "text", None
                 )
+                property_listing.estate.metadata = json_fields
                 property_listing.estate.save(
                     update_fields=[
                         "address",
@@ -155,7 +156,8 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
                         "outdoor_features",
                         "other_features",
                         "image_url",
-                        "description"
+                        "description",
+                        "metadata"
                     ]
                 )
 
