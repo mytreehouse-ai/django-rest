@@ -8,13 +8,10 @@ from django.utils import timezone
 from .services.scraperapi_service import ScrapyJobService
 from .serializers.create_scrapy_job_serializer import CreateScrapyJobSerializer
 from properties.models.property_type_model import PropertyTypeModel
-from properties.models.property_status_model import PropertyStatusModel
 from properties.models.listing_type_model import ListingTypeModel
 from properties.models.property_listing_model import PropertyListingModel
 from properties.models.property_model import PropertyModel
-from domain.models.city_model import CityModel
 from properties.models.price_history_model import PriceHistoryModel
-from django_celery_beat.models import IntervalSchedule, PeriodicTask
 
 
 logger = getLogger(__name__)
@@ -68,11 +65,6 @@ def scraperapi_process_scrapy_web():
 
 
 @shared_task()
-def scraperapi_job_checker():
-    pass
-
-
-@shared_task()
 def lamudi_multi_page_scraper_task():
     property_details = []
 
@@ -85,7 +77,7 @@ def lamudi_multi_page_scraper_task():
         info_elements = soup.find_all(class_='ListingCell-AllInfo ListingUnit')
         return info_elements
 
-    scrapy_jobs = ScrapyJobService.get_all_scrapy_job()
+    scrapy_jobs = ScrapyJobService.get_all_scrapy_job_for_task()
 
     current_scrapy_job_id = None
     for_sale = ListingTypeModel.objects.get(id=1)
@@ -95,11 +87,6 @@ def lamudi_multi_page_scraper_task():
     apartment = PropertyTypeModel.objects.get(id=3)
     warehouse = PropertyTypeModel.objects.get(id=4)
     land = PropertyTypeModel.objects.get(id=5)
-
-    every_one_minute, created = IntervalSchedule.objects.get_or_create(
-        every=1,
-        period=IntervalSchedule.MINUTES
-    )
 
     for scrapy_job in scrapy_jobs:
         current_scrapy_job_id = scrapy_job.job_id

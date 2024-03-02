@@ -52,18 +52,35 @@ class ScrapyJobService:
         return list(scrapy_webs)
 
     @staticmethod
-    def get_all_scrapy_job(single_page: Optional[bool] = False) -> List[ScrapyJobModel]:
+    def get_all_scrapy_job_for_task(single_page: Optional[bool] = False) -> List[ScrapyJobModel]:
         """
-        Retrieves all ScrapyJobModel instances from the database.
+        Fetches a limited list of ScrapyJobModel instances representing completed, unprocessed scraping jobs from the database.
 
-        This method queries the database for all instances of ScrapyJobModel, which represent individual 
-        scraping jobs that have been initiated or completed. It is crucial for monitoring, managing, and 
-        analyzing the performance and outcomes of the scraping jobs.
+        This method is designed to retrieve a subset of ScrapyJobModel records that match specific criteria: the jobs must be marked as 'finished', 
+        not yet processed, and optionally filtered to include only jobs that either targeted a single page or multiple pages, based on the 'single_page' parameter. 
+        This functionality is particularly useful for batch processing or reviewing the outcomes of recent scraping activities.
+
+        Args:
+            single_page (Optional[bool]): A flag to filter the jobs based on whether they were for a single page or not. Defaults to False.
 
         Returns:
-            List[ScrapyJobModel]: A list containing all instances of ScrapyJobModel limited by 10 records, representing all scraping jobs.
+            List[ScrapyJobModel]: A list of up to 10 ScrapyJobModel instances that meet the specified criteria.
         """
         return ScrapyJobModel.objects.filter(status="finished", is_processed=False, single_page=single_page)[:10]
+
+    @staticmethod
+    def get_all_scrapy_job_for_selenium():
+        """
+        Retrieves all ScrapyJobModel instances from the database without any filtering.
+
+        This method queries the database for all instances of ScrapyJobModel, which represent individual 
+        scraping jobs that have been initiated or completed using Selenium. It is crucial for monitoring, 
+        managing, and analyzing the performance and outcomes of the scraping jobs initiated by Selenium.
+
+        Returns:
+            QuerySet[ScrapyJobModel]: A QuerySet containing all instances of ScrapyJobModel.
+        """
+        return ScrapyJobModel.objects.filter()
 
     @staticmethod
     def get_scrapy_job(job_id: int) -> ScrapyJobModel:

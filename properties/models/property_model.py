@@ -45,18 +45,6 @@ class PropertyModel(BaseModel):
         default=0,
         verbose_name="Number of Car Spaces"
     )
-    address_line1 = models.CharField(
-        max_length=255,
-        null=True,
-        blank=True,
-        verbose_name="Address Line 1"
-    )
-    address_line2 = models.CharField(
-        max_length=255,
-        null=True,
-        blank=True,
-        verbose_name="Address Line 2"
-    )
     city = models.ForeignKey(
         "domain.CityModel",
         null=True,
@@ -64,16 +52,6 @@ class PropertyModel(BaseModel):
         related_name="city",
         on_delete=models.SET_NULL,
         verbose_name="City"
-    )
-    region = models.CharField(
-        max_length=200,
-        null=True,
-        db_index=True,
-        verbose_name="Region"
-    )
-    central_business_district = models.BooleanField(
-        default=False,
-        verbose_name="Central Business District"
     )
     longitude = models.FloatField(
         null=True,
@@ -85,32 +63,38 @@ class PropertyModel(BaseModel):
         blank=True,
         verbose_name="Latitude"
     )
-    year_built = models.IntegerField(
+    image_url = models.URLField(
         null=True,
         blank=True,
-        verbose_name="Year Built"
+        verbose_name="Image URL"
     )
-    images = models.JSONField(
-        default=list,
-        null=True,
-        blank=True,
-        verbose_name="Images"
-    )
-    amenities = models.JSONField(
+    indoor_features = models.JSONField(
         default=list,
         null=True,
         blank=True,
         verbose_name="Amenities"
     )
-    other_details = models.JSONField(
+    outdoor_features = models.JSONField(
+        default=list,
         null=True,
         blank=True,
-        verbose_name="Other Details"
+        verbose_name="Amenities"
+    )
+    other_features = models.JSONField(
+        default=list,
+        null=True,
+        blank=True,
+        verbose_name="Amenities"
     )
     description = models.TextField(
         null=True,
         blank=True,
         verbose_name="Description"
+    )
+    metadata = models.JSONField(
+        null=True,
+        blank=True,
+        verbose_name="Other Details"
     )
 
     def __str__(self) -> str:

@@ -49,6 +49,12 @@ class PropertyListingModel(BaseModel):
         default=0.0,
         verbose_name="Price"
     )
+    price_formatted = models.CharField(
+        null=True,
+        blank=True,
+        max_length=200,
+        verbose_name="Price Formatted"
+    )
     is_active = models.BooleanField(
         default=False,
         verbose_name="Is Active"
