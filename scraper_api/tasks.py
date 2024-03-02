@@ -61,8 +61,7 @@ def scraperapi_process_scrapy_web():
                     f"Failed to start scraping job. Status code: {response.status_code}, Response: {response_json}"
                 )
 
-            # Sleep for 1 second after each page iteration to avoid overwhelming the server
-            sleep(1)
+            sleep(0.5)
 
 
 @shared_task()
@@ -91,11 +90,11 @@ def lamudi_multi_page_scraper_task():
             "No scrapy jobs found for task reseting processed properties."
         )
 
-    current_scrapy_job_ids = []
+    current_scrapy_domains = []
 
     for scrapy_job in scrapy_jobs:
-        current_scrapy_job_ids.append(scrapy_job.job_id)
         if scrapy_job.html_code:
+            current_scrapy_domains.append(scrapy_job.domain)
             info_elements = extract_html(html_data=scrapy_job.html_code)
             listing_type = "for-sale" if "buy" in scrapy_job.domain else "for-rent"
             for element in info_elements:
@@ -129,13 +128,13 @@ def lamudi_multi_page_scraper_task():
                 }
                 property_details.append(details_dict)
 
-    ScrapyJobModel.objects.filter(job_id__in=current_scrapy_job_ids).update(
+    ScrapyJobModel.objects.filter(domain__in=current_scrapy_domains).update(
         html_code=None,
         is_multi_page_processed=True,
         finished_processed_at=timezone.now()
     )
 
-    current_scrapy_job_ids = []
+    current_scrapy_domains = []
 
     for property in property_details:
         if property.get("category") == "commercial":
