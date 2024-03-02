@@ -9,6 +9,7 @@ from ..serializers.update_property_webhook_serializer import UpdatePropertyWebho
 from ..serializers.scraperapi_job_finished_response_serializer import ScraperApiWebhookJobFinishedResponseSerializer
 from domain.models.city_model import CityModel
 from properties.models.listing_type_model import ListingTypeModel
+from properties.models.property_type_model import PropertyTypeModel
 from properties.models.property_listing_model import PropertyListingModel
 
 
@@ -77,8 +78,17 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
 
         if attributes:
             title = json_fields.get('title', None)
+            attribute_set_name = json_fields.get("attribute_set_name", None)
             price_formatted = attributes.get("price_formatted", None)
             offer_type = attributes.get("offer_type", None)
+
+            try:
+                property_type = PropertyTypeModel.objects.get(
+                    description=attribute_set_name
+                )
+            except PropertyTypeModel.DoesNotExist:
+                if attribute_set_name == "Commercial":
+                    property_type = PropertyTypeModel.objects.get(id=4)
 
             if offer_type == "Buy":
                 listing_type = ListingTypeModel.objects.get(
@@ -90,7 +100,7 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
                 )
 
             if attributes.get("listing_city_id", None) and attributes.get("listing_city", None):
-                city, created = CityModel.objects.get_or_create(
+                city, _created = CityModel.objects.get_or_create(
                     id=int(attributes.get("listing_city_id")),
                     name=attributes.get("listing_city")
                 )
@@ -102,11 +112,13 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
 
                 property_listing.listing_title = title
                 property_listing.listing_type = listing_type
+                property_listing.property_type = property_type
                 property_listing.price_formatted = price_formatted
                 property_listing.save(
                     update_fields=[
                         "listing_title",
                         "listing_type",
+                        "property_type",
                         "price_formatted"
                     ]
                 )
