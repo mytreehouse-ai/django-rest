@@ -7,6 +7,7 @@ from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_yasg.utils import swagger_auto_schema
 
+from ..utils.scrapy_job_filter import ScrapyJobFilters
 from ..services.scraperapi_service import ScrapyJobService
 from ..serializers.read_scrapy_job_serializer import ReadScrapyJobSerializer
 
@@ -35,6 +36,7 @@ class ReadScrapyJobAPIView(ListAPIView):
         filters.SearchFilter,
         filters.OrderingFilter
     ]
+    filterset_class = ScrapyJobFilters
     search_fields = [
         "job_id",
         "domain",
