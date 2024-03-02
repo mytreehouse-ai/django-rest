@@ -12,6 +12,16 @@ from ..services.public_property_service import PublicPropertyService
 logger = getLogger(__name__)
 
 
+class CustomPageNumberPagination(PageNumberPagination):
+    """
+    Custom pagination class to set a default page size.
+    """
+    page_size = 50  # Set the default number of items per page
+    # Allow client to override the page size using this query parameter
+    page_size_query_param = 'page_size'
+    max_page_size = 100  # Maximum limit of items per page
+
+
 class ReadPublicPropertyListingAPIView(ListAPIView):
     """
     API view for reading public property listings.
@@ -39,7 +49,7 @@ class ReadPublicPropertyListingAPIView(ListAPIView):
         'updated_at'
     ]
     serializer_class = ReadPropertyListingSerializer
-    pagination_class = PageNumberPagination
+    pagination_class = CustomPageNumberPagination
     queryset = PublicPropertyService.get_all_property_listing()
 
     @swagger_auto_schema(
