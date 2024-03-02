@@ -82,5 +82,4 @@ class Command(BaseCommand):
                         f"Failed to start scraping job. Status code: {response.status_code}, Response: {response_json}"
                     )
 
-                # Sleep for 1 second after each page iteration to avoid overwhelming the server
-                sleep(1)
+                sleep(0.5)

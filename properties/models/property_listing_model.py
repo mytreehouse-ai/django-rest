@@ -58,6 +58,10 @@ class PropertyListingModel(BaseModel):
         max_length=200,
         verbose_name="Price Formatted"
     )
+    is_delisted = models.BooleanField(
+        default=False,
+        verbose_name="Is Delisted"
+    )
     is_active = models.BooleanField(
         default=False,
         verbose_name="Is Active"
