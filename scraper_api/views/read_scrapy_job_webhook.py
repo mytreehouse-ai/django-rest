@@ -14,7 +14,7 @@ from ..serializers.read_scrapy_job_serializer import ReadScrapyJobSerializer
 logger = getLogger(__name__)
 
 
-class ReadScrapyJobAPIView(ListAPIView):
+class ReadScrapyJobWebhookAPIView(ListAPIView):
     """
     API view to retrieve a paginated list of Scrapy jobs.
 
