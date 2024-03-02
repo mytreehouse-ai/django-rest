@@ -11,6 +11,7 @@ from domain.models.city_model import CityModel
 from properties.models.listing_type_model import ListingTypeModel
 from properties.models.property_type_model import PropertyTypeModel
 from properties.models.property_listing_model import PropertyListingModel
+from scraper_api.models.scrapy_job_model import ScrapyJobModel
 
 
 logger = getLogger(__name__)
@@ -81,6 +82,7 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
             attribute_set_name = json_fields.get("attribute_set_name", None)
             price_formatted = attributes.get("price_formatted", None)
             offer_type = attributes.get("offer_type", None)
+            property_type = None
 
             try:
                 property_type = PropertyTypeModel.objects.get(
@@ -90,6 +92,7 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
                 if attribute_set_name == "Commercial":
                     property_type = PropertyTypeModel.objects.get(id=4)
 
+            listing_type = None
             if offer_type == "Buy":
                 listing_type = ListingTypeModel.objects.get(
                     description="For Sale"
@@ -99,6 +102,7 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
                     description="For Rent"
                 )
 
+            city = None
             if attributes.get("listing_city_id", None) and attributes.get("listing_city", None):
                 city, _created = CityModel.objects.get_or_create(
                     id=int(attributes.get("listing_city_id")),
@@ -109,20 +113,24 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
                 property_listing = PropertyListingModel.objects.get(
                     listing_url=listing_url
                 )
+            except PropertyListingModel.DoesNotExist:
+                print(f"No property listing found for URL: {listing_url}")
+                return
 
-                property_listing.listing_title = title
-                property_listing.listing_type = listing_type
-                property_listing.property_type = property_type
-                property_listing.price_formatted = price_formatted
-                property_listing.save(
-                    update_fields=[
-                        "listing_title",
-                        "listing_type",
-                        "property_type",
-                        "price_formatted"
-                    ]
-                )
+            property_listing.listing_title = title
+            property_listing.listing_type = listing_type
+            property_listing.property_type = property_type
+            property_listing.price_formatted = price_formatted
+            property_listing.save(
+                update_fields=[
+                    "listing_title",
+                    "listing_type",
+                    "property_type",
+                    "price_formatted"
+                ]
+            )
 
+            if city:
                 property_listing.estate.city = city
                 property_listing.estate.save(
                     update_fields=[
@@ -130,12 +138,9 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
                     ]
                 )
 
-                print(
-                    f"Property listing found: {property_listing.listing_url}"
-                )
-            except PropertyListingModel.DoesNotExist:
-                print(f"No property listing found for URL: {listing_url}")
-
+            print(
+                f"Property listing found: {property_listing.listing_url}"
+            )
         return Response(
             {
                 "message": "Webhook response successfully processed."
