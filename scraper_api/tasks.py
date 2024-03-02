@@ -80,6 +80,8 @@ def lamudi_multi_page_scraper_task():
 
     scrapy_jobs = ScrapyJobService.get_all_scrapy_job_for_task()
 
+    logger.info(f"Scrapy jobs length: {len(scrapy_jobs)}")
+
     if not scrapy_jobs:
         ScrapyJobModel.objects.all().update(
             is_multi_page_processed=False,
