@@ -4,6 +4,8 @@ FROM python:3.11-slim
 # Including 'git' to ensure successful installation of dependencies from git repositories
 RUN apt-get update && apt-get install -y --no-install-recommends git
 
+ARG RUN_MODE
+
 # Set environment variables
 ENV PYTHONUNBUFFERED=1 \
     PATH="/home/appuser/.local/bin:${PATH}"
@@ -29,7 +31,12 @@ COPY --chown=appuser:appuser . /app/
 EXPOSE 8000
 
 # Command to run the Django server
-CMD sh -c "\
-    python manage.py makemigrations --noinput && \
-    python manage.py migrate --noinput && \
-    gunicorn mytreehouse.wsgi:application --bind 0.0.0.0:8000"
+CMD if [ "$RUN_MODE" = "api-gateway" ]; then \
+        sh -c "python manage.py makemigrations --noinput && \
+               python manage.py migrate --noinput && \
+               gunicorn mytreehouse.wsgi:application --bind 0.0.0.0:8000;"; \
+    elif [ "$RUN_MODE" = "celery-beat" ]; then \
+        sh -c "celery -A mytreehouse beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler"; \
+    elif [ "$RUN_MODE" = "celery-worker" ]; then \
+        sh -c "celery -A mytreehouse worker -l INFO -E --concurrency=5"; \
+    fi
