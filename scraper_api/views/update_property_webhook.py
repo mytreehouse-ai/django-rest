@@ -8,6 +8,7 @@ from drf_yasg.utils import swagger_auto_schema
 
 from ..serializers.update_property_webhook_serializer import UpdatePropertyWebhookSerializer
 from ..serializers.scraperapi_job_finished_response_serializer import ScraperApiWebhookJobFinishedResponseSerializer
+from domain.models.city_model import CityModel
 
 
 logger = getLogger(__name__)
@@ -72,6 +73,17 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
         print(json.dumps(json_fields.get("attributes", {}), indent=4))
         print(json.dumps(json_fields.get("description", {}), indent=4))
         print(json.dumps(json_fields.get("location", {}), indent=4))
+
+        attributes = json_fields.get("attributes", None)
+
+        if attributes:
+            if attributes.get("listing_city_id", None) and attributes.get("listing_city", None):
+                city = CityModel.objects.get_or_create(
+                    id=int(attributes.get("listing_city_id")),
+                    name=attributes.get("listing_city")
+                )
+
+                print(city)
 
         return Response(
             {
