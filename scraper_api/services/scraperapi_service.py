@@ -66,7 +66,7 @@ class ScrapyJobService:
         Returns:
             List[ScrapyJobModel]: A list of up to 10 ScrapyJobModel instances that meet the specified criteria.
         """
-        return ScrapyJobModel.objects.filter(status="finished", is_multi_page_processed=False, single_page=False)[:10]
+        return ScrapyJobModel.objects.filter(status="finished", is_multi_page_processed=False, single_page=False, html_code__isnull=False)[:10]
 
     @staticmethod
     def get_all_scrapy_job_for_selenium():
