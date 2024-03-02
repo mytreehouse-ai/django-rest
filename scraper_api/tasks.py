@@ -170,7 +170,7 @@ def lamudi_multi_page_scraper_task():
 
             if new_listing or created:
                 generated_uuid = str(uuid.uuid4())
-                ScrapyJobModel.objects.get_or_create(
+                ScrapyJobModel.objects.update_or_create(
                     domain=property.get("listing_url"),
                     defaults={
                         "job_id": generated_uuid,
@@ -227,7 +227,7 @@ def lamudi_multi_page_scraper_task():
 
             if new_listing or created:
                 generated_uuid = str(uuid.uuid4())
-                ScrapyJobModel.objects.get_or_create(
+                ScrapyJobModel.objects.update_or_create(
                     domain=property.get("listing_url"),
                     defaults={
                         "job_id": generated_uuid,
@@ -287,7 +287,7 @@ def lamudi_multi_page_scraper_task():
 
             if new_listing or created:
                 generated_uuid = str(uuid.uuid4())
-                ScrapyJobModel.objects.get_or_create(
+                ScrapyJobModel.objects.update_or_create(
                     domain=property.get("listing_url"),
                     defaults={
                         "job_id": generated_uuid,
@@ -346,7 +346,7 @@ def lamudi_multi_page_scraper_task():
 
             if new_listing or created:
                 generated_uuid = str(uuid.uuid4())
-                ScrapyJobModel.objects.get_or_create(
+                ScrapyJobModel.objects.update_or_create(
                     domain=property.get("listing_url"),
                     defaults={
                         "job_id": generated_uuid,
@@ -405,7 +405,7 @@ def lamudi_multi_page_scraper_task():
 
             if new_listing or created:
                 generated_uuid = str(uuid.uuid4())
-                ScrapyJobModel.objects.get_or_create(
+                ScrapyJobModel.objects.update_or_create(
                     domain=property.get("listing_url"),
                     defaults={
                         "job_id": generated_uuid,
