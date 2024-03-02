@@ -78,6 +78,14 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
                 listing_url=listing_url
             )
         except PropertyListingModel.DoesNotExist:
+            deleted_count, _ = ScrapyJobModel.objects.filter(
+                domain=listing_url).delete()
+            if deleted_count > 0:
+                logger.info(
+                    f"Deleted {deleted_count} ScrapyJobModel entries for domain: {listing_url}"
+                )
+            else:
+                pass
             logger.error(
                 f"No property listing found for URL: {listing_url}")
             return Response(
