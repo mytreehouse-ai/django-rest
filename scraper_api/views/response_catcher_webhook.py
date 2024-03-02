@@ -66,6 +66,7 @@ class ResponseCatcherWebhookAPIView(CreateAPIView):
 
         ScrapyJobService.update_job(
             domain=url,
+            job_id=job_id,
             attempts=attempts,
             status=status,
             html_code=response.get("body", None) if response else None,
