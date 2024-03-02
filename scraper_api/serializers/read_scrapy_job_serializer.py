@@ -19,7 +19,8 @@ class ReadScrapyJobSerializer(serializers.ModelSerializer):
             "status_url",
             "supposed_to_run_at",
             "single_page",
-            "is_processed",
+            "is_multi_page_processed",
+            "is_single_page_processed",
             "created_at",
             "updated_at"
         ]
