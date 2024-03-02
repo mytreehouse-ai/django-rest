@@ -105,7 +105,7 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
                 property_listing.price_formatted = price_formatted
                 property_listing.save(
                     update_fields=[
-                        "title",
+                        "listing_title",
                         "listing_type",
                         "price_formatted"
                     ]
