@@ -91,10 +91,10 @@ def lamudi_multi_page_scraper_task():
             "No scrapy jobs found for task reseting processed properties."
         )
 
-    current_scrapy_job_id = None
+    current_scrapy_job_ids = []
 
     for scrapy_job in scrapy_jobs:
-        current_scrapy_job_id = scrapy_job.job_id
+        current_scrapy_job_ids.append(scrapy_job.job_id)
         if scrapy_job.html_code:
             info_elements = extract_html(html_data=scrapy_job.html_code)
             listing_type = "for-sale" if "buy" in scrapy_job.domain else "for-rent"
@@ -129,23 +129,13 @@ def lamudi_multi_page_scraper_task():
                 }
                 property_details.append(details_dict)
 
-    if current_scrapy_job_id:
-        scrapy_job = ScrapyJobService.get_scrapy_job(
-            job_id=current_scrapy_job_id
-        )
+    ScrapyJobModel.objects.filter(job_id__in=current_scrapy_job_ids).update(
+        html_code=None,
+        is_multi_page_processed=True,
+        finished_processed_at=timezone.now()
+    )
 
-        scrapy_job.html_code = None
-        scrapy_job.is_multi_page_processed = True
-        scrapy_job.finished_processed_at = timezone.now()
-        scrapy_job.save(
-            update_fields=[
-                "html_code",
-                "is_multi_page_processed",
-                "finished_processed_at"
-            ]
-        )
-
-        current_scrapy_job_id = None
+    current_scrapy_job_ids = []
 
     for property in property_details:
         if property.get("category") == "commercial":
