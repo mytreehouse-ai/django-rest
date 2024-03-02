@@ -18,6 +18,12 @@ class PropertyModel(BaseModel):
         max_length=200,
         verbose_name="Subdivision Name"
     )
+    address = models.CharField(
+        null=True,
+        blank=True,
+        max_length=255,
+        verbose_name="Address"
+    )
     lot_size = models.FloatField(
         null=True,
         blank=True,

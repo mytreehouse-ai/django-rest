@@ -82,6 +82,10 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
             attribute_set_name = attributes.get("attribute_set_name", None)
             price_formatted = attributes.get("price_formatted", None)
             offer_type = attributes.get("offer_type", None)
+            indoor_features = attributes.get("indoor_features", [])
+            outdoor_features = attributes.get("outdoor_features", [])
+            other_features = attributes.get("other_features", [])
+            listing_address = attributes.get("listing_address", None)
             property_type = None
 
             if attribute_set_name:
@@ -132,9 +136,11 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
             )
 
             if city:
+                property_listing.estate.address = listing_address
                 property_listing.estate.city = city
                 property_listing.estate.save(
                     update_fields=[
+                        "address",
                         "city"
                     ]
                 )
