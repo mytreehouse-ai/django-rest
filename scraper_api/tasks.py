@@ -265,8 +265,6 @@ def lamudi_multi_page_scraper_task():
                     num_bedrooms=property.get("bedrooms"),
                     num_bathrooms=property.get("bathrooms"),
                     num_carspaces=property.get("car_spaces"),
-                    year_built=property.get("year_built"),
-                    central_business_district=False,
                     longitude=longitude,
                     latitude=latitude
                 )
@@ -327,8 +325,6 @@ def lamudi_multi_page_scraper_task():
                     num_bedrooms=property.get("bedrooms"),
                     num_bathrooms=property.get("bathrooms"),
                     num_carspaces=property.get("car_spaces"),
-                    year_built=property.get("year_built"),
-                    central_business_district=False,
                     longitude=longitude,
                     latitude=latitude
                 )
@@ -389,8 +385,6 @@ def lamudi_multi_page_scraper_task():
                     num_bedrooms=property.get("bedrooms"),
                     num_bathrooms=property.get("bathrooms"),
                     num_carspaces=property.get("car_spaces"),
-                    year_built=property.get("year_built"),
-                    central_business_district=False,
                     longitude=longitude,
                     latitude=latitude
                 )
