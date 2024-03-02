@@ -1,4 +1,3 @@
-import re
 import json
 from time import sleep
 from logging import getLogger
@@ -9,13 +8,10 @@ from django.utils import timezone
 from .services.scraperapi_service import ScrapyJobService
 from .serializers.create_scrapy_job_serializer import CreateScrapyJobSerializer
 from properties.models.property_type_model import PropertyTypeModel
-from properties.models.property_status_model import PropertyStatusModel
 from properties.models.listing_type_model import ListingTypeModel
 from properties.models.property_listing_model import PropertyListingModel
 from properties.models.property_model import PropertyModel
-from domain.models.city_model import CityModel
 from properties.models.price_history_model import PriceHistoryModel
-from django_celery_beat.models import IntervalSchedule, PeriodicTask
 
 
 logger = getLogger(__name__)
@@ -69,136 +65,6 @@ def scraperapi_process_scrapy_web():
 
 
 @shared_task()
-def scraperapi_job_checker():
-    pass
-
-
-@shared_task()
-def lamudi_single_page_scraper_task():
-    property_details = []
-    scrapy_jobs = ScrapyJobService.get_all_scrapy_job(single_page=True)
-
-    def extract_address(soup):
-        address_tag = soup.find(
-            'h3',
-            {
-                'class': 'Title-pdp-address'
-            }
-        )
-
-        if address_tag:
-            address_text = address_tag.get_text(strip=True)
-            return address_text
-        else:
-            return 'n/a'
-
-    def extract_description(soup):
-        description_div = soup.find(
-            'div',
-            {
-                'class': 'listing-section listing-description'
-            }
-        )
-        description_text = description_div.find(
-            'div',
-            {
-                'class': 'ViewMore-text-description'
-            }
-        ) if description_div else None
-
-        return description_text.get_text(separator=" ", strip=True) if description_text else 'n/a'
-
-    def extract_images(soup):
-        images = []
-        if soup:  # Check if soup object is not None
-            divs = soup.find_all(
-                'div',
-                {
-                    'class': 'Banner-Images'
-                }
-            )
-
-            for div_tag in divs:
-                img_tag = div_tag.find('img')
-                if img_tag:
-                    data_src = img_tag.get('data-src')
-                    if data_src and data_src.endswith('.webp'):
-                        images.append(data_src)
-        else:
-            return ['n/a']  # Return a list with 'n/a' if soup is None
-
-        return images
-
-    def extract_amenities(soup):
-        amenities_list = []
-        amenities_div = soup.find(
-            'div',
-            {
-                'class': 'listing-amenities-list'
-            }
-        )
-        if amenities_div:
-            amenities_span = amenities_div.find_all(
-                'span',
-                {
-                    'class': 'listing-amenities-name'
-                }
-            )
-            amenities_list = [span.text.strip() for span in amenities_span]
-        return amenities_list
-
-    def extract_property_details_div(soup):
-        details_div = soup.find(
-            'div', {'class': 'listing-section listing-details'})
-        details = {}
-        if details_div:
-            rows = details_div.find_all('div', {'class': 'row'})
-            for row in rows:
-                columns = row.find_all(
-                    'div', {'class': 'columns medium-6 small-6 striped'})
-                for column in columns:
-                    items = column.find_all('div', {'class': 'columns-2'})
-                    for item in items:
-                        key = item.find('div', {'class': 'ellipsis'}).get(
-                            'data-attr-name', 'n/a').strip()
-                        value = item.find(
-                            'div', {'class': 'last'}).text.strip()
-                        details[key] = value
-        return details
-
-    def extract_property_details(html_code: str):
-        soup = BeautifulSoup(html_code, 'html.parser')
-
-        address = extract_address(soup)
-
-        if address == "Para\u00f1aque":
-            # Remove unknown characters
-            address = address.replace("\ufffd", "")
-            address = address.replace("\u00f1", "ñ")
-            address = address.replace("\u00d1", "Ñ")
-            if address != "n/a":
-                city = CityModel.objects.filter(
-                    name__icontains=address
-                )
-
-            property_details = {
-                "address": address,
-                "city": city.first().name if city.exists() else "Unknown",
-                "description": extract_description(soup),
-                "images": extract_images(soup),
-                "details": extract_property_details_div(soup),
-                "amenities": extract_amenities(soup)
-            }
-
-            return property_details
-
-    for scrapy_job in scrapy_jobs:
-        property_details = extract_property_details(scrapy_job.html_code)
-        print(scrapy_job.id)
-        print(json.dumps(property_details, indent=4))
-
-
-@shared_task()
 def lamudi_multi_page_scraper_task():
     property_details = []
 
@@ -211,7 +77,7 @@ def lamudi_multi_page_scraper_task():
         info_elements = soup.find_all(class_='ListingCell-AllInfo ListingUnit')
         return info_elements
 
-    scrapy_jobs = ScrapyJobService.get_all_scrapy_job()
+    scrapy_jobs = ScrapyJobService.get_all_scrapy_job_for_task()
 
     current_scrapy_job_id = None
     for_sale = ListingTypeModel.objects.get(id=1)
@@ -221,11 +87,6 @@ def lamudi_multi_page_scraper_task():
     apartment = PropertyTypeModel.objects.get(id=3)
     warehouse = PropertyTypeModel.objects.get(id=4)
     land = PropertyTypeModel.objects.get(id=5)
-
-    every_one_minute, created = IntervalSchedule.objects.get_or_create(
-        every=1,
-        period=IntervalSchedule.MINUTES
-    )
 
     for scrapy_job in scrapy_jobs:
         current_scrapy_job_id = scrapy_job.job_id
@@ -393,34 +254,6 @@ def lamudi_multi_page_scraper_task():
                 }
             )
 
-            if new_listing or created:
-                response = ScrapyJobService.scraper_api(
-                    scrapy_web=property.get("listing_url")
-                )
-
-                try:
-                    response_json: CreateScrapyJobSerializer = response.json()
-                    job = {
-                        "job_id": response_json.get("id", None),
-                        "domain": response_json.get("url", None),
-                        "status": response_json.get("status", None),
-                        "attempts": response_json.get("attempts", None),
-                        "status_url": response_json.get("status_url", None),
-                        "supposed_to_run_at": response_json.get("supposedToRunAt", None)
-                    }
-                    ScrapyJobService.create_job(**job)
-                except ValueError:
-                    logger.error("Failed to parse response as JSON.")
-                    response_json = "Invalid JSON response"
-                if response.status_code == 200:
-                    logger.info(
-                        f"Scraping job started successfully. Response: {response_json}"
-                    )
-                else:
-                    logger.error(
-                        f"Failed to start scraping job. Status code: {response.status_code}, Response: {response_json}"
-                    )
-
             # Extract geo_point safely
             geo_point = property.get("geo_point", [None, None])
             longitude = geo_point[0] if len(geo_point) > 0 else 0.0
@@ -507,34 +340,6 @@ def lamudi_multi_page_scraper_task():
                 }
             )
 
-            if new_listing or created:
-                response = ScrapyJobService.scraper_api(
-                    scrapy_web=property.get("listing_url")
-                )
-
-                try:
-                    response_json: CreateScrapyJobSerializer = response.json()
-                    job = {
-                        "job_id": response_json.get("id", None),
-                        "domain": response_json.get("url", None),
-                        "status": response_json.get("status", None),
-                        "attempts": response_json.get("attempts", None),
-                        "status_url": response_json.get("status_url", None),
-                        "supposed_to_run_at": response_json.get("supposedToRunAt", None)
-                    }
-                    ScrapyJobService.create_job(**job)
-                except ValueError:
-                    logger.error("Failed to parse response as JSON.")
-                    response_json = "Invalid JSON response"
-                if response.status_code == 200:
-                    logger.info(
-                        f"Scraping job started successfully. Response: {response_json}"
-                    )
-                else:
-                    logger.error(
-                        f"Failed to start scraping job. Status code: {response.status_code}, Response: {response_json}"
-                    )
-
             # Extract geo_point safely
             geo_point = property.get("geo_point", [None, None])
             longitude = geo_point[0] if len(geo_point) > 0 else 0.0
@@ -616,34 +421,6 @@ def lamudi_multi_page_scraper_task():
                 }
             )
 
-            if new_listing or created:
-                response = ScrapyJobService.scraper_api(
-                    scrapy_web=property.get("listing_url")
-                )
-
-                try:
-                    response_json: CreateScrapyJobSerializer = response.json()
-                    job = {
-                        "job_id": response_json.get("id", None),
-                        "domain": response_json.get("url", None),
-                        "status": response_json.get("status", None),
-                        "attempts": response_json.get("attempts", None),
-                        "status_url": response_json.get("status_url", None),
-                        "supposed_to_run_at": response_json.get("supposedToRunAt", None)
-                    }
-                    ScrapyJobService.create_job(**job)
-                except ValueError:
-                    logger.error("Failed to parse response as JSON.")
-                    response_json = "Invalid JSON response"
-                if response.status_code == 200:
-                    logger.info(
-                        f"Scraping job started successfully. Response: {response_json}"
-                    )
-                else:
-                    logger.error(
-                        f"Failed to start scraping job. Status code: {response.status_code}, Response: {response_json}"
-                    )
-
             # Extract geo_point safely
             geo_point = property.get("geo_point", [None, None])
             longitude = geo_point[0] if len(geo_point) > 0 else 0.0
@@ -724,34 +501,6 @@ def lamudi_multi_page_scraper_task():
                     'is_active': True
                 }
             )
-
-            if new_listing or created:
-                response = ScrapyJobService.scraper_api(
-                    scrapy_web=property.get("listing_url")
-                )
-
-                try:
-                    response_json: CreateScrapyJobSerializer = response.json()
-                    job = {
-                        "job_id": response_json.get("id", None),
-                        "domain": response_json.get("url", None),
-                        "status": response_json.get("status", None),
-                        "attempts": response_json.get("attempts", None),
-                        "status_url": response_json.get("status_url", None),
-                        "supposed_to_run_at": response_json.get("supposedToRunAt", None)
-                    }
-                    ScrapyJobService.create_job(**job)
-                except ValueError:
-                    logger.error("Failed to parse response as JSON.")
-                    response_json = "Invalid JSON response"
-                if response.status_code == 200:
-                    logger.info(
-                        f"Scraping job started successfully. Response: {response_json}"
-                    )
-                else:
-                    logger.error(
-                        f"Failed to start scraping job. Status code: {response.status_code}, Response: {response_json}"
-                    )
 
             # Extract geo_point safely
             geo_point = property.get("geo_point", [None, None])

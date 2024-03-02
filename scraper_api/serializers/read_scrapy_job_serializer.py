@@ -18,6 +18,7 @@ class ReadScrapyJobSerializer(serializers.ModelSerializer):
             "attempts",
             "status_url",
             "supposed_to_run_at",
+            "single_page",
             "created_at",
             "updated_at"
         ]
