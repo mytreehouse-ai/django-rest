@@ -1,0 +1,102 @@
+[
+    {
+        "agent_id": 604960,
+        "agent_name": "Remax Prime",
+        "attributes": {
+            "agent_ratings_enabled": 0,
+            "approved": 1,
+            "attribute_set_id": 1,
+            "categories": [
+                2,
+                48
+            ],
+            "indoor_features": [],
+            "is_agent": 1,
+            "listing_type": "Classifieds",
+            "other_features": [],
+            "outdoor_features": [
+                "24-hour security"
+            ],
+            "price_formatted": "₱167,475,000",
+            "price_not_shown": false,
+            "seller_is_trusted": 0,
+            "show_listing_address": 1,
+            "show_mobile": 1,
+            "is_whatsapp": 1,
+            "is_viber": 0,
+            "is_facebook": 1,
+            "show_officephone": 0,
+            "top_position": 1,
+            "urlkey_details": "dasmarinas-technopark-warehouse-office-space-resid-170926784265.html",
+            "building_size": 3750,
+            "land_size": 3000,
+            "agency_name": "Remax Prime",
+            "alternate_sku": "39924625",
+            "attribute_set_name": "Commercial",
+            "currency_code": "PHP",
+            "listing_start": "2024-03-01 12:37:22",
+            "name": "Dasmarinas Technopark - Warehouse, Office Space, Residential",
+            "price": 167475000,
+            "product_owner": 604960,
+            "product_owner_name": "Remax Prime",
+            "product_owner_url_key": "ayala-land-premier-agn-26",
+            "root_category": 2,
+            "sku": "CO65E15B82DBE34PH",
+            "status": "active",
+            "status_supplier_config": "active",
+            "subcategory": "Warehouse",
+            "subcategory_id": 48,
+            "offer_type_id": 2,
+            "location_latitude": "14.322093",
+            "location_longitude": "120.9567904",
+            "listing_region": "Cavite",
+            "listing_region_id": "24",
+            "offer_type": "Buy",
+            "listing_city": "Dasmariñas",
+            "listing_city_id": "1422",
+            "image_url": "https://static-ph.lamudi.com/static/media/bm9uZS9ub25l/2x2x5x880x396/1401cae0a8231f.jpg"
+        },
+        "country": "ph",
+        "description": {
+            "characters": 471,
+            "text": "FOR SALEDasmarinas TechnoparkMixed-used developmentIndustrial, Commercial and ResidentialLot Area - 3,000 sq.m.Floor Area - 3,750 sq.m.Can fit 40ft trailer trucks2 Warehouses4 Commercial/Office Spaceand Residential Penthouse13.5km away from SLEXPaolo OnaRE/MAX PrimePRC OR No. 16043018pona.remaxprime@gmail.com",
+            "words": 35
+        },
+        "device_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
+        "device_type": "desktop",
+        "desktop_leads_optional_phone": 0,
+        "whatsapp_leads_optional_phone": 1,
+        "images": 11,
+        "language": "en",
+        "location": {
+            "area": "",
+            "city": "Dasmariñas",
+            "region": "Cavite"
+        },
+        "login_state": false,
+        "number_of_product_attributes": 47,
+        "number_of_product_features": 1,
+        "sku": "CO65E15B82DBE34PH",
+        "title": "Dasmarinas Technopark - Warehouse, Office Space, Residential",
+        "page_type": "product"
+    },
+    {
+        "feature_test": "VariableControl:1"
+    },
+    {
+        "feature_set": "Control"
+    },
+    {
+        "gtm.start": 1709373786184,
+        "event": "gtm.js",
+        "gtm.uniqueEventId": 1
+    },
+    {
+        "event": "gtm.dom",
+        "gtm.uniqueEventId": 5
+    },
+    {
+        "event": "gtm.load",
+        "gtm.uniqueEventId": 6
+    }
+]

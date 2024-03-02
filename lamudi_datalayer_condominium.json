@@ -1,0 +1,128 @@
+[
+    {
+        "agent_id": 441212,
+        "agent_name": "Ortigas Land",
+        "attributes": {
+            "agent_ratings_enabled": 0,
+            "approved": 1,
+            "attribute_set_id": 1,
+            "categories": [
+                33,
+                35
+            ],
+            "indoor_features": [
+                "CCTV",
+                "Basement Parking",
+                "Elevators",
+                "Fire exits",
+                "Function Room",
+                "Gym",
+                "Lobby",
+                "Lounge",
+                "Reception Area",
+                "Fire Alarm",
+                "Fire sprinkler system"
+            ],
+            "is_agent": 1,
+            "listing_type": "Classifieds",
+            "other_features": [],
+            "outdoor_features": [
+                "24-hour security",
+                "Garden",
+                "Secure parking",
+                "Swimming pool"
+            ],
+            "price_formatted": "₱7,500,000",
+            "price_not_shown": false,
+            "seller_is_trusted": 1,
+            "show_listing_address": 1,
+            "show_mobile": 1,
+            "is_whatsapp": 0,
+            "is_viber": 1,
+            "is_facebook": 0,
+            "show_officephone": 1,
+            "top_position": 0,
+            "urlkey_details": "studio-condo-unit-for-sale-in-ortigas-center-san-a-170805718260.html",
+            "bathrooms": 1,
+            "bedrooms": 1,
+            "building_size": 21,
+            "car_spaces": 1,
+            "classification": 0,
+            "furnished": "",
+            "furnished_id": 1,
+            "agency_name": "Ortigas Land",
+            "alternate_sku": "39813063",
+            "listing_address": "Jade Drive corner Exchange Road, Ortigas Center ",
+            "attribute_set_name": "Condominium",
+            "currency_code": "PHP",
+            "listing_start": "2023-09-15 18:16:18",
+            "name": "Studio Condo Unit for Sale in Ortigas Center, San Antonio, Pasig | Olin at Jade Drive (1418)",
+            "price": 7500000,
+            "product_owner": 441212,
+            "product_owner_name": "Ortigas Land",
+            "product_owner_url_key": "ortigas-company",
+            "root_category": 33,
+            "sku": "CD65042EF21F2D8PH",
+            "status": "active",
+            "status_supplier_config": "active",
+            "subcategory": "Studio",
+            "subcategory_id": 35,
+            "offer_type_id": 2,
+            "location_latitude": "14.5833160859",
+            "location_longitude": "121.0621737955",
+            "listing_region": "Metro Manila",
+            "listing_region_id": "48",
+            "offer_type": "Buy",
+            "listing_area": "San Antonio",
+            "listing_area_id": "124913",
+            "listing_city": "Pasig",
+            "listing_city_id": "1986",
+            "project_id": "3600",
+            "project_name": "Olin at Jade Drive",
+            "project_urlkey": "olin-at-jade-drive",
+            "image_url": "https://static-ph.lamudi.com/static/media/bm9uZS9ub25l/2x2x5x880x396/95522d728bfd97.jpg"
+        },
+        "country": "ph",
+        "description": {
+            "characters": 3094,
+            "text": "Note: TCP is inclusive of parking  Experience living where all you need is within reach! Olin at Jade Drive is a 52-storey residential property that boasts of a strategic location that gives access to all the elements of modern, upbeat living for young homeowners. Nestled in the heart of Ortigas Center, Olin places you in the vicinity of offices, malls, schools, hospitals, and entertainment centers. Designed to let you pursue your passion for success, Olin comes with a co-working space right inside it for convenience. It also lets you enjoy life more with all the amenities like pools, gyms, garden lounges, and function halls. Live the modern condo lifestyle you deserve with Olin at Jade Drive!  Nearby Transportation:  MRT-3 Ortigas Station – 1.2km (15 mins) MRT-3 Shaw Blvd. Station – 1.3km (18 mins) SM Megamall UV Express Terminal – 900m (11 mins) SM Megamall Bus Terminal – 1.1km (14 mins) Future Ortigas North Subway Station – 600m (8 mins) Future Ortigas South Subway Station – 1.1km (15 mins) Future MRT-4 Meralco Ave. Station – 800m (11 mins)   Tower Highlights &amp;amp; Building Elevation:  52 Levels 43 Residential Floors: Low Zone: Levels 10-31| High Zone: Levels 32-54 1 Ground Floor with Retail 1 Amenity Floor (Level 9) 7 Podium Parking Levels (Levels 2-8) 2 Basement Parking Levels 5 Elevators 1,245 Residential Units 318 Parking Units   Below are the standard payment schemes for Olin at Jade Drive:  SPOT CASH: 90/10 - 90% spot (30 days) - 10% upon turnover - 10% discount on the Total List Price (TLP)  PROGRESSIVE SCHEMES a) 10/20/70  10% spot (30 days) 20% over 72 months 70% balance payable after the last monthly amortization 1.5% discount on the Total List Price (TLP)   b) 10/5/85  10% spot (30 days) 5% over 72 months 85% balance payable after the last monthly amortization 1% discount on the Total List Price (TLP)   c) 15/85  15% over 72 months 85% balance payable after the last monthly amortization   BULK PAYMENTS  Discount of 0.75% for bulk payments for purchase of two (2) to four (4) units Discount of 1.5% for purchase of five (5) and more Applicable for units purchased at the same time / second time but within six (6) months after the purchase of the first unit   Address: Jade Drive corner Exchange Road, Ortigas Center, Brgy. San Antonio, Pasig City, 1605 Metro Manila HLURB LTS No. NCR-012 Turnover Date: December 2029",
+            "words": 429
+        },
+        "device_agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36",
+        "device_type": "desktop",
+        "desktop_leads_optional_phone": 0,
+        "whatsapp_leads_optional_phone": 1,
+        "images": 25,
+        "language": "en",
+        "location": {
+            "area": "San Antonio",
+            "city": "Pasig",
+            "region": "Metro Manila"
+        },
+        "login_state": false,
+        "number_of_product_attributes": 58,
+        "number_of_product_features": 15,
+        "sku": "CD65042EF21F2D8PH",
+        "title": "Studio Condo Unit for Sale in Ortigas Center, San Antonio, Pasig | Olin at Jade Drive (1418)",
+        "page_type": "product"
+    },
+    {
+        "feature_test": "VariableControl:1"
+    },
+    {
+        "feature_set": "Control"
+    },
+    {
+        "gtm.start": 1709373439742,
+        "event": "gtm.js",
+        "gtm.uniqueEventId": 1
+    },
+    {
+        "event": "gtm.dom",
+        "gtm.uniqueEventId": 5
+    },
+    {
+        "event": "gtm.load",
+        "gtm.uniqueEventId": 6
+    }
+]
