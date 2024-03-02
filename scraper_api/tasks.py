@@ -157,7 +157,7 @@ def lamudi_multi_page_scraper_task():
     for property in property_details:
         if property.get("category") == "commercial":
             listing_url = PropertyListingModel.objects.get(
-                listing_url=listing_url
+                listing_url=property.get("listing_url")
             )
             if listing_url is None:
                 # Ensure price does not cause numeric field overflow
@@ -218,7 +218,7 @@ def lamudi_multi_page_scraper_task():
 
         if property.get("category") == "condominium":
             listing_url = PropertyListingModel.objects.get(
-                listing_url=listing_url
+                listing_url=property.get("listing_url")
             )
             if listing_url is None:
                 # Ensure price does not cause numeric field overflow
@@ -282,7 +282,7 @@ def lamudi_multi_page_scraper_task():
 
         if property.get("category") == "house":
             listing_url = PropertyListingModel.objects.get(
-                listing_url=listing_url
+                listing_url=property.get("listing_url")
             )
             if listing_url is None:
                 # Ensure price does not cause numeric field overflow
@@ -345,7 +345,7 @@ def lamudi_multi_page_scraper_task():
 
         if property.get("category") == "apartment":
             listing_url = PropertyListingModel.objects.get(
-                listing_url=listing_url
+                listing_url=property.get("listing_url")
             )
             if listing_url is None:
                 # Ensure price does not cause numeric field overflow
@@ -408,7 +408,7 @@ def lamudi_multi_page_scraper_task():
 
         if property.get("category") == "land":
             listing_url = PropertyListingModel.objects.get(
-                listing_url=listing_url
+                listing_url=property.get("listing_url")
             )
             if listing_url is None:
                 # Ensure price does not cause numeric field overflow
