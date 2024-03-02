@@ -72,19 +72,19 @@ class PropertyModel(BaseModel):
         default=list,
         null=True,
         blank=True,
-        verbose_name="Amenities"
+        verbose_name="Indoor Features"
     )
     outdoor_features = models.JSONField(
         default=list,
         null=True,
         blank=True,
-        verbose_name="Amenities"
+        verbose_name="Outdoor Features"
     )
     other_features = models.JSONField(
         default=list,
         null=True,
         blank=True,
-        verbose_name="Amenities"
+        verbose_name="Other Features"
     )
     description = models.TextField(
         null=True,
