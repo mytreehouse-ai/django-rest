@@ -73,6 +73,20 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
 
         attributes = json_fields.get("attributes", None)
 
+        try:
+            property_listing = PropertyListingModel.objects.get(
+                listing_url=listing_url
+            )
+        except PropertyListingModel.DoesNotExist:
+            logger.error(
+                f"No property listing found for URL: {listing_url}")
+            return Response(
+                {
+                    "message": f"No property listing found for URL: {listing_url}"
+                },
+                status=404
+            )
+
         if attributes:
             title = json_fields.get('title', None)
             attribute_set_name = attributes.get("attribute_set_name", None)
@@ -112,25 +126,18 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
                     name=attributes.get("listing_city")
                 )
 
-            try:
-                property_listing = PropertyListingModel.objects.get(
-                    listing_url=listing_url
-                )
-            except PropertyListingModel.DoesNotExist:
-                logger.error(
-                    f"No property listing found for URL: {listing_url}")
-                return
-
             property_listing.listing_title = title
             property_listing.listing_type = listing_type
             property_listing.property_type = property_type
             property_listing.price_formatted = price_formatted
+            property_listing.is_active = True
             property_listing.save(
                 update_fields=[
                     "listing_title",
                     "listing_type",
                     "property_type",
                     "price_formatted"
+                    "is_active"
                 ]
             )
 
@@ -168,6 +175,14 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
             logger.info(
                 f"Property listing found: {property_listing.listing_url}"
             )
+        else:
+            property_listing.is_active = False
+            property_listing.is_delisted = True
+            property_listing.save(update_fields=["is_active", "is_delisted"])
+            logger.info(
+                f"Property listing updated to inactive and delisted: {property_listing.listing_url}"
+            )
+
         return Response(
             {
                 "message": "Webhook response successfully processed."
