@@ -35,7 +35,7 @@ class ReadScrapyJobAPIView(ListAPIView):
         filters.SearchFilter,
         filters.OrderingFilter
     ]
-    search_fields = ["domain", "status", "attempts"]
+    search_fields = ["job_id", "domain", "status", "status_url", "attempts"]
     serializer_class = ReadScrapyJobSerializer
     pagination_class = PageNumberPagination
     queryset = ScrapyJobService.get_all_scrapy_job_for_selenium()
