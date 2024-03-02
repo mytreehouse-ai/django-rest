@@ -122,7 +122,7 @@ class ScrapyJobService:
             return None
 
     @staticmethod
-    def update_job(domain: str, job_id: str, attempts: int, status: str, single_page: Optional[bool] = False, html_code: Optional[str] = None, failed_reason: Optional[str] = None) -> None:
+    def update_job(domain: str, job_id: str, attempts: int, status: str, status_url: str, single_page: Optional[bool] = False, html_code: Optional[str] = None, failed_reason: Optional[str] = None) -> None:
         """
         Updates the details of a specific Scrapy job in the database.
 
@@ -145,6 +145,7 @@ class ScrapyJobService:
             job.job_id = job_id
             job.attempts = attempts
             job.status = status
+            job.status_url = status_url
             job.single_page = single_page
             job.finished_processed_at = timezone.now()
 
@@ -152,6 +153,7 @@ class ScrapyJobService:
                 "job_id",
                 "attempts",
                 "status",
+                "status_url",
                 "single_page",
                 "finished_processed_at"
             ]

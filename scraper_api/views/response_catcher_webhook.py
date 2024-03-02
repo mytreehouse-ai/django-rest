@@ -60,6 +60,7 @@ class ResponseCatcherWebhookAPIView(CreateAPIView):
         job_id = serializer.validated_data.get("id")
         attempts = serializer.validated_data.get("attempts")
         status = serializer.validated_data.get("status")
+        status_url = serializer.validated_data.get("statusUrl")
         url = serializer.validated_data.get("url")
         failed_reason = serializer.validated_data.get("failedReason", None)
         response = serializer.validated_data.get("response", None)
@@ -69,6 +70,7 @@ class ResponseCatcherWebhookAPIView(CreateAPIView):
             job_id=job_id,
             attempts=attempts,
             status=status,
+            status_url=status_url,
             html_code=response.get("body", None) if response else None,
             single_page=False if "/rent" in url or "/buy" in url else True,
             failed_reason=failed_reason
