@@ -97,6 +97,11 @@ class PropertyModel(BaseModel):
         blank=True,
         verbose_name="Description"
     )
+    markdown = models.TextField(
+        null=True,
+        blank=True,
+        verbose_name="Markdown"
+    )
     metadata = models.JSONField(
         null=True,
         blank=True,
