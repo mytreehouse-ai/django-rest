@@ -80,5 +80,9 @@ urlpatterns = [
         'scrapy-jobs/',
         include('scraper_api.urls')
     ),
-    # path('ml/', include("open_ai.urls"))
+    # path('ml/', include("open_ai.urls")),
+    path(
+        'properties/',
+        include('properties.urls')
+    )
 ]
