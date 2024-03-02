@@ -64,10 +64,11 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        json_fields = serializer.validated_data.get("json_fields", None)
+        listing_url = serializer.validated_data.get("listing_url")
+        json_fields = serializer.validated_data.get("json_fields")
 
-        if json_fields:
-            print(json.dumps(json_fields.get("attributes", None), indent=4))
+        print(listing_url)
+        print(json.dumps(json_fields.get("attributes", {}), indent=4))
 
         return Response(
             {
