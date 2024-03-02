@@ -164,8 +164,7 @@ def lamudi_multi_page_scraper_task():
                     'listing_url': property.get("listing_url"),
                     'listing_type': for_sale if property.get("listing_type") == "for-sale" else for_rent,
                     'property_type': warehouse,
-                    'price': price,
-                    'is_active': True
+                    'price': price
                 }
             )
 
@@ -222,8 +221,7 @@ def lamudi_multi_page_scraper_task():
                     'listing_url': property.get("listing_url"),
                     'listing_type': for_sale if property.get("listing_type") == "for-sale" else for_rent,
                     'property_type': condominium,
-                    'price': price,
-                    'is_active': True
+                    'price': price
                 }
             )
 
@@ -283,8 +281,7 @@ def lamudi_multi_page_scraper_task():
                     'listing_url': property.get("listing_url"),
                     'listing_type': for_sale if property.get("listing_type") == "for-sale" else for_rent,
                     'property_type': house,
-                    'price': price,
-                    'is_active': True
+                    'price': price
                 }
             )
 
@@ -343,8 +340,7 @@ def lamudi_multi_page_scraper_task():
                     'listing_url': property.get("listing_url"),
                     'listing_type': for_sale if property.get("listing_type") == "for-sale" else for_rent,
                     'property_type': apartment,
-                    'price': price,
-                    'is_active': True
+                    'price': price
                 }
             )
 
@@ -403,8 +399,7 @@ def lamudi_multi_page_scraper_task():
                     'listing_url': property.get("listing_url"),
                     'listing_type': for_sale if property.get("listing_type") == "for-sale" else for_rent,
                     'property_type': land,
-                    'price': price,
-                    'is_active': True
+                    'price': price
                 }
             )
 
