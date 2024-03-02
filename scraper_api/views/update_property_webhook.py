@@ -10,7 +10,6 @@ from ..serializers.scraperapi_job_finished_response_serializer import ScraperApi
 from domain.models.city_model import CityModel
 from properties.models.listing_type_model import ListingTypeModel
 from properties.models.property_listing_model import PropertyListingModel
-from properties.models.property_model import PropertyModel
 
 
 logger = getLogger(__name__)
@@ -70,7 +69,6 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
         listing_url = serializer.validated_data.get("listing_url")
         json_fields = serializer.validated_data.get("json_fields")
 
-        print(listing_url)
         print(f"title: {json_fields.get('title', None)}")
         # print(json.dumps(json_fields.get("attributes", {}), indent=4))
         # print(json.dumps(json_fields.get("description", {}), indent=4))
@@ -81,6 +79,7 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
         if attributes:
             price_formatted = attributes.get("price_formatted", None)
             offer_type = attributes.get("offer_type", None)
+
             if offer_type == "Buy":
                 listing_type = ListingTypeModel.objects.get(
                     description="For Sale"
@@ -100,6 +99,31 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
                 )
 
                 print(city)
+
+            try:
+                property_listing = PropertyListingModel.objects.get(
+                    listing_url=listing_url
+                )
+
+                property_listing.listing_type = listing_type
+                property_listing.price_formatted = price_formatted
+                property_listing.save(
+                    update_fields=[
+                        "listing_type",
+                        "price_formatted"
+                    ]
+                )
+
+                property_listing.estate.city = city
+                property_listing.estate.save(
+                    update_fields=[
+                        "city"
+                    ]
+                )
+
+                print(f"Property listing found: {property_listing}")
+            except PropertyListingModel.DoesNotExist:
+                print(f"No property listing found for URL: {listing_url}")
 
         return Response(
             {
