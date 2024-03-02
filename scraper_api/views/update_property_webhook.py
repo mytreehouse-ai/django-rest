@@ -79,18 +79,19 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
 
         if attributes:
             title = json_fields.get('title', None)
-            attribute_set_name = json_fields.get("attribute_set_name", None)
+            attribute_set_name = attributes.get("attribute_set_name", None)
             price_formatted = attributes.get("price_formatted", None)
             offer_type = attributes.get("offer_type", None)
             property_type = None
 
-            try:
-                property_type = PropertyTypeModel.objects.get(
-                    description=attribute_set_name
-                )
-            except PropertyTypeModel.DoesNotExist:
-                if attribute_set_name == "Commercial":
-                    property_type = PropertyTypeModel.objects.get(id=4)
+            if attribute_set_name:
+                try:
+                    property_type = PropertyTypeModel.objects.get(
+                        description=attribute_set_name
+                    )
+                except PropertyTypeModel.DoesNotExist:
+                    if attribute_set_name == "Commercial":
+                        property_type = PropertyTypeModel.objects.get(id=4)
 
             listing_type = None
             if offer_type == "Buy":
