@@ -4,8 +4,9 @@ import requests
 from time import sleep
 from django.core.management.base import BaseCommand
 
-from scraper_api.services.scraperapi_service import ScrapyJobService
 from ...serializers.create_scrapy_job_serializer import CreateScrapyJobSerializer
+from scraper_api.services.scraperapi_service import ScrapyJobService
+from scraper_api.models.scrapy_job_model import ScrapyJobModel
 
 logger = logging.getLogger(__name__)
 
@@ -59,15 +60,16 @@ class Command(BaseCommand):
 
                 try:
                     response_json: CreateScrapyJobSerializer = response.json()
-                    job = {
-                        "job_id": response_json.get("id", None),
-                        "domain": response_json.get("url", None),
-                        "status": response_json.get("status", "running"),
-                        "attempts": response_json.get("attempts", 0),
-                        "status_url": response_json.get("status_url", None),
-                        "supposed_to_run_at": response_json.get("supposedToRunAt", None)
-                    }
-                    ScrapyJobService.create_job(**job)
+                    ScrapyJobModel.objects.get_or_create(
+                        domain=response_json.get("url", None),
+                        defaults={
+                            "job_id": response_json.get("id", None),
+                            "status": response_json.get("status", None),
+                            "attempts": response_json.get("attempts", None),
+                            "status_url": response_json.get("status_url", None),
+                            "supposed_to_run_at": response_json.get("supposedToRunAt", None)
+                        }
+                    )
                 except ValueError:
                     logger.error("Failed to parse response as JSON.")
                     response_json = "Invalid JSON response"

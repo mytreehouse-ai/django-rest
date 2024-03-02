@@ -1,4 +1,5 @@
 import json
+import uuid
 from time import sleep
 from logging import getLogger
 from bs4 import BeautifulSoup
@@ -7,6 +8,7 @@ from django.utils import timezone
 
 from .services.scraperapi_service import ScrapyJobService
 from .serializers.create_scrapy_job_serializer import CreateScrapyJobSerializer
+from .models.scrapy_job_model import ScrapyJobModel
 from properties.models.property_type_model import PropertyTypeModel
 from properties.models.listing_type_model import ListingTypeModel
 from properties.models.property_listing_model import PropertyListingModel
@@ -39,15 +41,16 @@ def scraperapi_process_scrapy_web():
 
             try:
                 response_json: CreateScrapyJobSerializer = response.json()
-                job = {
-                    "job_id": response_json.get("id", None),
-                    "domain": response_json.get("url", None),
-                    "status": response_json.get("status", None),
-                    "attempts": response_json.get("attempts", None),
-                    "status_url": response_json.get("status_url", None),
-                    "supposed_to_run_at": response_json.get("supposedToRunAt", None)
-                }
-                ScrapyJobService.create_job(**job)
+                ScrapyJobModel.objects.get_or_create(
+                    domain=response_json.get("url", None),
+                    defaults={
+                        "job_id": response_json.get("id", None),
+                        "status": response_json.get("status", None),
+                        "attempts": response_json.get("attempts", None),
+                        "status_url": response_json.get("status_url", None),
+                        "supposed_to_run_at": response_json.get("supposedToRunAt", None)
+                    }
+                )
             except ValueError:
                 logger.error("Failed to parse response as JSON.")
                 response_json = "Invalid JSON response"
@@ -78,6 +81,16 @@ def lamudi_multi_page_scraper_task():
         return info_elements
 
     scrapy_jobs = ScrapyJobService.get_all_scrapy_job_for_task()
+
+    if not scrapy_jobs:
+        ScrapyJobModel.objects.all().update(
+            is_multi_page_processed=False,
+            is_single_page_processed=False,
+            finished_processed_at=None
+        )
+        logger.info(
+            "No scrapy jobs found for task reseting processed properties."
+        )
 
     current_scrapy_job_id = None
     for_sale = ListingTypeModel.objects.get(id=1)
@@ -158,32 +171,18 @@ def lamudi_multi_page_scraper_task():
             )
 
             if new_listing or created:
-                response = ScrapyJobService.scraper_api(
-                    scrapy_web=property.get("listing_url")
-                )
-
-                try:
-                    response_json: CreateScrapyJobSerializer = response.json()
-                    job = {
-                        "job_id": response_json.get("id", None),
-                        "domain": response_json.get("url", None),
-                        "status": response_json.get("status", None),
-                        "attempts": response_json.get("attempts", None),
-                        "status_url": response_json.get("status_url", None),
-                        "supposed_to_run_at": response_json.get("supposedToRunAt", None)
+                generated_uuid = str(uuid.uuid4())
+                ScrapyJobModel.objects.get_or_create(
+                    domain=property.get("listing_url"),
+                    defaults={
+                        "job_id": generated_uuid,
+                        "status": "finished",
+                        "attempts": 0,
+                        "single_page": True,
+                        "status_url": f"https://api.mytree.house/status/{generated_uuid}",
+                        "supposed_to_run_at": timezone.now()
                     }
-                    ScrapyJobService.create_job(**job)
-                except ValueError:
-                    logger.error("Failed to parse response as JSON.")
-                    response_json = "Invalid JSON response"
-                if response.status_code == 200:
-                    logger.info(
-                        f"Scraping job started successfully. Response: {response_json}"
-                    )
-                else:
-                    logger.error(
-                        f"Failed to start scraping job. Status code: {response.status_code}, Response: {response_json}"
-                    )
+                )
 
             # Extract geo_point safely
             geo_point = property.get("geo_point", [None, None])
@@ -253,6 +252,20 @@ def lamudi_multi_page_scraper_task():
                     'is_active': True
                 }
             )
+
+            if new_listing or created:
+                generated_uuid = str(uuid.uuid4())
+                ScrapyJobModel.objects.get_or_create(
+                    domain=property.get("listing_url"),
+                    defaults={
+                        "job_id": generated_uuid,
+                        "status": "finished",
+                        "attempts": 0,
+                        "single_page": True,
+                        "status_url": f"https://api.mytree.house/status/{generated_uuid}",
+                        "supposed_to_run_at": timezone.now()
+                    }
+                )
 
             # Extract geo_point safely
             geo_point = property.get("geo_point", [None, None])
@@ -340,6 +353,20 @@ def lamudi_multi_page_scraper_task():
                 }
             )
 
+            if new_listing or created:
+                generated_uuid = str(uuid.uuid4())
+                ScrapyJobModel.objects.get_or_create(
+                    domain=property.get("listing_url"),
+                    defaults={
+                        "job_id": generated_uuid,
+                        "status": "finished",
+                        "attempts": 0,
+                        "single_page": True,
+                        "status_url": f"https://api.mytree.house/status/{generated_uuid}",
+                        "supposed_to_run_at": timezone.now()
+                    }
+                )
+
             # Extract geo_point safely
             geo_point = property.get("geo_point", [None, None])
             longitude = geo_point[0] if len(geo_point) > 0 else 0.0
@@ -421,6 +448,20 @@ def lamudi_multi_page_scraper_task():
                 }
             )
 
+            if new_listing or created:
+                generated_uuid = str(uuid.uuid4())
+                ScrapyJobModel.objects.get_or_create(
+                    domain=property.get("listing_url"),
+                    defaults={
+                        "job_id": generated_uuid,
+                        "status": "finished",
+                        "attempts": 0,
+                        "single_page": True,
+                        "status_url": f"https://api.mytree.house/status/{generated_uuid}",
+                        "supposed_to_run_at": timezone.now()
+                    }
+                )
+
             # Extract geo_point safely
             geo_point = property.get("geo_point", [None, None])
             longitude = geo_point[0] if len(geo_point) > 0 else 0.0
@@ -501,6 +542,20 @@ def lamudi_multi_page_scraper_task():
                     'is_active': True
                 }
             )
+
+            if new_listing or created:
+                generated_uuid = str(uuid.uuid4())
+                ScrapyJobModel.objects.get_or_create(
+                    domain=property.get("listing_url"),
+                    defaults={
+                        "job_id": generated_uuid,
+                        "status": "finished",
+                        "attempts": 0,
+                        "single_page": True,
+                        "status_url": f"https://api.mytree.house/status/{generated_uuid}",
+                        "supposed_to_run_at": timezone.now()
+                    }
+                )
 
             # Extract geo_point safely
             geo_point = property.get("geo_point", [None, None])
