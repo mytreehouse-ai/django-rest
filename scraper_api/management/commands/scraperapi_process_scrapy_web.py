@@ -60,7 +60,7 @@ class Command(BaseCommand):
 
                 try:
                     response_json: CreateScrapyJobSerializer = response.json()
-                    ScrapyJobModel.objects.get_or_create(
+                    ScrapyJobModel.objects.update_or_create(
                         domain=response_json.get("url", None),
                         defaults={
                             "job_id": response_json.get("id", None),
