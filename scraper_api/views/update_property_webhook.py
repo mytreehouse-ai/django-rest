@@ -136,7 +136,7 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
                     "listing_title",
                     "listing_type",
                     "property_type",
-                    "price_formatted"
+                    "price_formatted",
                     "is_active"
                 ]
             )
