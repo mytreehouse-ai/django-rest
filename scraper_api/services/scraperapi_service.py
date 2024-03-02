@@ -52,7 +52,7 @@ class ScrapyJobService:
         return list(scrapy_webs)
 
     @staticmethod
-    def get_all_scrapy_job_for_task(single_page: Optional[bool] = False) -> List[ScrapyJobModel]:
+    def get_all_scrapy_job_for_task() -> List[ScrapyJobModel]:
         """
         Fetches a limited list of ScrapyJobModel instances representing completed, unprocessed scraping jobs from the database.
 
@@ -66,7 +66,7 @@ class ScrapyJobService:
         Returns:
             List[ScrapyJobModel]: A list of up to 10 ScrapyJobModel instances that meet the specified criteria.
         """
-        return ScrapyJobModel.objects.filter(status="finished", is_processed=False, single_page=single_page)[:10]
+        return ScrapyJobModel.objects.filter(status="finished", is_multi_page_processed=False, single_page=False)[:10]
 
     @staticmethod
     def get_all_scrapy_job_for_selenium():

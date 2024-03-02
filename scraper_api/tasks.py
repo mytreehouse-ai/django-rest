@@ -130,12 +130,12 @@ def lamudi_multi_page_scraper_task():
         )
 
         scrapy_job.html_code = None
-        scrapy_job.is_processed = True
+        scrapy_job.is_multi_page_processed = True
         scrapy_job.finished_processed_at = timezone.now()
         scrapy_job.save(
             update_fields=[
                 "html_code",
-                "is_processed",
+                "is_multi_page_processed",
                 "finished_processed_at"
             ]
         )

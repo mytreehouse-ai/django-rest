@@ -19,6 +19,9 @@ class ScrapyJobFilters(filters.FilterSet):
         lookup_expr='exact'
     )
     # Filter for is_processed using exact match
-    is_processed = filters.BooleanFilter(
+    is_multi_page_processed = filters.BooleanFilter(
+        lookup_expr='exact'
+    )
+    is_single_page_processed = filters.BooleanFilter(
         lookup_expr='exact'
     )

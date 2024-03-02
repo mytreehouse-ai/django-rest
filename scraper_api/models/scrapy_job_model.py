@@ -55,7 +55,10 @@ class ScrapyJobModel(BaseModel):
     single_page = models.BooleanField(
         default=False,
     )
-    is_processed = models.BooleanField(
+    is_multi_page_processed = models.BooleanField(
+        default=False
+    )
+    is_single_page_processed = models.BooleanField(
         default=False
     )
     finished_processed_at = models.DateTimeField(
