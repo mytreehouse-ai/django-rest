@@ -63,8 +63,11 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        # Process the validated data as needed
-        print(serializer.validated_data)
+        attributes = serializer.validated_data.get("attributes", None)
+
+        if attributes:
+            print(attributes.get("offer_type", None))
+            print(attributes.get("location", None))
 
         return Response(
             {
