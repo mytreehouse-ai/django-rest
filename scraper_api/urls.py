@@ -1,8 +1,10 @@
 from django.urls import path
 from .views.read_scrapy_job_webhook import ReadScrapyJobWebhookAPIView
-from .views.response_catcher_webhook import ResponseCatcherWebhookAPIView
+from .views.scraperapi_catcher_webhook import ScraperapiCatcherWebhookAPIView
+from .views.update_property_webhook import UpdatePropertyWebhookaAPIView
 
 urlpatterns = [
-    path("webhook/finished-job", ResponseCatcherWebhookAPIView.as_view()),
-    path("webhook/scrapy-jobs", ReadScrapyJobWebhookAPIView.as_view())
+    path("webhook/finished-job", ScraperapiCatcherWebhookAPIView.as_view()),
+    path("webhook/scrapy-jobs", ReadScrapyJobWebhookAPIView.as_view()),
+    path("webhook/property", UpdatePropertyWebhookaAPIView.as_view())
 ]

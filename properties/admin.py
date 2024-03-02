@@ -12,7 +12,7 @@ from .models.price_history_model import PriceHistoryModel
 class PropertyListingModelAdmin(admin.ModelAdmin):
     list_display = (
         "id", "listing_title", "listing_url", "price",
-        "is_active", "created_at", "updated_at"
+        "is_delisted", "is_active", "created_at", "updated_at"
     )
     search_fields = (
         "listing_title", "listing_url"

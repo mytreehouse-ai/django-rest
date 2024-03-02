@@ -64,6 +64,3 @@ class ScraperApiWebhookRequestBodySerializer(serializers.Serializer):
 
     class Meta:
         ref_field = "Scraper-api.webhook.request-body"
-
-    class Meta:
-        ref_field = "Scraper-api.webhook.request-body"
