@@ -95,7 +95,6 @@ class PropertyModel(BaseModel):
     description = models.TextField(
         null=True,
         blank=True,
-        db_index=True,
         verbose_name="Description"
     )
     markdown = models.TextField(
