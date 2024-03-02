@@ -9,8 +9,6 @@ from django.utils import timezone
 from .services.scraperapi_service import ScrapyJobService
 from .serializers.create_scrapy_job_serializer import CreateScrapyJobSerializer
 from .models.scrapy_job_model import ScrapyJobModel
-from properties.models.property_type_model import PropertyTypeModel
-from properties.models.listing_type_model import ListingTypeModel
 from properties.models.property_listing_model import PropertyListingModel
 from properties.models.property_model import PropertyModel
 from properties.models.price_history_model import PriceHistoryModel
@@ -92,13 +90,6 @@ def lamudi_multi_page_scraper_task():
         )
 
     current_scrapy_job_id = None
-    for_sale = ListingTypeModel.objects.get(id=1)
-    for_rent = ListingTypeModel.objects.get(id=2)
-    condominium = PropertyTypeModel.objects.get(id=1)
-    house = PropertyTypeModel.objects.get(id=2)
-    apartment = PropertyTypeModel.objects.get(id=3)
-    warehouse = PropertyTypeModel.objects.get(id=4)
-    land = PropertyTypeModel.objects.get(id=5)
 
     for scrapy_job in scrapy_jobs:
         current_scrapy_job_id = scrapy_job.job_id
@@ -166,8 +157,6 @@ def lamudi_multi_page_scraper_task():
                     listing_title=property.get("listing_title"),
                     defaults={
                         'listing_url': property.get("listing_url"),
-                        'listing_type': for_sale if property.get("listing_type") == "for-sale" else for_rent,
-                        'property_type': warehouse,
                         'price': price
                     }
                 )
@@ -227,8 +216,6 @@ def lamudi_multi_page_scraper_task():
                     listing_title=property.get("listing_title"),
                     defaults={
                         'listing_url': property.get("listing_url"),
-                        'listing_type': for_sale if property.get("listing_type") == "for-sale" else for_rent,
-                        'property_type': condominium,
                         'price': price
                     }
                 )
@@ -291,8 +278,6 @@ def lamudi_multi_page_scraper_task():
                     listing_title=property.get("listing_title"),
                     defaults={
                         'listing_url': property.get("listing_url"),
-                        'listing_type': for_sale if property.get("listing_type") == "for-sale" else for_rent,
-                        'property_type': house,
                         'price': price
                     }
                 )
@@ -354,8 +339,6 @@ def lamudi_multi_page_scraper_task():
                     listing_title=property.get("listing_title"),
                     defaults={
                         'listing_url': property.get("listing_url"),
-                        'listing_type': for_sale if property.get("listing_type") == "for-sale" else for_rent,
-                        'property_type': apartment,
                         'price': price
                     }
                 )
@@ -417,8 +400,6 @@ def lamudi_multi_page_scraper_task():
                     listing_title=property.get("listing_title"),
                     defaults={
                         'listing_url': property.get("listing_url"),
-                        'listing_type': for_sale if property.get("listing_type") == "for-sale" else for_rent,
-                        'property_type': land,
                         'price': price
                     }
                 )

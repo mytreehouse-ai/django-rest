@@ -24,6 +24,8 @@ class PropertyListingModel(BaseModel):
     )
     property_type = models.ForeignKey(
         "PropertyTypeModel",
+        null=True,
+        blank=True,
         related_name="property_type",
         on_delete=models.CASCADE,
         verbose_name="Property Type"
@@ -31,6 +33,7 @@ class PropertyListingModel(BaseModel):
     listing_type = models.ForeignKey(
         "ListingTypeModel",
         null=True,
+        blank=True,
         related_name="listing_type",
         on_delete=models.SET_NULL,
         verbose_name="Listing Type"
