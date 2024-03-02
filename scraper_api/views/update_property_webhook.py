@@ -1,4 +1,3 @@
-import json
 from logging import getLogger
 from rest_framework.generics import UpdateAPIView
 from rest_framework_api_key.permissions import HasAPIKey
@@ -9,6 +8,9 @@ from drf_yasg.utils import swagger_auto_schema
 from ..serializers.update_property_webhook_serializer import UpdatePropertyWebhookSerializer
 from ..serializers.scraperapi_job_finished_response_serializer import ScraperApiWebhookJobFinishedResponseSerializer
 from domain.models.city_model import CityModel
+from properties.models.listing_type_model import ListingTypeModel
+from properties.models.property_listing_model import PropertyListingModel
+from properties.models.property_model import PropertyModel
 
 
 logger = getLogger(__name__)
@@ -70,15 +72,29 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
 
         print(listing_url)
         print(f"title: {json_fields.get('title', None)}")
-        print(json.dumps(json_fields.get("attributes", {}), indent=4))
-        print(json.dumps(json_fields.get("description", {}), indent=4))
-        print(json.dumps(json_fields.get("location", {}), indent=4))
+        # print(json.dumps(json_fields.get("attributes", {}), indent=4))
+        # print(json.dumps(json_fields.get("description", {}), indent=4))
+        # print(json.dumps(json_fields.get("location", {}), indent=4))
 
         attributes = json_fields.get("attributes", None)
 
         if attributes:
+            price_formatted = attributes.get("price_formatted", None)
+            offer_type = attributes.get("offer_type", None)
+            if offer_type == "Buy":
+                listing_type = ListingTypeModel.objects.get(
+                    description="For Sale"
+                )
+            elif offer_type == "Rent":
+                listing_type = ListingTypeModel.objects.get(
+                    description="For Rent"
+                )
+
+            print(price_formatted)
+            print(listing_type)
+
             if attributes.get("listing_city_id", None) and attributes.get("listing_city", None):
-                city = CityModel.objects.get_or_create(
+                city, created = CityModel.objects.get_or_create(
                     id=int(attributes.get("listing_city_id")),
                     name=attributes.get("listing_city")
                 )
