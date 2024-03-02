@@ -71,10 +71,6 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
         listing_url = serializer.validated_data.get("listing_url")
         json_fields = serializer.validated_data.get("json_fields")
 
-        # print(json.dumps(json_fields.get("attributes", {}), indent=4))
-        # print(json.dumps(json_fields.get("description", {}), indent=4))
-        # print(json.dumps(json_fields.get("location", {}), indent=4))
-
         attributes = json_fields.get("attributes", None)
 
         if attributes:
@@ -121,7 +117,8 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
                     listing_url=listing_url
                 )
             except PropertyListingModel.DoesNotExist:
-                print(f"No property listing found for URL: {listing_url}")
+                logger.error(
+                    f"No property listing found for URL: {listing_url}")
                 return
 
             property_listing.listing_title = title
@@ -161,7 +158,14 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
                     ]
                 )
 
-            print(
+            try:
+                scrapy_job = ScrapyJobModel.objects.get(domain=listing_url)
+                scrapy_job.is_single_page_processed = True
+                scrapy_job.save(update_fields=["is_single_page_processed"])
+            except ScrapyJobModel.DoesNotExist:
+                logger.error(f"Scrapy job not found: {listing_url}")
+
+            logger.info(
                 f"Property listing found: {property_listing.listing_url}"
             )
         return Response(
