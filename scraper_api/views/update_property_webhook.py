@@ -86,6 +86,7 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
             outdoor_features = attributes.get("outdoor_features", [])
             other_features = attributes.get("other_features", [])
             listing_address = attributes.get("listing_address", None)
+            image_url = attributes.get("image_url", None)
             description = json_fields.get("description", None)
             property_type = None
 
@@ -142,9 +143,11 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
                 property_listing.estate.indoor_features = indoor_features
                 property_listing.estate.outdoor_features = outdoor_features
                 property_listing.estate.other_features = other_features
+                property_listing.estate.image_url = image_url
                 property_listing.estate.description = description.get(
                     "text", None
                 )
+                property_listing.estate.metadata = json_fields
                 property_listing.estate.save(
                     update_fields=[
                         "address",
@@ -152,7 +155,9 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
                         "indoor_features",
                         "outdoor_features",
                         "other_features",
-                        "description"
+                        "image_url",
+                        "description",
+                        "metadata"
                     ]
                 )
 
