@@ -15,10 +15,10 @@ class PropertyListingModel(BaseModel):
         unique=True,
         verbose_name="Listing URL"
     )
-    estate = models.ForeignKey(
+    estate = models.OneToOneField(
         "PropertyModel",
         null=True,
-        related_name="estate",
+        related_name="estate_listing",
         on_delete=models.CASCADE,
         verbose_name="Estate"
     )
