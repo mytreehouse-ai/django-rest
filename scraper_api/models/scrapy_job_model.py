@@ -36,7 +36,7 @@ class ScrapyJobModel(BaseModel):
     domain = models.URLField(
         blank=False,
         null=True,
-        db_index=True
+        unique=True
     )
     status = models.CharField(
         max_length=100,
