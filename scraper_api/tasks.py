@@ -82,6 +82,16 @@ def lamudi_multi_page_scraper_task():
 
     scrapy_jobs = ScrapyJobService.get_all_scrapy_job_for_task()
 
+    if not scrapy_jobs:
+        ScrapyJobModel.objects.all().update(
+            is_multi_page_processed=False,
+            is_single_page_processed=False,
+            finished_processed_at=None
+        )
+        logger.info(
+            "No scrapy jobs found for task reseting processed properties."
+        )
+
     current_scrapy_job_id = None
     for_sale = ListingTypeModel.objects.get(id=1)
     for_rent = ListingTypeModel.objects.get(id=2)
@@ -168,6 +178,7 @@ def lamudi_multi_page_scraper_task():
                         "job_id": generated_uuid,
                         "status": "finished",
                         "attempts": 0,
+                        "single_page": True,
                         "status_url": f"https://api.mytree.house/status/{generated_uuid}",
                         "supposed_to_run_at": timezone.now()
                     }
@@ -250,6 +261,7 @@ def lamudi_multi_page_scraper_task():
                         "job_id": generated_uuid,
                         "status": "finished",
                         "attempts": 0,
+                        "single_page": True,
                         "status_url": f"https://api.mytree.house/status/{generated_uuid}",
                         "supposed_to_run_at": timezone.now()
                     }
@@ -349,6 +361,7 @@ def lamudi_multi_page_scraper_task():
                         "job_id": generated_uuid,
                         "status": "finished",
                         "attempts": 0,
+                        "single_page": True,
                         "status_url": f"https://api.mytree.house/status/{generated_uuid}",
                         "supposed_to_run_at": timezone.now()
                     }
@@ -443,6 +456,7 @@ def lamudi_multi_page_scraper_task():
                         "job_id": generated_uuid,
                         "status": "finished",
                         "attempts": 0,
+                        "single_page": True,
                         "status_url": f"https://api.mytree.house/status/{generated_uuid}",
                         "supposed_to_run_at": timezone.now()
                     }
@@ -537,6 +551,7 @@ def lamudi_multi_page_scraper_task():
                         "job_id": generated_uuid,
                         "status": "finished",
                         "attempts": 0,
+                        "single_page": True,
                         "status_url": f"https://api.mytree.house/status/{generated_uuid}",
                         "supposed_to_run_at": timezone.now()
                     }
