@@ -8,6 +8,7 @@ from drf_yasg.utils import swagger_auto_schema
 
 from ..serializers.read_property_listing_serializer import ReadPropertyListingSerializer
 from ..services.public_property_service import PublicPropertyService
+from ..utils.property_listing_filter import PropertyListingFilter
 
 logger = getLogger(__name__)
 
@@ -35,6 +36,7 @@ class ReadAllPublicPropertyListingAPIView(ListAPIView):
         filters.SearchFilter,
         filters.OrderingFilter
     ]
+    filterset_class = PropertyListingFilter
     search_fields = [
         "listing_title",
         "listing_url",

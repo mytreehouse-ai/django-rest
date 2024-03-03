@@ -1,8 +1,8 @@
-import logging
+from logging import getLogger
 from django_filters import rest_framework as filters
 from django_filters import BaseInFilter, NumberFilter, DateFromToRangeFilter
 
-logger = logging.getLogger(__name__)
+logger = getLogger(__name__)
 
 
 class ScrapyJobFilters(filters.FilterSet):
