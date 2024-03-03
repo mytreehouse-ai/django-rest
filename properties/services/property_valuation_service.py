@@ -100,7 +100,7 @@ class PropertyValuationService:
         for_sale_avg_price = average_property_price_for_sale.get("average", 0)
         for_rent_avg_price = average_property_price_for_rent.get("average", 0)
 
-        if for_rent_avg_price == 0 and for_rent_avg_price == 0:
+        if for_sale_avg_price == 0 and for_rent_avg_price == 0:
             return {
                 "detail": "Your search criteria for condominium properties did not match any records in our database. Please adjust your search parameters and try again."
             }
@@ -108,13 +108,14 @@ class PropertyValuationService:
         appraisal_value_for_sale_price_per_sqm = for_sale_avg_price / floor_area
         appraisal_value_for_rent_price_per_sqm = for_rent_avg_price / floor_area
 
+        # Convert to float to avoid TypeError when multiplying with Decimal
         appraisal_value_for_sale_price = (
-            floor_area * condominium_remaining_useful_life
-        ) * appraisal_value_for_sale_price_per_sqm
+            float(floor_area) * float(condominium_remaining_useful_life)
+        ) * float(appraisal_value_for_sale_price_per_sqm)
 
         appraisal_value_for_rent_price = (
-            floor_area * condominium_remaining_useful_life
-        ) * appraisal_value_for_rent_price_per_sqm
+            float(floor_area) * float(condominium_remaining_useful_life)
+        ) * float(appraisal_value_for_rent_price_per_sqm)
 
         return {
             "for_sale_avg_price": for_sale_avg_price,
