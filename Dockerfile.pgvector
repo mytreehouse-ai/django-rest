@@ -1,0 +1,5 @@
+FROM ankane/pgvector:latest
+
+COPY pgvector-activator.sh /pgvector-activator.sh
+RUN chmod +x pgvector-activator.sh
+
