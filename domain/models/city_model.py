@@ -6,7 +6,7 @@ class CityModel(BaseModel):
     id = models.AutoField(primary_key=True)
     name = models.CharField(
         max_length=200,
-        unique=True,
+        db_index=True,
         verbose_name="Name"
     )
 
@@ -18,3 +18,6 @@ class CityModel(BaseModel):
         verbose_name = "City"
         verbose_name_plural = "Cities"
         ordering = ["-id"]
+        indexes = [
+            models.Index(fields=['name'], name='city_model_name_idx'),
+        ]

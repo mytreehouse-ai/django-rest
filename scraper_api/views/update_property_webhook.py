@@ -127,10 +127,10 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
 
             city = None
             if attributes.get("listing_city_id", None) and attributes.get("listing_city", None):
-                city, _created = CityModel.objects.update_or_create(
-                    name=attributes.get("listing_city"),
+                city, _created = CityModel.objects.get_or_create(
+                    id=int(attributes.get("listing_city_id")),
                     defaults={
-                        "id": int(attributes.get("listing_city_id"))
+                        "name": attributes.get("listing_city"),
                     }
                 )
 
