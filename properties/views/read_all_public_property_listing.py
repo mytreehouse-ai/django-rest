@@ -56,22 +56,45 @@ class ReadAllPublicPropertyListingAPIView(ListAPIView):
 
     @swagger_auto_schema(
         operation_description="""
-        Retrieve a list of public property listings with support for filtering, searching, and ordering.
-        
-        The API supports various filters to refine the search results. For example, you can filter properties by type and listing status using the `property_type_id` and `listing_type_id` query parameters, respectively.
-        
-        Sample valid payloads for `property_type_id` include:
-        - `1` for Condominium
-        - `2` for House
-        - `3` for Apartment
-        - `4` for Warehouse
-        - `5` for Land
-        
-        For `listing_type_id`, the valid payloads are:
-        - `1` for For Sale
-        - `2` for For Rent
-        
-        These filters can be combined with other search and ordering options provided by the API.
+        Retrieve a list of public property listings without requiring any authentication or authorization. This endpoint provides comprehensive support for filtering, searching, and ordering to refine search results effectively.
+
+        **Filtering Options:**
+
+        - `property_type_id`: Filters properties by type. Valid payloads include:
+            - `1` for Condominium
+            - `2` for House
+            - `3` for Apartment
+            - `4` for Warehouse
+            - `5` for Land
+
+        - `listing_type_id`: Filters properties by listing status. Valid payloads are:
+            - `1` for For Sale
+            - `2` for For Rent
+
+        - `property_status_id`: Filters properties by their status. Valid payloads include:
+            - `1` for Available
+            - `2` for Under Offer
+            - `3` for Sold
+
+        - `price_min` and `price_max`: Filters properties within a specific price range. For example, `?price_min=500000&price_max=1000000` filters properties priced between 500,000 and 1,000,000.
+
+        - `lot_size_min` and `lot_size_max`: Filters properties based on the lot size in square meters. For instance, `?lot_size_min=100&lot_size_max=500` filters properties with lot sizes between 100 and 500 square meters.
+
+        - `floor_size_min` and `floor_size_max`: Filters properties by the floor size in square meters.
+
+        - `building_size_min` and `building_size_max`: Filters properties by the building size in square meters.
+
+        - `num_bedrooms_min` and `num_bedrooms_max`: Filters properties by the number of bedrooms.
+
+        - `num_bathrooms_min` and `num_bathrooms_max`: Filters properties by the number of bathrooms.
+
+        - `num_carspaces_min` and `num_carspaces_max`: Filters properties by the number of car spaces.
+
+        - `city_id`: Filters properties based on their city. For example, `?city_id=1` filters properties located in a specific city.
+
+        - `indoor_features`, `outdoor_features`, and `other_features`: Filters properties by specific features. These filters support partial matches and can be combined. For example, `?indoor_features=gym&outdoor_features=pool` filters properties with gyms indoors and pools outdoors.
+
+        These filters can be used individually or combined to tailor the search results to your specific needs, alongside the search and ordering options provided by the API.
         """,
         operation_id="list_public_property_listings",
         tags=["Properties"],
