@@ -25,3 +25,22 @@ class PublicPropertyService:
             List[PropertyListingModel]: A list of all property listings.
         """
         return PropertyListingModel.objects.filter(is_active=True, is_delisted=False)
+
+    @staticmethod
+    def get_one_property_listing(listing_url: str) -> PropertyListingModel:
+        """
+        Retrieves a single property listing from the database based on the listing URL.
+
+        This method queries the PropertyListingModel to fetch a property listing that matches
+        the provided listing URL. If no matching property is found, it returns None.
+
+        Args:
+            listing_url (str): The URL of the listing to retrieve.
+
+        Returns:
+            PropertyListingModel: The property listing if found, otherwise None.
+        """
+        try:
+            return PropertyListingModel.objects.get(listing_url=listing_url)
+        except PropertyListingModel.DoesNotExist:
+            return None

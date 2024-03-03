@@ -22,7 +22,7 @@ class CustomPageNumberPagination(PageNumberPagination):
     max_page_size = 100  # Maximum limit of items per page
 
 
-class ReadPublicPropertyListingAPIView(ListAPIView):
+class ReadAllPublicPropertyListingAPIView(ListAPIView):
     """
     API view for reading public property listings.
 
