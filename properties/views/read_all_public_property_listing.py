@@ -55,7 +55,24 @@ class ReadAllPublicPropertyListingAPIView(ListAPIView):
     queryset = PublicPropertyService.get_all_property_listing()
 
     @swagger_auto_schema(
-        operation_description="Retrieve a list of public property listings with support for filtering, searching, and ordering.",
+        operation_description="""
+        Retrieve a list of public property listings with support for filtering, searching, and ordering.
+        
+        The API supports various filters to refine the search results. For example, you can filter properties by type and listing status using the `property_type_id` and `listing_type_id` query parameters, respectively.
+        
+        Sample valid payloads for `property_type_id` include:
+        - `1` for Condominium
+        - `2` for House
+        - `3` for Apartment
+        - `4` for Warehouse
+        - `5` for Land
+        
+        For `listing_type_id`, the valid payloads are:
+        - `1` for For Sale
+        - `2` for For Rent
+        
+        These filters can be combined with other search and ordering options provided by the API.
+        """,
         operation_id="list_public_property_listings",
         tags=["Properties"],
     )
