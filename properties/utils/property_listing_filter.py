@@ -52,3 +52,8 @@ class PropertyListingFilter(django_filters.FilterSet):
         field_name='estate__building_size',
         lookup_expr='lte'
     )
+    # Example usage in API: ?city_id=1
+    city_id = django_filters.NumberFilter(
+        field_name='estate__city__id',
+        lookup_expr='exact'
+    )
