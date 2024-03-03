@@ -27,7 +27,7 @@ class PublicPropertyService:
         return PropertyListingModel.objects.filter(is_active=True, is_delisted=False)
 
     @staticmethod
-    def get_one_property_listing(listing_url: str) -> PropertyListingModel:
+    def get_one_property_listing(listing_title: str) -> PropertyListingModel:
         """
         Retrieves a single property listing from the database based on the listing URL.
 
@@ -41,6 +41,6 @@ class PublicPropertyService:
             PropertyListingModel: The property listing if found, otherwise None.
         """
         try:
-            return PropertyListingModel.objects.get(listing_url=listing_url)
+            return PropertyListingModel.objects.get(listing_title=listing_title)
         except PropertyListingModel.DoesNotExist:
             return None
