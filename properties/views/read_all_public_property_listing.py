@@ -75,6 +75,7 @@ class ReadAllPublicPropertyListingAPIView(ListAPIView):
             - `1` for Available
             - `2` for Under Offer
             - `3` for Sold
+            - `4` Delisted property
 
         - `price_min` and `price_max`: Filters properties within a specific price range. For example, `?price_min=500000&price_max=1000000` filters properties priced between 500,000 and 1,000,000.
 

@@ -10,6 +10,7 @@ from ..serializers.scraperapi_job_finished_response_serializer import ScraperApi
 from domain.models.city_model import CityModel
 from properties.models.listing_type_model import ListingTypeModel
 from properties.models.property_type_model import PropertyTypeModel
+from properties.models.property_status_model import PropertyStatusModel
 from properties.models.property_listing_model import PropertyListingModel
 from scraper_api.models.scrapy_job_model import ScrapyJobModel
 
@@ -134,10 +135,15 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
                     }
                 )
 
+            property_available = PropertyStatusModel.objects.get_or_create(
+                description="Available"
+            )
+
             property_listing.listing_title = title
             property_listing.listing_type = listing_type
             property_listing.property_type = property_type
             property_listing.price_formatted = price_formatted
+            property_listing.property_status = property_available
             property_listing.is_active = True
             property_listing.save(
                 update_fields=[
@@ -145,6 +151,7 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
                     "listing_type",
                     "property_type",
                     "price_formatted",
+                    "property_status",
                     "is_active"
                 ]
             )
@@ -184,9 +191,19 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
                 f"Property listing found: {property_listing.listing_url}"
             )
         else:
+            property_delisted = PropertyStatusModel.objects.get_or_create(
+                description="Delisted"
+            )
+            property_listing.property_status = property_delisted
             property_listing.is_active = False
             property_listing.is_delisted = True
-            property_listing.save(update_fields=["is_active", "is_delisted"])
+            property_listing.save(
+                update_fields=[
+                    "property_status",
+                    "is_active",
+                    "is_delisted"
+                ]
+            )
             logger.info(
                 f"Property listing updated to inactive and delisted: {property_listing.listing_url}"
             )
