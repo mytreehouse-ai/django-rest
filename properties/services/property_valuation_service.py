@@ -37,7 +37,7 @@ class PropertyValuationService:
                 "detail": "Condominium property type not found"
             }
 
-        city = self.get_city(city_id)
+        city = self._get_city(city_id)
         if not city:
             return {
                 "detail": "City not found"
