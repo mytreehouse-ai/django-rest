@@ -41,9 +41,15 @@ class ReadOnePublicPropertyListingAPIView(RetrieveAPIView):
         """
         listing_url = self.kwargs.get('listing_url')
         property_listing = PublicPropertyService.get_one_property_listing(
-            listing_url)
+            listing_url=listing_url
+        )
         if property_listing is None:
-            return Response({"details": "Property listing not found"}, status=404)
+            return Response(
+                {
+                    "details": "Property listing not found"
+                },
+                status=404
+            )
         return property_listing
 
     @swagger_auto_schema(
