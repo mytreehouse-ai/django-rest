@@ -84,5 +84,9 @@ urlpatterns = [
     path(
         'properties/',
         include('properties.urls')
+    ),
+    path(
+        'domains/',
+        include('domain.urls')
     )
 ]
