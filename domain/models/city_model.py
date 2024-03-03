@@ -17,7 +17,7 @@ class CityModel(BaseModel):
         db_table = "cities"
         verbose_name = "City"
         verbose_name_plural = "Cities"
-        ordering = ["-id"]
+        ordering = ["name"]
         indexes = [
             models.Index(fields=['name'], name='name_idx'),
         ]
