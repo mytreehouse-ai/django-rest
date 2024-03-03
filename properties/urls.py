@@ -4,5 +4,8 @@ from .views.read_one_public_property_listing import ReadOnePublicPropertyListing
 
 urlpatterns = [
     path("public", ReadAllPublicPropertyListingAPIView.as_view()),
-    path("public/<str:listing_url>", ReadOnePublicPropertyListingAPIView.as_view())
+    path(
+        "public/<str:listing_title>",
+        ReadOnePublicPropertyListingAPIView.as_view()
+    )
 ]

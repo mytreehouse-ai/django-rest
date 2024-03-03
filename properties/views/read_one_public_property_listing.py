@@ -1,4 +1,5 @@
 from logging import getLogger
+from django.http import Http404
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -39,17 +40,12 @@ class ReadOnePublicPropertyListingAPIView(RetrieveAPIView):
             PropertyListingModel: The property listing instance if found.
             Response: A DRF Response object with a 404 status if the property listing is not found.
         """
-        listing_url = self.kwargs.get('listing_url')
+        listing_title = self.kwargs.get('listing_title')
         property_listing = PublicPropertyService.get_one_property_listing(
-            listing_url=listing_url
+            listing_title=listing_title
         )
         if property_listing is None:
-            return Response(
-                {
-                    "details": "Property listing not found"
-                },
-                status=404
-            )
+            raise Http404()
         return property_listing
 
     @swagger_auto_schema(
