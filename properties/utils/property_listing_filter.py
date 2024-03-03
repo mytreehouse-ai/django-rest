@@ -52,6 +52,31 @@ class PropertyListingFilter(django_filters.FilterSet):
         field_name='estate__building_size',
         lookup_expr='lte'
     )
+    # Example usage in API: ?num_bedrooms_min=2&num_bedrooms_max=5&num_bathrooms_min=1&num_bathrooms_max=3&num_carspaces_min=1&num_carspaces_max=2
+    num_bedrooms_min = django_filters.NumberFilter(
+        field_name='estate__num_bedrooms',
+        lookup_expr='gte'
+    )
+    num_bedrooms_max = django_filters.NumberFilter(
+        field_name='estate__num_bedrooms',
+        lookup_expr='lte'
+    )
+    num_bathrooms_min = django_filters.NumberFilter(
+        field_name='estate__num_bathrooms',
+        lookup_expr='gte'
+    )
+    num_bathrooms_max = django_filters.NumberFilter(
+        field_name='estate__num_bathrooms',
+        lookup_expr='lte'
+    )
+    num_carspaces_min = django_filters.NumberFilter(
+        field_name='estate__num_carspaces',
+        lookup_expr='gte'
+    )
+    num_carspaces_max = django_filters.NumberFilter(
+        field_name='estate__num_carspaces',
+        lookup_expr='lte'
+    )
     # Example usage in API: ?city_id=1
     city_id = django_filters.NumberFilter(
         field_name='estate__city__id',
