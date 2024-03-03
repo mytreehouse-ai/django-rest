@@ -135,7 +135,7 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
                     }
                 )
 
-            property_status_available = PropertyStatusModel.objects.get_or_create(
+            property_status_available, _property_status_created = PropertyStatusModel.objects.get_or_create(
                 description="Available"
             )
 
@@ -192,7 +192,7 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
                 f"Property listing found: {property_listing.listing_url}"
             )
         else:
-            property_status_delisted = PropertyStatusModel.objects.get_or_create(
+            property_status_delisted, _property_status_created = PropertyStatusModel.objects.get_or_create(
                 description="Delisted"
             )
             property_listing.property_status = property_status_delisted
