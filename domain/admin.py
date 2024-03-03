@@ -1,6 +1,11 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
+from django.contrib import admin
 
+from .models.user_model import User
 from .models.city_model import CityModel
+
+admin.site.register(User, UserAdmin)
 
 
 @admin.register(CityModel)
