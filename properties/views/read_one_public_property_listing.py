@@ -41,7 +41,7 @@ class ReadOnePublicPropertyListingAPIView(RetrieveAPIView):
         """
         listing_url = self.kwargs.get('listing_url')
         property_listing = PublicPropertyService.get_one_property_listing(
-            listing_url
+            listing_url=listing_url
         )
         if property_listing is None:
             return Response(
