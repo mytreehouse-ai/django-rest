@@ -67,7 +67,7 @@ class PropertyValuationService:
         # - The price is greater than 1
         # - The property type is condominium
         # - The listing type is for sale
-        # - The estate's floor area is within 80% to 120% of the specified floor area
+        # - The estate's floor size is within 80% to 120% of the specified floor area
         # - The estate is located in the specified city
         # The result is stored in a dictionary with the key 'average', which represents the average price.
         # To access the average price, use average_property_price_for_sale['average'].
@@ -75,16 +75,16 @@ class PropertyValuationService:
             price__gt=1,
             property_type=property_type_condominium,
             listing_type=listing_type_for_sale,
-            estate__floor_area__gte=floor_area * 0.8,
-            estate__floor_area__lte=floor_area * 1.2,
+            estate__floor_size__gte=floor_area * 0.8,
+            estate__floor_size__lte=floor_area * 1.2,
             estate__city=city,
         ).aggregate(average=Avg('price'))
 
-        # The following query calculates the average price of property listings for sale that match certain criteria:
+        # The following query calculates the average price of property listings for rent that match certain criteria:
         # - The price is greater than 1
         # - The property type is condominium
         # - The listing type is for rent
-        # - The estate's floor area is within 80% to 120% of the specified floor area
+        # - The estate's floor size is within 80% to 120% of the specified floor area
         # - The estate is located in the specified city
         # The result is stored in a dictionary with the key 'average', which represents the average price.
         # To access the average price, use average_property_price_for_rent['average'].
@@ -92,8 +92,8 @@ class PropertyValuationService:
             price__gt=1,
             property_type=property_type_condominium,
             listing_type=listing_type_for_rent,
-            estate__floor_area__gte=floor_area * 0.8,
-            estate__floor_area__lte=floor_area * 1.2,
+            estate__floor_size__gte=floor_area * 0.8,
+            estate__floor_size__lte=floor_area * 1.2,
             estate__city=city,
         ).aggregate(average=Avg('price'))
 
