@@ -37,7 +37,7 @@ class ReadPropertySerializer(serializers.ModelSerializer):
             "other_features",
             "description",
             "markdown",
-            "metadata",
+            # "metadata", too much to include.
             "created_at",
             "updated_at"
         ]
