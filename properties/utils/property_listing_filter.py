@@ -77,6 +77,19 @@ class PropertyListingFilter(django_filters.FilterSet):
         field_name='estate__num_carspaces',
         lookup_expr='lte'
     )
+    # Example usage in API: ?indoor_features=gym&outdoor_features=pool&other_features=elevator
+    indoor_features = django_filters.CharFilter(
+        field_name='estate__indoor_features',
+        lookup_expr='contains'
+    )
+    outdoor_features = django_filters.CharFilter(
+        field_name='estate__outdoor_features',
+        lookup_expr='contains'
+    )
+    other_features = django_filters.CharFilter(
+        field_name='estate__other_features',
+        lookup_expr='contains'
+    )
     # Example usage in API: ?city_id=1
     city_id = django_filters.NumberFilter(
         field_name='estate__city__id',
