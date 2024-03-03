@@ -1,7 +1,6 @@
 from logging import getLogger
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import AllowAny
-from rest_framework.pagination import PageNumberPagination
 from rest_framework import filters
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_yasg.utils import swagger_auto_schema
@@ -9,18 +8,9 @@ from drf_yasg.utils import swagger_auto_schema
 from ..serializers.read_property_listing_serializer import ReadPropertyListingSerializer
 from ..services.public_property_service import PublicPropertyService
 from ..utils.property_listing_filter import PropertyListingFilter
+from domain.utils.custom_page_number_pagination import CustomPageNumberPagination
 
 logger = getLogger(__name__)
-
-
-class CustomPageNumberPagination(PageNumberPagination):
-    """
-    Custom pagination class to set a default page size.
-    """
-    page_size = 10  # Set the default number of items per page
-    # Allow client to override the page size using this query parameter
-    page_size_query_param = 'page_size'
-    max_page_size = 100  # Maximum limit of items per page
 
 
 class ReadAllPublicPropertyListingAPIView(ListAPIView):
