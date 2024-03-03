@@ -36,9 +36,9 @@ class ReadAllPublicPropertyListingAPIView(ListAPIView):
         "estate__description"
     ]
     ordering_fields = [
-        'id',
-        'created_at',
-        'updated_at'
+        "id",
+        "created_at",
+        "updated_at"
     ]
     serializer_class = ReadPropertyListingSerializer
     pagination_class = CustomPageNumberPagination

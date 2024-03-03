@@ -32,9 +32,10 @@ class ReadAllCityAPIView(ListAPIView):
         "name",
     ]
     ordering_fields = [
-        'id',
-        'created_at',
-        'updated_at'
+        "id",
+        "name",
+        "created_at",
+        "updated_at"
     ]
     serializer_class = ReadCitySerializer
     pagination_class = CustomPageNumberPagination
