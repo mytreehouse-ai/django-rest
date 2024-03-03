@@ -3,7 +3,6 @@ from django.utils import timezone
 from django.db.models import Avg
 
 from ..models.property_listing_model import PropertyListingModel
-from ..models.property_model import PropertyModel
 from ..models.listing_type_model import ListingTypeModel
 from ..models.property_type_model import PropertyTypeModel
 from domain.models.city_model import CityModel
@@ -118,10 +117,10 @@ class PropertyValuationService:
         ) * float(appraisal_value_for_rent_price_per_sqm)
 
         return {
-            "for_sale_avg_price": f"₱{for_sale_avg_price:.2f}",
-            "for_rent_avg_price": f"₱{for_rent_avg_price:.2f}",
-            "appraisal_value_for_sale_price_per_sqm": f"₱{appraisal_value_for_sale_price_per_sqm:.2f}",
-            "appraisal_value_for_rent_price_per_sqm": f"₱{appraisal_value_for_rent_price_per_sqm:.2f}",
-            "appraisal_value_for_sale_price": f"₱{appraisal_value_for_sale_price:.2f}",
-            "appraisal_value_for_rent_price": f"₱{appraisal_value_for_rent_price:.2f}"
+            "for_sale_avg_price": f"₱{for_sale_avg_price:,.2f}",
+            "for_rent_avg_price": f"₱{for_rent_avg_price:,.2f}",
+            "appraisal_value_for_sale_price_per_sqm": f"₱{appraisal_value_for_sale_price_per_sqm:,.2f}",
+            "appraisal_value_for_rent_price_per_sqm": f"₱{appraisal_value_for_rent_price_per_sqm:,.2f}",
+            "appraisal_value_for_sale_price": f"₱{appraisal_value_for_sale_price:,.2f}",
+            "appraisal_value_for_rent_price": f"₱{appraisal_value_for_rent_price:,.2f}"
         }
