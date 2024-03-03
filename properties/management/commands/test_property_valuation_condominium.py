@@ -1,5 +1,6 @@
 import json
 import logging
+from decimal import Decimal
 from django.utils import timezone
 from django.core.management.base import BaseCommand
 
@@ -37,4 +38,10 @@ class Command(BaseCommand):
             city_id=city_id,
             year_built=year_built
         )
+        # Convert Decimal values to float for JSON serialization
+        condominium_valuation = {
+            k: float(v) if isinstance(
+                v, Decimal
+            ) else v for k, v in condominium_valuation.items()
+        }
         print(json.dumps(condominium_valuation, indent=4))
