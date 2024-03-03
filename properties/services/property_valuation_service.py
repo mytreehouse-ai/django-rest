@@ -75,9 +75,9 @@ class PropertyValuationService:
             price__gt=1,
             property_type=property_type_condominium,
             listing_type=listing_type_for_sale,
-            estate_floor_area__gte=floor_area * 0.8,
-            estate_floor_area__lte=floor_area * 1.2,
-            estate_city=city,
+            estate__floor_area__gte=floor_area * 0.8,
+            estate__floor_area__lte=floor_area * 1.2,
+            estate__city=city,
         ).aggregate(average=Avg('price'))
 
         # The following query calculates the average price of property listings for sale that match certain criteria:
@@ -92,9 +92,9 @@ class PropertyValuationService:
             price__gt=1,
             property_type=property_type_condominium,
             listing_type=listing_type_for_rent,
-            estate_floor_area__gte=floor_area * 0.8,
-            estate_floor_area__lte=floor_area * 1.2,
-            estate_city=city,
+            estate__floor_area__gte=floor_area * 0.8,
+            estate__floor_area__lte=floor_area * 1.2,
+            estate__city=city,
         ).aggregate(average=Avg('price'))
 
         for_sale_avg_price = average_property_price_for_sale.get("average", 0)
