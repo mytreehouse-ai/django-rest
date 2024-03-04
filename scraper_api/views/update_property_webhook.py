@@ -1,3 +1,4 @@
+import json
 from logging import getLogger
 from rest_framework.generics import UpdateAPIView
 from rest_framework_api_key.permissions import HasAPIKey
@@ -204,6 +205,15 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
                     "is_active",
                     "is_delisted"
                 ]
+            )
+            print(json.dumps(
+                {
+                    "id": property_listing.id,
+                    "listing_url": property_listing.listing_url,
+                    "property_status": property_status_delisted.description
+                },
+                indent=4
+            )
             )
             logger.info(
                 f"Property listing updated to inactive and delisted: {property_listing.listing_url}"
