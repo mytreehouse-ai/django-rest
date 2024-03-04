@@ -1,0 +1,125 @@
+1. [Spacious Warehouse for Rent in Quezon City, 500sqm P200,000](https://www.myproperty.ph/spacious-warehouse-for-rent-in-quezon-city-500sqm-200000.html)
+    - Listing type: For Rent
+    - Current Price: Php 200,000
+    - Lot Area: 500 sqm
+    - Address: Novaliches, Quezon City
+    - Longitude: 121.0329
+    - Latitude: 14.7214
+    - Description: 
+        - Ideal for storage and distribution
+        - Accessible location with 24/7 security
+        - Minimum lease 1 year
+        - Ready for occupancy
+
+2. [Industrial Warehouse in Laguna for Sale, 1000sqm P15M](https://www.myproperty.ph/industrial-warehouse-in-laguna-for-sale-1000sqm-15m.html)
+    - Listing type: For Sale
+    - Current Price: Php 15,000,000
+    - Lot Area: 1000 sqm
+    - Address: Calamba, Laguna
+    - Longitude: 121.1497
+    - Latitude: 14.2138
+    - Description: 
+        - High ceiling with office space
+        - Near SLEX, perfect for manufacturing
+        - Clean title, direct buyers only
+
+3. [Commercial Warehouse for Lease in Davao, 800sqm P120,000](https://www.myproperty.ph/commercial-warehouse-for-lease-in-davao-800sqm-120000.html)
+    - Listing type: For Rent
+    - Current Price: Php 120,000
+    - Lot Area: 800 sqm
+    - Address: Buhangin, Davao City
+    - Longitude: 125.6236
+    - Latitude: 7.0731
+    - Description: 
+        - Newly built with truck parking
+        - Ideal for logistics and storage
+        - With office and staff quarters
+
+4. [Cold Storage Warehouse in Cebu for Rent, 400sqm P250,000](https://www.myproperty.ph/cold-storage-warehouse-in-cebu-for-rent-400sqm-250000.html)
+    - Listing type: For Rent
+    - Current Price: Php 250,000
+    - Lot Area: 400 sqm
+    - Address: Mandaue City, Cebu
+    - Longitude: 123.9603
+    - Latitude: 10.3236
+    - Description: 
+        - Equipped with state-of-the-art cooling systems
+        - 24/7 operation capability
+        - Strategically located near ports
+
+5. [Large Scale Warehouse Facility in Clark for Sale, 2000sqm P30M](https://www.myproperty.ph/large-scale-warehouse-facility-in-clark-for-sale-2000sqm-30m.html)
+    - Listing type: For Sale
+    - Current Price: Php 30,000,000
+    - Lot Area: 2000 sqm
+    - Address: Clark Freeport Zone, Pampanga
+    - Longitude: 120.5463
+    - Latitude: 15.1859
+    - Description: 
+        - Ideal for high volume storage and distribution
+        - With existing office space and staff amenities
+        - Secure compound within industrial park
+
+6. [Modern Logistics Hub in Batangas for Rent, 600sqm P180,000](https://www.myproperty.ph/modern-logistics-hub-in-batangas-for-rent-600sqm-180000.html)
+    - Listing type: For Rent
+    - Current Price: Php 180,000
+    - Lot Area: 600 sqm
+    - Address: Lipa City, Batangas
+    - Longitude: 121.1603
+    - Latitude: 13.9411
+    - Description:
+        - Advanced security systems
+        - High capacity for logistics operations
+        - Flexible lease terms available
+        - Proximity to major highways
+
+7. [Eco-Friendly Warehouse in Iloilo for Sale, 1200sqm P22M](https://www.myproperty.ph/eco-friendly-warehouse-in-iloilo-for-sale-1200sqm-22m.html)
+    - Listing type: For Sale
+    - Current Price: Php 22,000,000
+    - Lot Area: 1200 sqm
+    - Address: Santa Barbara, Iloilo
+    - Longitude: 122.5311
+    - Latitude: 10.8242
+    - Description:
+        - Solar-powered lighting
+        - Rainwater harvesting system
+        - Ample parking and loading areas
+        - Green building certified
+
+8. [Compact Warehouse Space for Lease in Makati, 300sqm P100,000](https://www.myproperty.ph/compact-warehouse-space-for-lease-in-makati-300sqm-100000.html)
+    - Listing type: For Rent
+    - Current Price: Php 100,000
+    - Lot Area: 300 sqm
+    - Address: Barangay Olympia, Makati
+    - Longitude: 121.0142
+    - Latitude: 14.5642
+    - Description:
+        - Suitable for small-scale operations
+        - 24-hour CCTV surveillance
+        - Easy access to public transport
+        - Near commercial centers
+
+9. [High-Ceiling Warehouse in Bulacan for Rent, 850sqm P230,000](https://www.myproperty.ph/high-ceiling-warehouse-in-bulacan-for-rent-850sqm-230000.html)
+    - Listing type: For Rent
+    - Current Price: Php 230,000
+    - Lot Area: 850 sqm
+    - Address: Marilao, Bulacan
+    - Longitude: 120.9584
+    - Latitude: 14.7578
+    - Description:
+        - Perfect for manufacturing or storage
+        - With office and worker facilities
+        - Near NLEX for easy logistics
+        - Secure environment with 24/7 guards
+
+10. [Strategically Located Warehouse in Pasig for Sale, 1500sqm P28M](https://www.myproperty.ph/strategically-located-warehouse-in-pasig-for-sale-1500sqm-28m.html)
+    - Listing type: For Sale
+    - Current Price: Php 28,000,000
+    - Lot Area: 1500 sqm
+    - Address: Ortigas Avenue, Pasig
+    - Longitude: 121.0812
+    - Latitude: 14.5883
+    - Description:
+        - Accessible to major roads and business districts
+        - Ideal for distribution centers
+        - With existing utility connections
+        - Secure and gated compound

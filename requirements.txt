@@ -45,8 +45,8 @@ jsonpatch==1.33
 jsonpointer==2.4
 kombu==5.3.5
 langchain==0.1.9
-langchain-community==0.0.24
-langchain-core==0.1.26
+langchain-community==0.0.25
+langchain-core==0.1.28
 langchain-openai==0.0.7
 langsmith==0.1.8
 marshmallow==3.20.2
