@@ -1,13 +1,13 @@
 import os
+import json
 from logging import getLogger
 from django.core.management.base import BaseCommand
+from openai import OpenAI
 from langchain.vectorstores.pgvector import PGVector
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
-from langchain.output_parsers import ResponseSchema
+from langchain.output_parsers import ResponseSchema, StructuredOutputParser
 from langchain_community.document_loaders import TextLoader
 from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.output_parsers import StrOutputParser
-from langchain_core.runnables import RunnablePassthrough
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
 logger = getLogger(__name__)
@@ -18,7 +18,7 @@ class Command(BaseCommand):
     help = ""
 
     def handle(self, *args, **options):
-        openai_api_key = os.getenv("OPENAI_API_KEY")
+        OpenAI.api_key = os.getenv("OPENAI_API_KEY")
         pg_host = os.getenv("POSTGRES_HOST")
         pg_user = os.getenv("POSTGRES_USERNAME")
         pg_pass = os.getenv("POSTGRES_PASSWORD")
@@ -30,15 +30,14 @@ class Command(BaseCommand):
         collection_name = "mytreehouse_vectors"
 
         llm = ChatOpenAI(
-            api_key=openai_api_key,
             model="gpt-3.5-turbo-0125",
             temperature=0.0
         )
 
-        embeddings = OpenAIEmbeddings(api_key=os.getenv("OPENAI_API_KEY"))
+        embeddings = OpenAIEmbeddings()
 
-        chat_prompt_template_text = """
-          Answer the question based only on the following question: {context}
+        ai_instruction_advance = """
+          Listings: {context}
 
           Question: {question}
 
@@ -47,33 +46,18 @@ class Command(BaseCommand):
           1. Attachment Information: Exclude any attachment details mentioned in the property description from your response.
           2. Alternative Options: If the data provides additional options, proactively recommend these to the user.
           3. Description Conciseness: Ensure property descriptions are concise yet comprehensive. Focus on key details to provide a clear overview.
-          4. Warehouse Listings: If the user asks for all available warehouses, we can show 5 examples and prompt the user to specify their interest in a particular warehouse for more detailed information.
-          5. For queries unrelated to warehouse, always treat them as FAQs and provide unlimited responses for industrial FAQs and always respond with complete details.
-          6. Price Formatting:
+          4. For queries unrelated to warehouse, always treat them as FAQs and provide unlimited responses for industrial FAQs and always respond with complete details.
+          5. Price Formatting:
               - Always present prices in PHP (Philippine Peso).
               - Omit decimal points when the price ends in .0 or .00.
-          7. User Guidance for Specificity: When providing property information, advise the owner on how they can refine their query for more targeted results. Encourage specificity in their requests.
-          8. If a keyword is highly similar to the description, include it in the recommendation.
-          9. If the user doesn't mention the warehouse, please assume they are looking for one.
-          10. It is important to be specific about the location. If the user asks for Makati, only provide the Makati warehouse location, and if they ask for Taguig, provide the Taguig location, and so on.
-          10. Markdown Format: All responses should be formatted in markdown for clarity and readability and always target="_blank" when you include a link in your response.
+          6. User Guidance for Specificity: When providing property information, advise the owner on how they can refine their query for more targeted results. Encourage specificity in their requests.
+          7. If a keyword is highly similar to the description, include it in the recommendation.
+          8. It is important to be specific about the location. If the user asks for Makati, only provide the Makati warehouse location, and if they ask for Taguig, provide the Taguig location, and so on.
 
-          Follow this response format for warehouse inquiry:
-
-          Listing Title:
-          Listing URL:
-          Listing type:
-          Current Price:
-          Lot Area:
-          Address:
-          Longitude:
-          Latitude:
-          description:
-
-          This is an example of a single response a user wants to see:
+          This is an example of a single response a user wants to see supply this into the listing_markdown_formatted_response property and should be a markdown:
 
           ```example start
-          1. [Commercial Storage Warehouse for Lease Makati near kalayaan 327sqm P150,000](https://www.myproperty.ph/commercial-storage-warehouse-for-lease-makati-near-169192747861.html)
+          [Commercial Storage Warehouse for Lease Makati near kalayaan 327sqm P150,000](https://www.myproperty.ph/commercial-storage-warehouse-for-lease-makati-near-169192747861.html)
               - Listing type: For Rent
               - Current Price: Php 150,000
               - Lot Area: 300 sqm
@@ -90,10 +74,51 @@ class Command(BaseCommand):
           example end```
           
           When responding to a prompt unrelated to warehouse properties, always reply as a friendly assistant. Let the user know that you only cater Industrial property related to warehouse.
+          
+          {format_instructions}
           """
 
-        chat_prompt_template = ChatPromptTemplate.from_template(
-            chat_prompt_template_text
+        listing_url_schema = ResponseSchema(
+            name="listing_url",
+            description="The URL of the listing, providing a direct link to the warehouse's detailed page."
+        )
+
+        listing_city = ResponseSchema(
+            name="listing_city",
+            description="The city where the warehouse is located, helping to filter listings by geographical preference."
+        )
+
+        listing_type = ResponseSchema(
+            name="listing_type",
+            description="Specifies whether the warehouse is for rent or for sale, catering to different user needs."
+        )
+
+        listing_price = ResponseSchema(
+            name="listing_price",
+            description="The price of the warehouse listing in PHP, formatted according to the guidelines (e.g., omitting decimal points when price ends in .0 or .00)."
+        )
+
+        listing_markdown_formatted_response = ResponseSchema(
+            name="listing_markdown_formatted_response",
+            description="A markdown-formatted response that includes all the essential details of the warehouse listing, ensuring clarity and readability."
+        )
+
+        response_schemas = [
+            listing_url_schema,
+            listing_city,
+            listing_type,
+            listing_price,
+            listing_markdown_formatted_response
+        ]
+
+        output_parser = StructuredOutputParser.from_response_schemas(
+            response_schemas=response_schemas
+        )
+
+        format_instruction = output_parser.get_format_instructions()
+
+        advance_prompt = ChatPromptTemplate.from_template(
+            template=ai_instruction_advance
         )
 
         loader = TextLoader(
@@ -118,11 +143,23 @@ class Command(BaseCommand):
             connection_string=connection_string,
         )
 
-        store.add_documents(documents=texts)
+        # store.add_documents(documents=texts)
 
         retriever = store.as_retriever()
 
-        query = "I need atleast 1200sqm somewhere in bulacan?"
+        query = "Give me 4 option for warehouse?"
+
+        advance_message = advance_prompt.format_messages(
+            context=retriever,
+            question=query,
+            format_instructions=format_instruction
+        )
+
+        response = llm.invoke(advance_message)
+
+        output_dict = output_parser.parse(response.content)
+
+        print(json.dumps(output_dict, indent=4))
 
         # similarity = store.similarity_search_with_score(query=query)
 
@@ -132,12 +169,3 @@ class Command(BaseCommand):
             order by cosine_distance
             limit 2
         """
-
-        chain = (
-            {"context": retriever, "question": RunnablePassthrough()}
-            | chat_prompt_template
-            | llm
-            | StrOutputParser()
-        )
-
-        print(chain.invoke(query))
