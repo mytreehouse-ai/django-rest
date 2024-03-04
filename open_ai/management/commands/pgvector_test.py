@@ -37,26 +37,28 @@ class Command(BaseCommand):
         embeddings = OpenAIEmbeddings()
 
         ai_instruction_advance = """
-          Listings: {context}
-
-          Question: {question}
-
-          When responding to property inquiries, please adhere to the following guidelines:
-
+          You are a realstate agent, helping user find the best realstate property.
+          
+          Generate your response by following the steps below:
+          
           1. Attachment Information: Exclude any attachment details mentioned in the property description from your response.
           2. Alternative Options: If the data provides additional options, proactively recommend these to the user.
           3. Description Conciseness: Ensure property descriptions are concise yet comprehensive. Focus on key details to provide a clear overview.
-          4. For queries unrelated to warehouse, always treat them as FAQs and provide unlimited responses for industrial FAQs and always respond with complete details.
-          5. Price Formatting:
+          4. Price Formatting:
               - Always present prices in PHP (Philippine Peso).
               - Omit decimal points when the price ends in .0 or .00.
-          6. User Guidance for Specificity: When providing property information, advise the owner on how they can refine their query for more targeted results. Encourage specificity in their requests.
-          7. If a keyword is highly similar to the description, include it in the recommendation.
-          8. It is important to be specific about the location. If the user asks for Makati, only provide the Makati warehouse location, and if they ask for Taguig, provide the Taguig location, and so on.
+          5. User Guidance for Specificity: When providing property information, advise the user on how they can refine their query for more targeted results. Encourage specificity in their requests.
+          6. It is important to be specific about the location. If the user asks for Makati, only provide the Makati warehouse location, and if they ask for Taguig, provide the Taguig location, and so on.
+          7. Queries unrelated to real estate should be answered by guiding the user back to real estate-related inquiries or providing a brief, polite response indicating the inability to assist with non-real estate questions.
+        
+          CONTEXT:
+           
+          {context}
 
-          This is an example of a single response a user wants to see supply this into the listing_markdown_formatted_response property and should be a markdown:
+          USER QUERY: {question}
 
-          ```example start
+          This is an example of a response a user must see:
+
           [Commercial Storage Warehouse for Lease Makati near kalayaan 327sqm P150,000](https://www.myproperty.ph/commercial-storage-warehouse-for-lease-makati-near-169192747861.html)
               - Listing type: For Rent
               - Current Price: Php 150,000
@@ -69,49 +71,52 @@ class Command(BaseCommand):
                   - 2 months deposit 2 months advance
                   - Minimum lease 2 years
                   - As-is where-is
-          example end```
           
-          {format_instructions}
-          
-          When responding to a prompt unrelated to warehouse properties, always reply as a friendly assistant. Let the user know that you only cater Industrial property related to warehouse.
+          {format_instructions}        
           """
 
-        listing_url = ResponseSchema(
+        system_suggestion_schema = ResponseSchema(
+            name="system_suggestion",
+            description="This schema defines the structure for the AI's property suggestion, formatted in markdown for clarity and readability. It includes reasons for the recommendation, ensuring the user understands why this particular property is suggested based on their query and preferences."
+        )
+
+        listing_url_schema = ResponseSchema(
             name="listing_url",
-            description="The URL of the listing, providing a direct link to the warehouse's detailed page. Omitted if 'no_listing_found_message' is not empty."
+            description="A URL pointing directly to the detailed page of the warehouse listing. Leave this field blank if there is no property recommendation."
         )
 
-        listing_city = ResponseSchema(
+        listing_city_schema = ResponseSchema(
             name="listing_city",
-            description="The city where the warehouse is located, helping to filter listings by geographical preference. Omitted if 'no_listing_found_message' is not empty."
+            description="The city where the warehouse is located, helping to filter listings by geographical preference. Leave this field blank if there is no property recommendation."
         )
 
-        listing_type = ResponseSchema(
+        listing_type_schema = ResponseSchema(
             name="listing_type",
-            description="Specifies whether the warehouse is for rent or for sale, catering to different user needs. Omitted if 'no_listing_found_message' is not empty."
+            description="Specifies whether the warehouse is for rent or for sale, catering to different user needs. Leave this field blank if there is no property recommendation."
         )
 
-        listing_price = ResponseSchema(
+        listing_price_schema = ResponseSchema(
             name="listing_price",
-            description="The price of the warehouse listing in PHP, formatted according to the guidelines (e.g., omitting decimal points when price ends in .0 or .00). Omitted if 'no_listing_found_message' is not empty."
+            description="The price of the warehouse listing in PHP, formatted according to the guidelines (e.g., omitting decimal points when price ends in .0 or .00). Leave this field blank if there is no property recommendation."
         )
 
-        listing_markdown_formatted_response = ResponseSchema(
-            name="listing_markdown_formatted_response",
-            description="A markdown-formatted response that includes all the essential details of the warehouse listing, ensuring clarity and readability. Omitted if 'no_listing_found_message' is not empty."
+        listing_markdown_formatted_schema = ResponseSchema(
+            name="listing_markdown_formatted",
+            description="A markdown-formatted response that includes all the essential details of the warehouse listing, ensuring clarity and readability. Leave this field blank if there is no property recommendation."
         )
 
-        no_listing_found_message = ResponseSchema(
+        no_listing_found_message_schema = ResponseSchema(
             name="no_listing_found_message",
-            description="Message to be displayed when no property related to the user's query is found. Omitted if listing_url, listing_city, listing_type, listing_price, and listing_markdown_formatted_response are not empty."
+            description="Message to be displayed when no property related to the user's query is found in the given context."
         )
         response_schemas = [
-            listing_url,
-            listing_city,
-            listing_type,
-            listing_price,
-            listing_markdown_formatted_response,
-            no_listing_found_message
+            system_suggestion_schema,
+            listing_url_schema,
+            listing_city_schema,
+            listing_type_schema,
+            listing_price_schema,
+            listing_markdown_formatted_schema,
+            no_listing_found_message_schema
         ]
 
         output_parser = StructuredOutputParser.from_response_schemas(
@@ -150,13 +155,15 @@ class Command(BaseCommand):
 
         from_vector = store.as_retriever()
 
-        query = "Any available in taguig city?"
+        query = "Any warehouse property in makati?"
 
         advance_message = advance_prompt.format_messages(
             context=from_vector,
             question=query,
             format_instructions=format_instruction
         )
+
+        print(advance_message[0].content)
 
         response = llm.invoke(advance_message)
 
