@@ -69,46 +69,49 @@ class Command(BaseCommand):
                   - 2 months deposit 2 months advance
                   - Minimum lease 2 years
                   - As-is where-is
-
-          If you have any further questions or need more details about these warehouses, please let me know.
           example end```
           
-          When responding to a prompt unrelated to warehouse properties, always reply as a friendly assistant. Let the user know that you only cater Industrial property related to warehouse.
-          
           {format_instructions}
+          
+          When responding to a prompt unrelated to warehouse properties, always reply as a friendly assistant. Let the user know that you only cater Industrial property related to warehouse.
           """
 
-        listing_url_schema = ResponseSchema(
+        listing_url = ResponseSchema(
             name="listing_url",
-            description="The URL of the listing, providing a direct link to the warehouse's detailed page."
+            description="The URL of the listing, providing a direct link to the warehouse's detailed page. Omitted if 'no_listing_found_message' is not empty."
         )
 
         listing_city = ResponseSchema(
             name="listing_city",
-            description="The city where the warehouse is located, helping to filter listings by geographical preference."
+            description="The city where the warehouse is located, helping to filter listings by geographical preference. Omitted if 'no_listing_found_message' is not empty."
         )
 
         listing_type = ResponseSchema(
             name="listing_type",
-            description="Specifies whether the warehouse is for rent or for sale, catering to different user needs."
+            description="Specifies whether the warehouse is for rent or for sale, catering to different user needs. Omitted if 'no_listing_found_message' is not empty."
         )
 
         listing_price = ResponseSchema(
             name="listing_price",
-            description="The price of the warehouse listing in PHP, formatted according to the guidelines (e.g., omitting decimal points when price ends in .0 or .00)."
+            description="The price of the warehouse listing in PHP, formatted according to the guidelines (e.g., omitting decimal points when price ends in .0 or .00). Omitted if 'no_listing_found_message' is not empty."
         )
 
         listing_markdown_formatted_response = ResponseSchema(
             name="listing_markdown_formatted_response",
-            description="A markdown-formatted response that includes all the essential details of the warehouse listing, ensuring clarity and readability."
+            description="A markdown-formatted response that includes all the essential details of the warehouse listing, ensuring clarity and readability. Omitted if 'no_listing_found_message' is not empty."
         )
 
+        no_listing_found_message = ResponseSchema(
+            name="no_listing_found_message",
+            description="Message to be displayed when no property related to the user's query is found. Omitted if listing_url, listing_city, listing_type, listing_price, and listing_markdown_formatted_response are not empty."
+        )
         response_schemas = [
-            listing_url_schema,
+            listing_url,
             listing_city,
             listing_type,
             listing_price,
-            listing_markdown_formatted_response
+            listing_markdown_formatted_response,
+            no_listing_found_message
         ]
 
         output_parser = StructuredOutputParser.from_response_schemas(
@@ -145,12 +148,12 @@ class Command(BaseCommand):
 
         # store.add_documents(documents=texts)
 
-        retriever = store.as_retriever()
+        from_vector = store.as_retriever()
 
-        query = "Give me 4 option for warehouse?"
+        query = "Any available in taguig city?"
 
         advance_message = advance_prompt.format_messages(
-            context=retriever,
+            context=from_vector,
             question=query,
             format_instructions=format_instruction
         )
