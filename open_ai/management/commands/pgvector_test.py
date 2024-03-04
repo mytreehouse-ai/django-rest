@@ -118,7 +118,7 @@ class Command(BaseCommand):
             connection_string=connection_string,
         )
 
-        # store.add_documents(documents=texts)
+        store.add_documents(documents=texts)
 
         retriever = store.as_retriever()
 
