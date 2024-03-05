@@ -206,19 +206,28 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
                     "is_delisted"
                 ]
             )
-            print(json.dumps(
-                {
-                    "id": property_listing.id,
-                    "listing_url": property_listing.listing_url,
-                    "property_status": property_status_delisted.description,
-                    "is_delisted": property_listing.is_delisted,
-                },
-                indent=4
-            )
+            print(
+                json.dumps(
+                    {
+                        "id": property_listing.id,
+                        "listing_url": property_listing.listing_url,
+                        "property_status": property_status_delisted.description,
+                        "is_delisted": property_listing.is_delisted,
+                    },
+                    indent=4
+                )
             )
             logger.info(
                 f"Property listing updated to inactive and delisted: {property_listing.listing_url}"
             )
+
+            try:
+                scrapy_job = ScrapyJobModel.objects.get(domain=listing_url)
+                scrapy_job.delete()
+                logger.info(f"Scrapy job deleted for domain: {listing_url}")
+            except ScrapyJobModel.DoesNotExist:
+                scrapy_job = None
+                logger.error(f"Scrapy job not found for domain: {listing_url}")
 
         return Response(
             {
