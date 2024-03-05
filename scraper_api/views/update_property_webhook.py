@@ -210,7 +210,8 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
                 {
                     "id": property_listing.id,
                     "listing_url": property_listing.listing_url,
-                    "property_status": property_status_delisted.description
+                    "property_status": property_status_delisted.description,
+                    "is_delisted": property_listing.is_delisted,
                 },
                 indent=4
             )
