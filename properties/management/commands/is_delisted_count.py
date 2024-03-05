@@ -32,7 +32,7 @@ class Command(BaseCommand):
 
         is_delisted_count = PropertyListingModel.objects.filter(
             is_delisted=True,
-            property_status__description=delisted
+            property_status=delisted
         ).count()
 
         print(f"is_delisted count: {is_delisted_count}")
