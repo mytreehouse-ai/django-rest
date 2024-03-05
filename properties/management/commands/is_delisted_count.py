@@ -23,7 +23,7 @@ class Command(BaseCommand):
             *args: Variable length argument list.
             **options: Arbitrary keyword arguments.
         """
-        delisted = PropertyStatusModel.objects.get_or_create(
+        delisted, _created = PropertyStatusModel.objects.get_or_create(
             description="Delisted"
         )
 
