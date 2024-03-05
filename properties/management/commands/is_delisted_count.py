@@ -1,7 +1,4 @@
-import json
 import logging
-from decimal import Decimal
-from django.utils import timezone
 from django.core.management.base import BaseCommand
 
 from properties.models.property_listing_model import PropertyListingModel
