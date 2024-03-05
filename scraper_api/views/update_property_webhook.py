@@ -186,6 +186,9 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
                 scrapy_job = ScrapyJobModel.objects.get(domain=listing_url)
                 scrapy_job.is_single_page_processed = True
                 scrapy_job.save(update_fields=["is_single_page_processed"])
+                logger.info(
+                    f"Scrapy job for {listing_url} marked as single page processed."
+                )
             except ScrapyJobModel.DoesNotExist:
                 logger.error(f"Scrapy job not found: {listing_url}")
 
