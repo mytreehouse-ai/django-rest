@@ -1,7 +1,4 @@
-import json
 import logging
-from decimal import Decimal
-from django.utils import timezone
 from django.core.management.base import BaseCommand
 
 from properties.models.property_listing_model import PropertyListingModel
@@ -26,7 +23,7 @@ class Command(BaseCommand):
             *args: Variable length argument list.
             **options: Arbitrary keyword arguments.
         """
-        delisted = PropertyStatusModel.objects.get_or_create(
+        delisted, _created = PropertyStatusModel.objects.get_or_create(
             description="Delisted"
         )
 
