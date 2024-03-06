@@ -48,8 +48,8 @@ class Command(BaseCommand):
               - Always present prices in PHP (Philippine Peso).
               - Omit decimal points when the price ends in .0 or .00.
           5. User Guidance for Specificity: When providing property information, advise the user on how they can refine their query for more targeted results. Encourage specificity in their requests.
-          6. It is important to be specific about the location. If the user asks for Makati, only provide the Makati warehouse location, and if they ask for Taguig, provide the Taguig location, and so on.
-          7. Queries unrelated to real estate should be answered by guiding the user back to real estate-related inquiries or providing a brief, polite response indicating the inability to assist with non-real estate questions.
+          6. Queries unrelated to real estate should be answered by guiding the user back to real estate-related inquiries or providing a brief, polite response indicating the inability to assist with 
+          non-real estate questions.
         
           CONTEXT:
            
@@ -77,7 +77,8 @@ class Command(BaseCommand):
 
         system_suggestion_schema = ResponseSchema(
             name="system_suggestion",
-            description="This schema defines the structure for the AI's property suggestion, formatted in markdown for clarity and readability. It includes reasons for the recommendation, ensuring the user understands why this particular property is suggested based on their query and preferences."
+            description="""This schema defines the structure for the AI's property suggestion, formatted in markdown for clarity and readability. It includes reasons for the recommendation, 
+            ensuring the user understands why this particular property is suggested based on their query and preferences."""
         )
 
         listing_url_schema = ResponseSchema(
@@ -97,12 +98,14 @@ class Command(BaseCommand):
 
         listing_price_schema = ResponseSchema(
             name="listing_price",
-            description="The price of the warehouse listing in PHP, formatted according to the guidelines (e.g., omitting decimal points when price ends in .0 or .00). Leave this field blank if there is no property recommendation."
+            description="""The price of the warehouse listing in PHP, formatted according to the guidelines (e.g., omitting decimal points when price ends in .0 or .00). Leave this field blank 
+            if there is no property recommendation."""
         )
 
         listing_markdown_formatted_schema = ResponseSchema(
             name="listing_markdown_formatted",
-            description="A markdown-formatted response that includes all the essential details of the warehouse listing, ensuring clarity and readability. Leave this field blank if there is no property recommendation."
+            description="""A markdown-formatted response that includes all the essential details of the warehouse listing, ensuring clarity and readability. Leave this field blank if there is no 
+            property recommendation."""
         )
 
         no_listing_found_message_schema = ResponseSchema(
@@ -137,9 +140,7 @@ class Command(BaseCommand):
         documents = loader.load()
 
         text_splitter = RecursiveCharacterTextSplitter(
-            # Adjusted for more granular splitting, considering the detailed nature of warehouse listings.
             chunk_size=500,
-            # Reduced overlap to balance between context preservation and redundancy.
             chunk_overlap=50
         )
 
