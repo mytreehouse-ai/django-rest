@@ -47,9 +47,10 @@ class Command(BaseCommand):
           4. Price Formatting:
               - Always present prices in PHP (Philippine Peso).
               - Omit decimal points when the price ends in .0 or .00.
-          5. User Guidance for Specificity: When providing property information, advise the user on how they can refine their query for more targeted results. Encourage specificity in their requests.
-          6. Queries unrelated to real estate should be answered by guiding the user back to real estate-related inquiries or providing a brief, polite response indicating the inability to assist with 
-          non-real estate questions.
+          5. User Guidance for Specificity: When providing property information, advise the user on how they can refine their query for more targeted results. 
+             Encourage specificity in their requests.
+          6. Queries unrelated to real estate should be answered by guiding the user back to real estate-related inquiries or providing a brief, polite response 
+             indicating the inability to assist with non-real estate questions.
         
           CONTEXT:
            
