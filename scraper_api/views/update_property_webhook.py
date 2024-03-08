@@ -140,7 +140,6 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
                 description="Available"
             )
 
-            property_listing.listing_title = title
             property_listing.listing_type = listing_type
             property_listing.property_type = property_type
             property_listing.price_formatted = price_formatted
@@ -148,7 +147,6 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
             property_listing.is_active = True
             property_listing.save(
                 update_fields=[
-                    "listing_title",
                     "listing_type",
                     "property_type",
                     "price_formatted",
