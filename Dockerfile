@@ -38,5 +38,5 @@ CMD if [ "$RUN_MODE" = "api-gateway" ]; then \
     elif [ "$RUN_MODE" = "celery-beat" ]; then \
         sh -c "celery -A mytreehouse beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler"; \
     elif [ "$RUN_MODE" = "celery-worker" ]; then \
-        sh -c "celery -A mytreehouse worker -l INFO -E --concurrency=5"; \
+        sh -c "celery -A mytreehouse worker -l INFO -E --concurrency=2"; \
     fi
