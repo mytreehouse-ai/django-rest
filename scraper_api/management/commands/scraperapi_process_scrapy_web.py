@@ -69,6 +69,7 @@ class Command(BaseCommand):
                             "status_url": response_json.get("status_url", None),
                             "supposed_to_run_at": response_json.get("supposedToRunAt", None),
                             "is_multi_page_processed": False,
+                            "is_single_page_processed": False
                         }
                     )
                 except ValueError:
