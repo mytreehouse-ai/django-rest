@@ -96,7 +96,6 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
             )
 
         if attributes:
-            title = json_fields.get('title', None)
             attribute_set_name = attributes.get("attribute_set_name", None)
             price_formatted = attributes.get("price_formatted", None)
             offer_type = attributes.get("offer_type", None)
