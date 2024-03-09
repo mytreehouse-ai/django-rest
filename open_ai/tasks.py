@@ -14,7 +14,7 @@ def update_available_cities_for_ai_context():
     try:
         cities = CityModel.objects.values_list('name', flat=True)
         cities_str = ', '.join(cities)
-        cache.set(key="ai_context_cities", value=cities_str, timeout=None)
+        cache.set(key="open_ai:cities_context", value=cities_str, timeout=None)
         logger.info("Cities cache updated successfully")
     except Exception as e:
         logger.error(f"Failed to update cities cache: {str(e)}")
