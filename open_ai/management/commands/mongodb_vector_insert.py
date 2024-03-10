@@ -249,17 +249,18 @@ long_text = """
 
 """
 
+
 class Command(BaseCommand):
     """
     Django management command to process a question using the OpenAI service and store the resulting vector in MongoDB.
     """
-    
+
     help = "Processes a question with the OpenAI service and stores the resulting vector in MongoDB."
 
     def handle(self, *args, **options):
         """
         Handles the command execution. Connects to MongoDB, processes the question with OpenAI, and stores the result.
-        
+
         Args:
             *args: Variable length argument list.
             **options: Arbitrary keyword arguments, expects 'question' to be provided.
@@ -267,20 +268,23 @@ class Command(BaseCommand):
         # Retrieve MongoDB URI from environment and establish a connection
         mongodb_uri = os.environ.get('MONGODB_URI', None)
         mongodb = MongoDBConnector(mongodb_uri)
-        
+
         # Initialize the OpenAI services with the API key from the environment
-        open_ai_services = LangchainOpenAIServices(api_key=os.environ.get("OPENAI_API_KEY"))
-        
+        open_ai_services = LangchainOpenAIServices(
+            api_key=os.environ.get("OPENAI_API_KEY"))
+
         # Convert the long text to a vector using OpenAI service
         vector_text = open_ai_services.convert_to_vector(text=long_text)
-        
+
         # Insert the original text and its vector representation into MongoDB
-        insert_vector = mongodb.insert_vector_data(original_data=long_text, vector_data=vector_text)
-        
+        insert_vector = mongodb.insert_vector_data(
+            original_data=long_text, vector_data=vector_text)
+
         # Output the result of the insertion
         print(insert_vector)
-        
+
         # Log a success message to the console
         self.stdout.write("\n\n")
-        self.stdout.write(self.style.SUCCESS('Successfully processed the question with the OpenAI service and stored the result in MongoDB.'))
+        self.stdout.write(self.style.SUCCESS(
+            'Successfully processed the question with the OpenAI service and stored the result in MongoDB.'))
         return None

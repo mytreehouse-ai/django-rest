@@ -2,6 +2,7 @@ import os
 import json
 from logging import getLogger
 from django.core.management.base import BaseCommand
+from django.core.cache import cache
 from openai import OpenAI
 from langchain.vectorstores.pgvector import PGVector
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
@@ -47,41 +48,36 @@ class Command(BaseCommand):
                   Use bullet points or a structured format to improve readability.
                   
                 4. Price Formatting:
-                   - Always present prices in PHP (Philippine Peso).
-                   - Omit decimal points when the price ends in .0 or .00.
-                   - Format prices with commas for thousands separators (e.g., Php 1,500,000).
+                    - Always present prices in PHP (Philippine Peso).
+                    - Omit decimal points when the price ends in .0 or .00.
+                    - Format prices with commas for thousands separators (e.g., Php 1,500,000).
                    
                 5. User Guidance for Specificity:
-                   - When providing property information, advise the user on how they can refine their query for more targeted results.
-                   - Encourage specificity in their requests by suggesting relevant filters or criteria (e.g., location, property type, price range, number of bedrooms/bathrooms).
-                   - Provide examples of how users can phrase their queries to get more accurate results.
+                    - When providing property information, advise the user on how they can refine their query for more targeted results.
+                    - Encourage specificity in their requests by suggesting relevant filters or criteria (e.g., location, property type, price range, number of bedrooms/bathrooms).
+                    - Provide examples of how users can phrase their queries to get more accurate results.
                    
                 6. Off-topic Queries:
-                  - If a user's query is unrelated to real estate, guide them back to real estate-related inquiries.
-                  - Provide a brief, polite response indicating the inability to assist with non-real estate questions.
-                  - Suggest alternative resources or platforms that may be more suitable for their non-real estate needs.
+                    - If a user's query is unrelated to real estate, guide them back to real estate-related inquiries.
+                    - Provide a brief, polite response indicating the inability to assist with non-real estate questions.
+                    - Suggest alternative resources or platforms that may be more suitable for their non-real estate needs.
                   
                 7. Property availability by places or city:
-                  - If a user asks about the places or cities currently available in your [PLACES/CITIES AVAILABLE], provide a helpful response.
-                  - Present the information in a clear and organized manner, such as a bullet-point list or a comma-separated string.
-                  - If no places or cities are found in the [PLACES/CITIES AVAILABLE], inform the user and suggest alternative ways to explore available properties.
+                    - If a user asks about the places or cities currently available in your [PLACES/CITIES AVAILABLE], provide a helpful response.
+                    - Instead of listing all available cities, select 5 representative cities from the [PLACES/CITIES AVAILABLE] to present to the user.
+                    - Present the selected cities in a clear and organized manner, such as a bullet-point list or a comma-separated string.
+                    - After listing the 5 cities, ask the user if any of these locations match their preferences or if they have a specific place in mind.
+                    - Encourage the user to provide more details about their preferred location, such as a specific neighborhood, district, or proximity to certain landmarks or amenities.
+                    - If no places or cities are found in the [PLACES/CITIES AVAILABLE], inform the user and suggest alternative ways to explore available properties.
             
             Here are the places and cities where we currently have properties available in our database:
             
-            PLACES/CITIES AVAILABLE:
-
-            - Makati
-            - Quezon City
-            - Taguig
-            - Pasig
-            - Mandaluyong
-            - Pasay
-            - Paranaque
+            PLACES/CITIES AVAILABLE: {available_cities}
 
             You can use these locations as a starting point for your property search. Feel free to specify your preferred location, along with other criteria like property 
             type, price range, and desired amenities,
                   
-            PROPERTIES: {properties}
+            REALSTATE PROPERTIES: {realstate_properties}
 
             USER QUERY: {question}
 
@@ -119,18 +115,37 @@ class Command(BaseCommand):
                 - Reasons for the recommendation based on the user's query and preferences
                 - Pros and cons of the property (if applicable)
                 - Any additional insights or advice related to the suggestion
-
+                - Follow-up questions to the user to promote a more engaging and personalized property
+            search experience, such as:
+                - Seeking clarification on the user's preferences or requirements
+                - Suggesting additional filters or criteria to refine the search
+                - Offering alternative options or recommendations based on the user's input
+                - Encouraging the user to provide more details for a more accurate property match
             For location-related queries (e.g., available cities or places), the response should include:
                 - A clear and concise list of the available cities or places in the database
                 - Instructions on how the user can utilize this information to refine their property search
                 - Encouragement for the user to provide more specific criteria for a more targeted search
                 - An offer to assist the user further with any other questions or requirements
-
+                - Follow-up questions to the user to gather more information about their preferred location, such as:
+                    - Asking if any of the listed locations match their preferences
+                    - Inquiring if they have a specific place or neighborhood in mind
+                    - Encouraging them to provide more details about their ideal location
             If no suitable properties are found or if the database does not contain any locations matching the user's query, the response should:
                 - Inform the user that no matching results were found
                 - Suggest alternative locations or property types that the user might consider
                 - Provide guidance on how the user can modify their search criteria for better results
                 - Assure the user that the AI is ready to help with any further inquiries or requirements
+                - Ask follow-up questions to better understand the user's needs and preferences, such as:
+                    - Inquiring about their budget range or desired amenities
+                    - Suggesting related locations or property types that might interest them
+                    - Encouraging them to provide more context about their search criteria
+                    
+                Additionally, include a friendly and informative message when no suitable listings are found:
+                    - Acknowledge that no properties matching the user's query were found within the given context
+                    - Suggest alternative search criteria or related property types that the user might explore
+                    - Encourage the user to modify their query or preferences for better results
+                    - Provide guidance on how to refine the search for more relevant listings
+                    - Assure the user that the AI is ready to assist with any further inquiries
             """
         )
 
@@ -179,30 +194,6 @@ class Command(BaseCommand):
             """
         )
 
-        ai_question_to_user_schema = ResponseSchema(
-            name="ai_question_to_user",
-            description="""
-            This schema is used for generating follow-up questions to the user's initial query, promoting a more engaging and personalized property search experience. 
-            The questions should:
-                - Seek clarification on the user's preferences or requirements
-                - Suggest additional filters or criteria to refine the search
-                - Offer alternative options or recommendations based on the user's input
-                - Encourage the user to provide more details for a more accurate property match
-            """
-        )
-
-        no_listing_found_message_schema = ResponseSchema(
-            name="no_listing_found_message",
-            description="""
-            A friendly and informative message to be displayed when no property matching the user's query is found within the given context. The message should:
-                - Acknowledge that no suitable listings were found
-                - Suggest alternative search criteria or related property types
-                - Encourage the user to modify their query or preferences for better results
-                - Provide guidance on how to refine the search for more relevant listings
-                - Assure the user that the AI is ready to assist with any further inquiries
-            """
-        )
-
         response_schemas = [
             ai_suggestion_schema,
             listing_url_schema,
@@ -210,8 +201,6 @@ class Command(BaseCommand):
             listing_type_schema,
             listing_price_schema,
             listing_markdown_formatted_schema,
-            ai_question_to_user_schema,
-            no_listing_found_message_schema
         ]
 
         output_parser = StructuredOutputParser.from_response_schemas(
@@ -229,14 +218,14 @@ class Command(BaseCommand):
             encoding="utf-8"
         )
 
-        # documents = loader.load()
+        documents = loader.load()
 
         text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=500,
             chunk_overlap=50
         )
 
-        # texts = text_splitter.split_documents(documents=documents)
+        texts = text_splitter.split_documents(documents=documents)
 
         store = PGVector(
             embedding_function=embeddings,
@@ -244,22 +233,25 @@ class Command(BaseCommand):
             connection_string=connection_string,
         )
 
-        # store.add_documents(documents=texts)
+        store.add_documents(documents=texts)
 
-        query = "What are the available places?"
+        query = "Any warehouse located in tagaytay?"
 
         retriever = store.as_retriever()
         relevant_documents = retriever.get_relevant_documents(query=query)
-        properties_page_contents = [
+        realstate_properties = [
             data.page_content for data in relevant_documents
         ]
 
-        print(properties_page_contents)
+        # print(realstate_properties)
 
         # print(json.dumps(page_contents, indent=4))
 
+        available_cities = cache.get("open_ai:cities_context")
+
         advance_message = advance_prompt.format_messages(
-            properties=properties_page_contents,
+            available_cities=available_cities,
+            realstate_properties=realstate_properties,
             question=query,
             format_instructions=format_instruction
         )
