@@ -5,13 +5,6 @@ price_formatting_instructions = """
 """
 
 handling_off_topic_queries = """
-- If the user's query is not directly related to real estate:
-  - Do not recommend any properties. And don't populate the following schema leave them empty:
-    - listing_url
-    - listing_city
-    - listing_type
-    - listing_price
-    - listing_markdown_formatted
   - Provide a friendly response based on the "ai_suggestion" schema:
     - Acknowledge the user's query.
     - Clarify the AI's role as a real estate agent.
@@ -31,4 +24,20 @@ encouraging_specificity = """
 leveraging_conversation_history = """
 - Use the provided conversation history to understand the context of the user's query and generate a more personalized response.
 - Refer back to previous topics, preferences, or suggestions from the conversation history to demonstrate attentiveness.
+"""
+
+listing_markdown_formatted = """
+- [Listing title](Listing URL)
+- Price
+- Listing type
+- Property type
+- Lot area or Building size
+- Floor area if available
+- Address if available
+- City
+- Building name or subdivision name
+- Bedrooms if available
+- Bathrooms if available
+- Parking space if available
+- Listing description, indoor, outdoor, and other features if available
 """

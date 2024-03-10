@@ -1,5 +1,8 @@
+from logging import getLogger
 from django.db import models
 from domain.models.base_model import BaseModel
+
+logger = getLogger(__name__)
 
 
 class ThreadModel(BaseModel):

@@ -16,18 +16,24 @@ class Command(BaseCommand):
             api_key=os.getenv("OPENAI_API_KEY")
         )
 
-        history = apollo_exporation_service.message_history(
-            session_id="sk_asdasd123asd"
+        get_conversation_history = apollo_exporation_service.get_message_history(
+            thread_id="sk_asdasd123asd"
         )
 
         # history.add_user_message(message="Hi!")
 
         # history.add_ai_message(message="Hello")
 
-        for message in history.messages:
-            jayson = message.to_json()
-            kwargs_ni_jayson = jayson.get("kwargs")
+        conversation_history = """"""
 
-            print(
-                f"{kwargs_ni_jayson.get('type')}: {kwargs_ni_jayson.get('content')}"
-            )
+        if len(get_conversation_history.messages) == 0:
+            conversation_history = "This is a new query no conversation history at the moment"
+        else:
+            for message in get_conversation_history.messages:
+                message_json = message.to_json()
+                message_data = message_json.get("kwargs")
+                message_type = message_data.get('type')
+                message_content = message_data.get('content')
+                conversation_history += f"{message_type.title()}: {message_content}\n"
+
+        print(conversation_history)
