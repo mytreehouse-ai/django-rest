@@ -35,12 +35,11 @@ def update_vector_property_listings():
     )
 
     property_listings = PropertyListingModel.objects.filter(
-        vector_uuids__isnull=True,
+        vector_uuids__len=0,
         is_active=True
     )[:10]
 
     for property_listing in property_listings:
-        print(property_listing)
         documents = apollo_exporation_service.get_text_chunks_langchain(
             text=f"""
             [{property_listing.listing_title}]({property_listing.listing_url})
