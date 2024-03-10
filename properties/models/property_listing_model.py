@@ -65,6 +65,11 @@ class PropertyListingModel(BaseModel):
         default=False,
         verbose_name="Is Active"
     )
+    vector_uuids = models.JSONField(
+        default=list,
+        blank=True,
+        verbose_name="Vector UUIDs"
+    )
 
     def __str__(self) -> str:
         return self.listing_title
