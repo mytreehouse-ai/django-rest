@@ -1,5 +1,6 @@
 import os
 import json
+from typing import List
 from logging import getLogger
 from django.core.management.base import BaseCommand
 from django.core.cache import cache
@@ -10,6 +11,7 @@ from langchain.output_parsers import ResponseSchema, StructuredOutputParser
 from langchain_community.document_loaders import TextLoader
 from langchain_core.prompts import ChatPromptTemplate
 from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.schema.document import Document
 
 logger = getLogger(__name__)
 
@@ -220,10 +222,49 @@ class Command(BaseCommand):
 
         documents = loader.load()
 
+        print(len(documents))
+
         text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=500,
             chunk_overlap=50
         )
+
+        def get_text_chunks_langchain(text: str) -> List[Document]:
+            text_splitter = RecursiveCharacterTextSplitter(
+                chunk_size=500,
+                chunk_overlap=100,
+                separators=["\n\n", "\n", " ", ""]
+            )
+            documents = [
+                Document(
+                    page_content=text,
+                    metadata={
+                        'source': 'database.listings'
+                    }
+                )
+                for text in text_splitter.split_text(text)
+            ]
+
+            return documents
+
+        test_text = """
+        1. [Spacious Warehouse for Rent in Quezon City, 500sqm P200,000](https://www.myproperty.ph/spacious-warehouse-for-rent-in-quezon-city-500sqm-200000.html)
+        - Listing type: For Rent
+        - Current Price: Php 200,000
+        - Lot Area: 500 sqm
+        - Address: Novaliches, Quezon City
+        - Longitude: 121.0329
+        - Latitude: 14.7214
+        - Description: 
+            - Ideal for storage and distribution
+            - Accessible location with 24/7 security
+            - Minimum lease 1 year
+            - Ready for occupancy
+        """
+
+        docs = get_text_chunks_langchain(test_text)
+
+        print(docs)
 
         texts = text_splitter.split_documents(documents=documents)
 
@@ -250,7 +291,7 @@ class Command(BaseCommand):
         available_cities = cache.get("open_ai:cities_context")
 
         advance_message = advance_prompt.format_messages(
-            available_cities=available_cities,
+            available_cities=available_cities if available_cities else "No available in the database",
             realstate_properties=realstate_properties,
             question=query,
             format_instructions=format_instruction

@@ -6,8 +6,7 @@ class PropertyListingModel(BaseModel):
     id = models.AutoField(
         primary_key=True
     )
-    listing_title = models.CharField(
-        max_length=255,
+    listing_title = models.TextField(
         unique=True,
         verbose_name="Listing Title"
     )
@@ -47,9 +46,9 @@ class PropertyListingModel(BaseModel):
         verbose_name="Property Status"
     )
     price = models.DecimalField(
-        max_digits=12,
+        max_digits=19,
         decimal_places=2,
-        default=0.0,
+        default=0.00,
         verbose_name="Price"
     )
     price_formatted = models.CharField(
