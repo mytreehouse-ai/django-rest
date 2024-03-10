@@ -218,14 +218,14 @@ class Command(BaseCommand):
             encoding="utf-8"
         )
 
-        # documents = loader.load()
+        documents = loader.load()
 
         text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=500,
             chunk_overlap=50
         )
 
-        # texts = text_splitter.split_documents(documents=documents)
+        texts = text_splitter.split_documents(documents=documents)
 
         store = PGVector(
             embedding_function=embeddings,
@@ -233,7 +233,7 @@ class Command(BaseCommand):
             connection_string=connection_string,
         )
 
-        # store.add_documents(documents=texts)
+        store.add_documents(documents=texts)
 
         query = "Any warehouse located in tagaytay?"
 
