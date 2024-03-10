@@ -1,6 +1,7 @@
 import os
 from logging import getLogger
 from celery import shared_task
+from django.db.models import Count
 from django.core.cache import cache
 
 from domain.models.city_model import CityModel
@@ -34,8 +35,10 @@ def update_vector_property_listings():
         collection_name="property_listings"
     )
 
-    property_listings = PropertyListingModel.objects.filter(
-        vector_uuids__len=0,
+    property_listings = PropertyListingModel.objects.annotate(
+        vector_uuids_count=Count('vector_uuids')
+    ).filter(
+        vector_uuids_count=0,
         is_active=True
     )[:10]
 
