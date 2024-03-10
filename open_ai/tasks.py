@@ -40,6 +40,7 @@ def update_vector_property_listings():
     )[:10]
 
     for property_listing in property_listings:
+        print(property_listing)
         documents = apollo_exporation_service.get_text_chunks_langchain(
             text=f"""
             [{property_listing.listing_title}]({property_listing.listing_url})
