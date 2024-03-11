@@ -8,6 +8,8 @@ logger = getLogger(__name__)
 
 class ReadListingTypeSerializer(serializers.ModelSerializer):
     class Meta:
+        # TODO: Empty ref_name
+        ref_name = ""
         model = ListingTypeModel
         fields = [
             "id",
