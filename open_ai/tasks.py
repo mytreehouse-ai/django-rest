@@ -70,7 +70,7 @@ def update_vector_property_listings():
         customs_ids = pg_vector.add_documents(documents=documents)
 
         property_listing.vector_uuids = customs_ids
-        property_listings.is_in_vector_table = True
+        property_listing.is_in_vector_table = True
         property_listing.save(
             update_fields=[
                 "vector_uuids",
