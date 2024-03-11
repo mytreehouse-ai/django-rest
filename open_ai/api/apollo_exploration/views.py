@@ -49,6 +49,8 @@ class ApolloExplorationAiAPIView(RetrieveAPIView):
             None
         )
 
+        print(serialize_query_params)
+
         apollo_exporation_service = ApolloExplorationService(
             api_key=os.getenv("OPENAI_API_KEY")
         )

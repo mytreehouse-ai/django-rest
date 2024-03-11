@@ -135,8 +135,6 @@ class ApolloExplorationService:
         #         for property_data in realstate_properties:
         #             available_properties += property_data + "\n"
 
-        print(available_properties)
-
         cached_cities = cache.get("open_ai:cities_context")
         cities_available = cached_cities if cached_cities else "No available cities currently in the database"
 
@@ -148,7 +146,7 @@ class ApolloExplorationService:
         message = chat_propmt_template.format_messages(
             conversation_history=conversation_history,
             available_cities=cities_available,
-            realstate_properties=available_properties,
+            available_properties=available_properties,
             format_instructions=format_instruction,
             question=query,
         )
@@ -156,7 +154,7 @@ class ApolloExplorationService:
         try:
             response = self.gpt3_5_turbo_0125_llm.invoke(message)
             output_dict = output_parser.parse(response.content)
-            if get_conversation_history:
+            if thread_id and get_conversation_history:
                 get_conversation_history.add_user_message(message=query)
                 get_conversation_history.add_ai_message(
                     message=f"{output_dict.get('ai_suggestion')}\n{output_dict.get('property_suggestion')}"
