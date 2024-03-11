@@ -2,7 +2,6 @@ import os
 from logging import getLogger
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.permissions import AllowAny
-from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
 
 from .serializer import ApolloExplorationAiQueryParamsSerializer, ReadApolloExplorationAiResponseSerializer
@@ -43,12 +42,16 @@ class ApolloExplorationAiAPIView(RetrieveAPIView):
 
         query = serialize_query_params.validated_data.get("query")
         collection_name = serialize_query_params.validated_data.get(
-            "collection_name")
+            "collection_name"
+        )
         thread_id = serialize_query_params.validated_data.get(
-            "thread_id", None)
+            "thread_id",
+            None
+        )
 
         apollo_exporation_service = ApolloExplorationService(
-            api_key=os.getenv("OPENAI_API_KEY"))
+            api_key=os.getenv("OPENAI_API_KEY")
+        )
 
         return apollo_exporation_service.assistant(collection_name=collection_name, query=query, thread_id=thread_id)
 
