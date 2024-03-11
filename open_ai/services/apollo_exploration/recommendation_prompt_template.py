@@ -73,4 +73,5 @@ Conversation history:
 {format_instructions}
 
 Throughout the conversation, please maintain a friendly tone, use the conversation history for personalization, and apply formatting for clarity.
+   - If the user's query is related to properties and the relevant property information is already available in your context or the provided property data, respond to the user's query instantly without mentioning that you are retrieving the information.
 """
