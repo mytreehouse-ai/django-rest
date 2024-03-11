@@ -63,7 +63,7 @@ def scraperapi_process_scrapy_web():
                     f"Failed to start scraping job. Status code: {response.status_code}, Response: {response_json}"
                 )
 
-            sleep(0.5)
+            sleep(10)
 
 
 @shared_task()
@@ -71,12 +71,12 @@ def lamudi_multi_page_scraper_task():
     property_details = []
 
     def get_attribute(element, attribute):
-        value = element.attrs.get(attribute, '')
-        return 'n/a' if not value else value
+        value = element.attrs.get(attribute, "")
+        return "n/a" if not value else value
 
     def extract_html(html_data: str):
-        soup = BeautifulSoup(html_data, 'html.parser')
-        info_elements = soup.find_all(class_='ListingCell-AllInfo ListingUnit')
+        soup = BeautifulSoup(html_data, "html.parser")
+        info_elements = soup.find_all(class_="ListingCell-AllInfo ListingUnit")
         return info_elements
 
     scrapy_jobs = ScrapyJobService.get_all_scrapy_job_for_task()
@@ -471,6 +471,6 @@ def lamudi_multi_page_scraper_task():
 
                     print(f"New listing added: {new_listing.listing_url}")
 
-        sleep(0.5)
+        sleep(10)
 
     property_details = []
