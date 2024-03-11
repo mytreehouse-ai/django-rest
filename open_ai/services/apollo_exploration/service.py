@@ -119,6 +119,8 @@ class ApolloExplorationService:
                 data, _similarity_score = relevant_doc
                 available_properties += data.page_content + "\n"
 
+        print(available_properties)
+
         cached_cities = cache.get("open_ai:cities_context")
         cities_available = cached_cities if cached_cities else "No available cities currently in the database"
 
@@ -135,7 +137,7 @@ class ApolloExplorationService:
             question=query,
         )
 
-        print(message[0].content)
+        # print(message[0].content)
 
         try:
             response = self.gpt3_5_turbo_0125_llm.invoke(message)
