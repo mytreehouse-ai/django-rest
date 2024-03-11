@@ -13,7 +13,6 @@ class ReadApolloExplorationAiResponseSerializer(serializers.Serializer):
         ai_suggestion (CharField): The AI-generated suggestion or response.
     """
     ai_suggestion = serializers.CharField()
-    property_recommendation = serializers.CharField()
 
     class Meta:
         """
