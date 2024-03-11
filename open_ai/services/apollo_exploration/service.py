@@ -129,6 +129,8 @@ class ApolloExplorationService:
             template=chat_prompt
         )
 
+        print(available_properties)
+
         message = chat_propmt_template.format_messages(
             conversation_history=conversation_history,
             available_cities=cities_available,
