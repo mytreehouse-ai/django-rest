@@ -7,6 +7,6 @@ response_schemas = [
     ),
     ResponseSchema(
         name="property_suggestion",
-        description="This where you will put your property recommendation."
+        description="This is where you can enter your property recommendation. Leave it blank if you can't find any property related to the user's query."
     )
 ]
