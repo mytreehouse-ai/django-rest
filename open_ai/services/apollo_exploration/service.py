@@ -132,7 +132,9 @@ class ApolloExplorationService:
                     message_content = message_data.get('content')
                     conversation_history += f"{message_type.title()}: {message_content}\n"
 
-        if query_classifer.get("query_type", "") == "real_estate":
+        query_type = query_classifer.get("query_type", "")
+
+        if query_type == "real_estate":
             store = self.pg_vector(collection_name=collection_name)
             get_relevant_documents = store.similarity_search_with_score(
                 query=query_classifer.get("for_vector_search"),
@@ -157,11 +159,12 @@ class ApolloExplorationService:
         )
 
         message = chat_recommendation_prompt_template.format_messages(
-            conversation_history=conversation_history,
+            query_type=query_type,
+            question=query,
             available_cities=cities_available,
             available_properties=available_properties,
+            conversation_history=conversation_history,
             format_instructions=format_instruction,
-            question=query,
         )
 
         # print(message[0].content)
