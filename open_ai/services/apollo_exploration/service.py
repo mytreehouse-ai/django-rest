@@ -145,7 +145,7 @@ class ApolloExplorationService:
             if get_conversation_history:
                 get_conversation_history.add_user_message(message=query)
                 get_conversation_history.add_ai_message(
-                    message=f"{output_dict.get('ai_suggestion')}\n{output_dict.get('listing_markdown_formatted')}"
+                    message=f"{output_dict.get('ai_suggestion')}\n{output_dict.get('property_suggestion')}"
                 )
         except BadRequestError as e:
             output_dict = {
