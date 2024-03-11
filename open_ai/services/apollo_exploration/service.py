@@ -87,8 +87,8 @@ class ApolloExplorationService:
         )
         return history
 
-    def assistant(self, query: str, thread_id: Optional[str] = None):
-        store = self.pg_vector(collection_name="mytreehouse_vectors")
+    def assistant(self, query: str, collection_name: str, thread_id: Optional[str] = None):
+        store = self.pg_vector(collection_name=collection_name)
         retriever = store.as_retriever()
 
         conversation_history = "This is a new query no conversation history at the moment"
