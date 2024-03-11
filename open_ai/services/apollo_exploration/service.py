@@ -108,7 +108,7 @@ class ApolloExplorationService:
 
         get_relevant_documents = store.similarity_search_with_score(
             query=query,
-            k=10
+            k=4
         )
 
         if len(get_relevant_documents) == 0:
