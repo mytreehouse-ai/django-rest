@@ -135,6 +135,8 @@ class ApolloExplorationService:
             question=query,
         )
 
+        print(message[0].content)
+
         try:
             response = self.gpt3_5_turbo_0125_llm.invoke(message)
             output_dict = output_parser.parse(response.content)
