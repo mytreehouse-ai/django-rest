@@ -58,8 +58,8 @@ class ApolloExplorationService:
 
     def get_text_chunks_langchain(self, text: str) -> List[Document]:
         text_splitter = RecursiveCharacterTextSplitter(
-            chunk_size=500,
-            chunk_overlap=50
+            chunk_size=1024,  # Optimal chunk size for balanced performance and coherence
+            chunk_overlap=100  # Increased overlap for better context retention between chunks
         )
         documents = [
             Document(
@@ -116,8 +116,9 @@ class ApolloExplorationService:
         else:
             for relevant_doc in get_relevant_documents:
                 data, _similarity_score = relevant_doc
-                print(data.page_content)
                 available_properties += data.page_content + "\n"
+
+        print(available_properties)
 
         cached_cities = cache.get("open_ai:cities_context")
         cities_available = cached_cities if cached_cities else "No available cities currently in the database"
