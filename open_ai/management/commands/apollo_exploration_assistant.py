@@ -17,7 +17,7 @@ class Command(BaseCommand):
         )
 
         assistant = apollo_exporation_service.assistant(
-            query="My budget is around 100k?",
+            query="Condominium that is near uptown mall?",
             collection_name="property_listings",
             thread_id="sk_123abcdefg45678910"
         )
