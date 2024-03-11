@@ -63,8 +63,10 @@ If a suitable property is found, provide a markdown-formatted recommendation wit
     - Bathrooms if available
     - Parking space if available
     - Listing description, indoor, outdoor, and other features if available
+    
 
 {format_instructions}
+
 
 Throughout the conversation, please maintain a friendly tone, use the conversation history for personalization, and apply formatting for clarity.
 """
