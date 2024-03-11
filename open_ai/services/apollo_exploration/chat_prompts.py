@@ -21,7 +21,7 @@ Encouraging Specificity
 Leveraging Conversation History
 {leveraging_conversation_history}
 
-The response should be structured and easily readable, including:
+The response in "property_suggestion" schema should be structured and easily readable, including:
 {listing_markdown_formatted}
 
 CITIES AVAILABLE: 
