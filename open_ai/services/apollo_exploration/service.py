@@ -89,7 +89,7 @@ class ApolloExplorationService:
 
     def assistant(self, query: str, collection_name: str, thread_id: Optional[str] = None):
         store = self.pg_vector(collection_name=collection_name)
-        retriever = store.as_retriever()
+        # retriever = store.as_retriever()
 
         conversation_history = "This is a new query no conversation history at the moment"
         available_properties = """"""
@@ -110,7 +110,7 @@ class ApolloExplorationService:
 
         get_relevant_documents = store.similarity_search_with_score(
             query=query,
-            k=10
+            k=4
         )
 
         if len(get_relevant_documents) == 0:
