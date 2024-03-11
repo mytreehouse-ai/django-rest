@@ -1,4 +1,5 @@
 import os
+import time
 from logging import getLogger
 from celery import shared_task
 from django.core.cache import cache
@@ -81,3 +82,5 @@ def update_vector_property_listings():
         logger.info(
             f"Property stored in vector database with property id: {property_listing.id}"
         )
+
+        time.sleep(2)
