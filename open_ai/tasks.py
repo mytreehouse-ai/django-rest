@@ -1,7 +1,6 @@
 import os
 from logging import getLogger
 from celery import shared_task
-from django.db.models import Count
 from django.core.cache import cache
 
 from domain.models.city_model import CityModel
