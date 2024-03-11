@@ -59,8 +59,7 @@ class ApolloExplorationService:
     def get_text_chunks_langchain(self, text: str) -> List[Document]:
         text_splitter = RecursiveCharacterTextSplitter(
             chunk_size=500,
-            chunk_overlap=100,
-            separators=["\n\n", "\n", " ", ""]
+            chunk_overlap=50
         )
         documents = [
             Document(
@@ -109,7 +108,7 @@ class ApolloExplorationService:
 
         get_relevant_documents = store.similarity_search_with_score(
             query=query,
-            k=8
+            k=10
         )
 
         if len(get_relevant_documents) == 0:
