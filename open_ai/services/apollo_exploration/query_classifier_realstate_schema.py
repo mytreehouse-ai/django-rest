@@ -3,7 +3,7 @@ from langchain.output_parsers import ResponseSchema
 query_classifier_realstate_schema = [
     ResponseSchema(
         name="query_type",
-        description="'real_estate' or 'non_real_estate'"
+        description="'real_estate' or 'non_real_estate' or 'user_satisfaction'"
     ),
     ResponseSchema(
         name="location",

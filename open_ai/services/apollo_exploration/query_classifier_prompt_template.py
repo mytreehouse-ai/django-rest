@@ -8,6 +8,7 @@ USER QUERY: {query}
    - Use the real estate query classification model to classify the query into one of the following categories:
      - Real estate-related
      - Non-real estate-related
+     - User satisfaction or acknowledgment
 
 2. Information Extraction:
    - If the query is classified as real estate-related, extract the following information from the user's query using natural language processing techniques:
@@ -20,7 +21,11 @@ USER QUERY: {query}
 3. Output Format: provide the extracted information in the following format:
     {query_classifier_realstate_schema}
 
-4. Follow-up Questions:
+4. User Satisfaction Handling:
+   - If the user's query expresses satisfaction, gratitude, or acknowledgment (e.g., "thank you," "you're awesome," "great recommendations"), classify the query as "user_satisfaction".
+   - In the output JSON, set the "query_type" to "user_satisfaction" and leave the other fields empty or set to their default values.
+
+5. Follow-up Questions:
    - If any relevant information is missing or unclear, generate follow-up questions to gather the necessary details from the user.
    - Example follow-up questions:
      - "Could you please specify the location where you're looking for a property?"
@@ -28,7 +33,7 @@ USER QUERY: {query}
      - "Do you have a specific budget range in mind for the property?"
      - "Are there any specific features or amenities you're looking for in the property?"
 
-5. Error Handling:
+6. Error Handling:
    - If the user's query is empty or contains irrelevant information, provide an appropriate error message and ask the user to rephrase their query.
    - Example error message: "I'm sorry, but I couldn't understand your query. Could you please provide more details about your real estate-related question or requirement?"
 
