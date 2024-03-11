@@ -35,9 +35,6 @@ USER QUERY: {question}
     - If the user's query is off-topic or not directly related to real estate, acknowledge the query and gently guide the conversation back to real estate-related topics.
     - If the user persists with off-topic queries, provide a brief response and then redirect the conversation to real estate, emphasizing the AI's role as a real estate agent.
 
-9. Include property recommendation in "property_recommendation" schema.
-    - Follow the rules given on the schema.
-
 CITIES AVAILABLE: 
 {available_cities}
 

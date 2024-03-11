@@ -17,9 +17,9 @@ class Command(BaseCommand):
         )
 
         assistant = apollo_exporation_service.assistant(
-            query="Large Scale Warehouse Facility in Clark for Sale?",
+            query="warehouse in taguig city?",
             collection_name="mytreehouse_vectors",
-            thread_id="sk_123abcdefg45678910"
+            thread_id="sk_sssssssdsdsds"
         )
 
         print(json.dumps(assistant, indent=4))
