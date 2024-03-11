@@ -89,7 +89,6 @@ class ApolloExplorationService:
 
     def assistant(self, query: str, collection_name: str, thread_id: Optional[str] = None):
         store = self.pg_vector(collection_name=collection_name)
-        # retriever = store.as_retriever()
 
         conversation_history = "This is a new query no conversation history at the moment"
         available_properties = """"""
@@ -117,23 +116,8 @@ class ApolloExplorationService:
             available_properties = f"No available properties related to query: {query}"
         else:
             for relevant_doc in get_relevant_documents:
-                data, score = relevant_doc
-                available_properties += f"similarity score: {score}\n" + \
-                    data.page_content + "\n"
-
-        # get_relevant_documents = retriever.get_relevant_documents(query=query)
-
-        # if len(get_relevant_documents) == 0:
-        #     available_properties = f"No available properties related to query: {query}"
-        # else:
-        #     realstate_properties = [
-        #         data.page_content for data in get_relevant_documents
-        #     ]
-        #     if isinstance(realstate_properties, str):
-        #         available_properties = realstate_properties
-        #     else:
-        #         for property_data in realstate_properties:
-        #             available_properties += property_data + "\n"
+                data, _similarity_score = relevant_doc
+                available_properties += data.page_content + "\n"
 
         cached_cities = cache.get("open_ai:cities_context")
         cities_available = cached_cities if cached_cities else "No available cities currently in the database"
