@@ -6,7 +6,7 @@ response_schemas = [
         description="Include your answer here."
     ),
     ResponseSchema(
-        name="property_suggestion",
+        name="property_recommendation",
         description="""
        A markdown-formatted response:
        
