@@ -65,6 +65,10 @@ class PropertyListingModel(BaseModel):
         default=False,
         verbose_name="Is Active"
     )
+    is_in_vector_table = models.BooleanField(
+        default=False,
+        verbose_name="Is In Vector Table"
+    )
     vector_uuids = models.JSONField(
         default=list,
         blank=True,

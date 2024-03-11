@@ -35,12 +35,10 @@ def update_vector_property_listings():
         collection_name="property_listings"
     )
 
-    property_listings = PropertyListingModel.objects.annotate(
-        vector_uuids_count=Count('vector_uuids')
-    ).filter(
-        vector_uuids_count=0,
+    property_listings = PropertyListingModel.objects.filter(
+        is_in_vector_table=False,
         is_active=True
-    )[:10]
+    ).order_by('-id')[:10]
 
     for property_listing in property_listings:
         documents = apollo_exporation_service.get_text_chunks_langchain(
@@ -68,7 +66,13 @@ def update_vector_property_listings():
         customs_ids = pg_vector.add_documents(documents=documents)
 
         property_listing.vector_uuids = customs_ids
-        property_listing.save(update_fields=["vector_uuids"])
+        property_listings.is_in_vector_table = True
+        property_listing.save(
+            update_fields=[
+                "vector_uuids",
+                "is_in_vector_table"
+            ]
+        )
 
         logger.info(
             f"Property stored in vector database with property id: {property_listing.id}"
