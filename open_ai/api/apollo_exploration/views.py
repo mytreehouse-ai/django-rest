@@ -56,7 +56,17 @@ class ApolloExplorationAiAPIView(RetrieveAPIView):
         return apollo_exporation_service.assistant(collection_name=collection_name, query=query, thread_id=thread_id)
 
     @swagger_auto_schema(
-        operation_description="Retrieve AI-generated responses for a given query.",
+        operation_description="""
+        Retrieve AI-generated responses for a given query, collection name, and an optional thread ID without requiring any authentication or authorization. This endpoint allows clients to interact with the Apollo Exploration AI to receive responses based on their queries.
+
+        **Query Parameters:**
+
+        - `query`: The question or prompt that the AI will answer. This parameter is required to initiate the AI response process.
+
+        - `collection_name`: The vector collection name identifier. This parameter specifies the context or domain from which the AI should generate responses, enhancing the relevance and accuracy of the AI's output.
+
+        - `thread_id`: An optional parameter used to retain conversation history with the bot. Providing a thread ID allows the AI to maintain context over multiple interactions, leading to more coherent and contextually appropriate responses.
+        """,
         operation_id="get_apollo_exploration_response",
         query_serializer=ApolloExplorationAiQueryParamsSerializer(),
         responses={200: ReadApolloExplorationAiResponseSerializer()},

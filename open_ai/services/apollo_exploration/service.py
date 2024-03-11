@@ -103,7 +103,8 @@ class ApolloExplorationService:
         )
 
         ai_classifier_response = self.gpt4_0125_turbo_preview_llm.invoke(
-            message)
+            input=message
+        )
 
         output_dict = output_parser.parse(ai_classifier_response.content)
 
