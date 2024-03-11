@@ -36,7 +36,8 @@ def update_vector_property_listings():
 
     property_listings = PropertyListingModel.objects.filter(
         is_in_vector_table=False,
-        is_active=True
+        is_active=True,
+        estate__description__isnull=False
     ).order_by('-id')[:10]
 
     for property_listing in property_listings:
