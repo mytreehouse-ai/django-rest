@@ -40,8 +40,7 @@ def update_vector_property_listings():
     ).order_by('-id')[:10]
 
     for property_listing in property_listings:
-        documents = apollo_exporation_service.get_text_chunks_langchain(
-            text=f"""
+        estate = f"""
             [{property_listing.listing_title}]({property_listing.listing_url})
             Price: {property_listing.price_formatted}
             Listing type: {property_listing.listing_type.description}
@@ -61,6 +60,11 @@ def update_vector_property_listings():
             Other Feature: {property_listing.estate.other_features}
             Description: {property_listing.estate.description}
             """
+
+        print(estate)
+
+        documents = apollo_exporation_service.get_text_chunks_langchain(
+            text=estate
         )
         customs_ids = pg_vector.add_documents(documents=documents)
 
