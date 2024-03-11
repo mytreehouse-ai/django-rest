@@ -17,8 +17,8 @@ class Command(BaseCommand):
         )
 
         assistant = apollo_exporation_service.assistant(
-            query="Condominium that is near uptown mall?",
-            collection_name="property_listings",
+            query="Large Scale Warehouse Facility in Clark for Sale?",
+            collection_name="mytreehouse_vectors",
             thread_id="sk_123abcdefg45678910"
         )
 

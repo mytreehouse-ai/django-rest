@@ -108,18 +108,34 @@ class ApolloExplorationService:
                     message_content = message_data.get('content')
                     conversation_history += f"{message_type.title()}: {message_content}\n"
 
-        get_relevant_documents = retriever.get_relevant_documents(query=query)
+        get_relevant_documents = store.similarity_search_with_score(
+            query=query,
+            k=10
+        )
+
         if len(get_relevant_documents) == 0:
-            realstate_properties = f"No available properties related to query: {query}"
+            available_properties = f"No available properties related to query: {query}"
         else:
-            realstate_properties = [
-                data.page_content for data in get_relevant_documents
-            ]
-            if isinstance(realstate_properties, str):
-                available_properties = realstate_properties
-            else:
-                for property_data in realstate_properties:
-                    available_properties += property_data + "\n"
+            for relevant_doc in get_relevant_documents:
+                data, score = relevant_doc
+                available_properties += f"similarity score: {score}\n" + \
+                    data.page_content + "\n"
+
+        # get_relevant_documents = retriever.get_relevant_documents(query=query)
+
+        # if len(get_relevant_documents) == 0:
+        #     available_properties = f"No available properties related to query: {query}"
+        # else:
+        #     realstate_properties = [
+        #         data.page_content for data in get_relevant_documents
+        #     ]
+        #     if isinstance(realstate_properties, str):
+        #         available_properties = realstate_properties
+        #     else:
+        #         for property_data in realstate_properties:
+        #             available_properties += property_data + "\n"
+
+        print(available_properties)
 
         cached_cities = cache.get("open_ai:cities_context")
         cities_available = cached_cities if cached_cities else "No available cities currently in the database"
@@ -128,8 +144,6 @@ class ApolloExplorationService:
         chat_propmt_template = ChatPromptTemplate.from_template(
             template=chat_prompt
         )
-
-        print(available_properties)
 
         message = chat_propmt_template.format_messages(
             conversation_history=conversation_history,
