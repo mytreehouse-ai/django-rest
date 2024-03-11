@@ -1,4 +1,5 @@
 import os
+import json
 from typing import List, Optional
 from logging import getLogger
 from openai import OpenAI, BadRequestError, RateLimitError, APIError
@@ -10,10 +11,13 @@ from langchain_community.document_loaders import TextLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.chat_message_histories import RedisChatMessageHistory
 from langchain_core.prompts import ChatPromptTemplate
+from langchain.output_parsers import ResponseSchema
 from langchain.schema.document import Document
 
-from .response_schemas import response_schemas
-from .chat_prompts import chat_prompt
+from .recommendation_response_schemas import recommendation_response_schemas
+from .query_classifier_realstate_schema import query_classifier_realstate_schema
+from .query_classifier_prompt_template import query_classifier_prompt_template
+from .recommendation_prompt_template import recommendation_prompt_template
 
 
 logger = getLogger(__name__)
@@ -36,14 +40,14 @@ class ApolloExplorationService:
             model="gpt-3.5-turbo-0125",
             temperature=0.0
         )
-        self.gpt4_turbo_preview_llm = ChatOpenAI(
-            model="gpt-4-turbo-preview",
+        self.gpt4_0125_turbo_preview_llm = ChatOpenAI(
+            model="gpt-4-0125-preview",
             temperature=0.0
         )
 
-    def _get_format_instruction(self) -> tuple[StructuredOutputParser, str]:
+    def _get_format_instruction(self, response_schema: List[ResponseSchema]) -> tuple[StructuredOutputParser, str]:
         output_parser = StructuredOutputParser.from_response_schemas(
-            response_schemas=response_schemas
+            response_schemas=response_schema
         )
         format_instruction = output_parser.get_format_instructions()
         return output_parser, format_instruction
@@ -86,8 +90,29 @@ class ApolloExplorationService:
         )
         return history
 
+    def query_classifier(self, query: str):
+        output_parser, format_instruction = self._get_format_instruction(
+            response_schema=query_classifier_realstate_schema
+        )
+        chat_query_classifier_prompt_template = ChatPromptTemplate.from_template(
+            template=query_classifier_prompt_template
+        )
+        message = chat_query_classifier_prompt_template.format_messages(
+            query=query,
+            query_classifier_realstate_schema=format_instruction
+        )
+
+        ai_classifier_response = self.gpt4_0125_turbo_preview_llm.invoke(
+            message)
+
+        output_dict = output_parser.parse(ai_classifier_response.content)
+
+        return output_dict
+
     def assistant(self, query: str, collection_name: str, thread_id: Optional[str] = None):
-        store = self.pg_vector(collection_name=collection_name)
+        query_classifer = self.query_classifier(query=query)
+
+        print(json.dumps(query_classifer, indent=4))
 
         conversation_history = "This is a new query no conversation history at the moment"
         available_properties = """"""
@@ -106,29 +131,31 @@ class ApolloExplorationService:
                     message_content = message_data.get('content')
                     conversation_history += f"{message_type.title()}: {message_content}\n"
 
-        get_relevant_documents = store.similarity_search_with_score(
-            query=query,
-            k=4
-        )
+        if query_classifer.get("query_type", "") == "real_estate":
+            store = self.pg_vector(collection_name=collection_name)
+            get_relevant_documents = store.similarity_search_with_score(
+                query=query_classifer.get("for_vector_search"),
+                k=4
+            )
 
-        if len(get_relevant_documents) == 0:
-            available_properties = f"No available properties related to query: {query}"
-        else:
-            for relevant_doc in get_relevant_documents:
-                data, _similarity_score = relevant_doc
-                available_properties += data.page_content + "\n"
-
-        print(conversation_history)
+            if len(get_relevant_documents) == 0:
+                available_properties = f"No available properties related to query: {query}"
+            else:
+                for relevant_doc in get_relevant_documents:
+                    data, _similarity_score = relevant_doc
+                    available_properties += data.page_content + "\n"
 
         cached_cities = cache.get("open_ai:cities_context")
         cities_available = cached_cities if cached_cities else "No available cities currently in the database"
 
-        output_parser, format_instruction = self._get_format_instruction()
-        chat_propmt_template = ChatPromptTemplate.from_template(
-            template=chat_prompt
+        output_parser, format_instruction = self._get_format_instruction(
+            response_schema=recommendation_response_schemas
+        )
+        chat_recommendation_prompt_template = ChatPromptTemplate.from_template(
+            template=recommendation_prompt_template
         )
 
-        message = chat_propmt_template.format_messages(
+        message = chat_recommendation_prompt_template.format_messages(
             conversation_history=conversation_history,
             available_cities=cities_available,
             available_properties=available_properties,
