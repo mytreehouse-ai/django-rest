@@ -161,6 +161,7 @@ class ApolloExplorationService:
         message = chat_recommendation_prompt_template.format_messages(
             query_type=query_type,
             question=query,
+            user_preference_log="",
             available_cities=cities_available,
             available_properties=available_properties,
             conversation_history=conversation_history,
