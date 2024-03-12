@@ -118,3 +118,4 @@ dmypy.json
 # docker-compose db files and backup
 data/
 backups/
+redis/
