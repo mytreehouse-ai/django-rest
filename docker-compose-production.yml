@@ -9,7 +9,7 @@ services:
     ports:
       - "6381:6379"
   django:
-    container_name: mytreehouse_django
+    container_name: mytreehouse_api
     build:
       context: .
       dockerfile: Dockerfile.local
