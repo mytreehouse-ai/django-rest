@@ -48,14 +48,27 @@ jobs:
       - name: Execute environment variable validation
         run: ./validate_env_vars.sh
 
-  run-and-build-docker-compose:
+  run-build-docker-compose:
     runs-on: self-hosted
     needs: validate-environment-variables
 
     steps:
-      - name: Run and build docker-compose file in the background
-        run: docker compose -f docker-compose-production.yml up --build -d
-
+      - name: Check if containers are running
+        id: check_containers
+        run: |
+          RUNNING_CONTAINERS=$(docker compose -f docker-compose.production.yml ps -q)
+          if [ -z "$RUNNING_CONTAINERS" ]; then
+            echo "Containers are not running, starting them..."
+            echo "containers_up=false" >> $GITHUB_OUTPUT
+          else
+            echo "All containers are already running."
+            echo "containers_up=true" >> $GITHUB_OUTPUT
+          fi
+      - name: Start containers if not running
+        if: steps.check_containers.outputs.containers_up == 'false'
+        run: docker compose -f docker-compose.production.yml up -d
+      - name: Run and build docker-compose file
+        run: docker compose -f docker-compose.production.yml build
 
 
 
