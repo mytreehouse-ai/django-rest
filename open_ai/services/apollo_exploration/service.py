@@ -40,8 +40,8 @@ class ApolloExplorationService:
             model="gpt-3.5-turbo-0125",
             temperature=0.0
         )
-        self.gpt4_0125_turbo_preview_llm = ChatOpenAI(
-            model="gpt-4-0125-preview",
+        self.gpt4_turbo_preview_llm = ChatOpenAI(
+            model="gpt-4-turbo-preview",
             temperature=0.0
         )
 
@@ -102,7 +102,7 @@ class ApolloExplorationService:
             query_classifier_realstate_schema=format_instruction
         )
 
-        ai_classifier_response = self.gpt4_0125_turbo_preview_llm.invoke(
+        ai_classifier_response = self.gpt4_turbo_preview_llm.invoke(
             input=message
         )
 
@@ -170,7 +170,7 @@ class ApolloExplorationService:
         # print(message[0].content)
 
         try:
-            response = self.gpt4_0125_turbo_preview_llm.invoke(message)
+            response = self.gpt4_turbo_preview_llm.invoke(message)
             output_dict = output_parser.parse(response.content)
             if thread_id and get_conversation_history:
                 get_conversation_history.add_user_message(message=query)
