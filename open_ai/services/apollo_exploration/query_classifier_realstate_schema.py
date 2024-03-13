@@ -43,6 +43,6 @@ query_classifier_realstate_schema = [
     ),
     ResponseSchema(
         name="for_vector_search",
-        description="For the real estate query type, this schema is responsible for generating a comprehensive query that incorporates all relevant extracted information for input into our vector search engine.",
+        description="For the real estate query type, this schema is responsible for generating a comprehensive query that incorporates all relevant extracted information for input into our vector search engine. Follow this format: property type:, location:, budget: (min and max or just the budget specified in php format eg: Php 1,000,000.00), features: (eg: ameneties like swimming pool, gym, etc... or property size like in sqm, floor size or building size) Instead of tagging a requirement as n/a if it's not extracted from the query, exclude it.",
     ),
 ]
