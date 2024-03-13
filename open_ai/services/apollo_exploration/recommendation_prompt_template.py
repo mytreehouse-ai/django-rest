@@ -49,6 +49,18 @@ User query: {question}
    - Acknowledge user satisfaction with recommendations and offer further assistance if needed.
    - Encourage users to explore other property types, locations, or features if they have additional preferences.
    - Clarify any misunderstandings and ensure user needs are met.
+   
+11. Property format must be in markdown:
+   [property title](listing url)
+   - property type
+   - listing type
+   - lot size: if available
+   - floor size: if available
+   - building size: if available
+   - formatted price
+   - address and city
+   - property features
+   - description
 
 Property types available in our database: Condominium, House and lot, Apartment, Land, and Warehouse.
 
