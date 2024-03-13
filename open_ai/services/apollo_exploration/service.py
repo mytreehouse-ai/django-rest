@@ -138,7 +138,7 @@ class ApolloExplorationService:
             store = self.pg_vector(collection_name=collection_name)
             get_relevant_documents = store.similarity_search_with_score(
                 query=query_classifer.get("for_vector_search"),
-                k=10
+                k=4
             )
 
             if len(get_relevant_documents) == 0:
@@ -159,14 +159,14 @@ class ApolloExplorationService:
         )
 
         message = chat_recommendation_prompt_template.format_messages(
-            query_type=query_type,
             question=query,
-            user_preference_log="",
             available_cities=cities_available,
             available_properties=available_properties,
             conversation_history=conversation_history,
             format_instructions=format_instruction,
         )
+
+        print(available_properties)
 
         # print(message[0].content)
 
