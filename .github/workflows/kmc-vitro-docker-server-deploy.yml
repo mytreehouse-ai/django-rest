@@ -1,4 +1,4 @@
-name: azure_docker_deploy
+name: kmc_vitro_docker_server_deployment
 
 on:
   push:
