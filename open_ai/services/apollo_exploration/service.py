@@ -165,9 +165,9 @@ class ApolloExplorationService:
             format_instructions=format_instruction,
         )
 
-        print(available_properties)
+        # print(available_properties)
 
-        print(message[0].content)
+        # print(message[0].content)
 
         try:
             response = self.gpt4_0125_turbo_preview_llm.invoke(message)
