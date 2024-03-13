@@ -42,7 +42,7 @@ class ApolloExplorationService:
         )
         self.gpt4_turbo_preview_llm = ChatOpenAI(
             model="gpt-4-turbo-preview",
-            temperature=0.0
+            temperature=0.7
         )
 
     def get_format_instruction(self, response_schema: List[ResponseSchema]) -> tuple[StructuredOutputParser, str]:
