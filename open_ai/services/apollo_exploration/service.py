@@ -116,11 +116,12 @@ class ApolloExplorationService:
         print(json.dumps(query_classifer, indent=4))
 
         conversation_history = "This is a new query no conversation history at the moment"
+        user_preference_log = """"""
         available_properties = """"""
 
         if thread_id:
             get_conversation_history = self.get_message_history(
-                thread_id=thread_id
+                thread_id=f"{thread_id}:user_conversation_history"
             )
 
             if len(get_conversation_history.messages) > 0:
@@ -133,9 +134,26 @@ class ApolloExplorationService:
                     conversation_history += f"{message_type.title()}: {message_content}\n"
 
         query_type = query_classifer.get("query_type", "")
+        user_preference = query_classifer.get("user_preference", "")
 
         if query_type == "real_estate":
             store = self.pg_vector(collection_name=collection_name)
+
+            user_preference_log_history = self.get_message_history(
+                thread_id=f"{thread_id}:user_preference_log"
+            )
+
+            if user_preference:
+                user_preference_log_history.add_user_message(
+                    message=user_preference
+                )
+
+            for message in user_preference_log_history.messages:
+                message_json = message.to_json()
+                message_data = message_json.get("kwargs")
+                message_content = message_data.get('content')
+                user_preference_log += f"- {message_content}\n"
+
             get_relevant_documents = store.similarity_search_with_score(
                 query=query_classifer.get("for_vector_search"),
                 k=8,
@@ -160,12 +178,13 @@ class ApolloExplorationService:
 
         message = chat_recommendation_prompt_template.format_messages(
             question=query,
+            user_preference_log=user_preference_log,
             available_properties=available_properties,
             conversation_history=conversation_history,
             format_instructions=format_instruction,
         )
 
-        print(available_properties)
+        # print(available_properties)
 
         # print(message[0].content)
 
