@@ -42,7 +42,7 @@ class ApolloExplorationService:
         )
         self.gpt4_0125_preview_llm = ChatOpenAI(
             model="gpt-4-0125-preview",
-            temperature=0.7
+            temperature=0.5
         )
 
     def get_format_instruction(self, response_schema: List[ResponseSchema]) -> tuple[StructuredOutputParser, str]:
@@ -168,6 +168,8 @@ class ApolloExplorationService:
         print(available_properties)
 
         # print(message[0].content)
+
+        # TODO: check sk_mochieworks-09
 
         try:
             response = self.gpt4_0125_preview_llm.invoke(message)
