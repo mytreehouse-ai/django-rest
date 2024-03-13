@@ -1,24 +1,33 @@
 version: '3.9'
 services:
+  redis:
+    container_name: mytreehouse_redis
+    image: redis:alpine
+    command: "redis-server --appendonly yes --save 60 1 --loglevel warning"
+    sysctls:
+      - net.core.somaxconn=1024
+    ports:
+      - "6381:6379"
+    volumes:
+      - ~/mytreehouse_redis_data:/data
   django:
-    container_name: kmc_savills_app
+    container_name: mytreehouse_api
     build:
       context: .
       dockerfile: Dockerfile.local
     command: >
       sh -c "/wait &&
-             python manage.py collectstatic --no-input &&
              python manage.py makemigrations --no-input &&
              python manage.py migrate --no-input &&
              python manage.py runserver 0.0.0.0:8000"
     volumes:
     - .:/app
     ports:
-    - "8000:8000"
+    - "8001:8000"
     env_file:
       - .env
   celery:
-    container_name: kmc_savills_celery
+    container_name: mytreehouse_celery
     build:
       context: .
       dockerfile: Dockerfile.local
@@ -30,21 +39,23 @@ services:
     env_file:
       - .env
     depends_on:
+      - redis
       - django
     environment:
-      WAIT_HOSTS: django:8000
+      WAIT_HOSTS: django:8000,redis:6379
   worker:
-    container_name: kmc_savills_worker
+    container_name: mytreehouse_worker
     build:
       context: .
       dockerfile: Dockerfile.local
     command: >
-      sh -c "/wait && celery -A mytreehouse worker -l INFO -E --concurrency=5"
+      sh -c "/wait && celery -A mytreehouse worker -l INFO -E --concurrency=4"
     volumes:
       - .:/app
     env_file:
       - .env
     depends_on:
+      - redis
       - django
     environment:
-      WAIT_HOSTS: django:8000
+      WAIT_HOSTS: django:8000,redis:6379

@@ -45,14 +45,14 @@ class ApolloExplorationService:
             temperature=0.0
         )
 
-    def _get_format_instruction(self, response_schema: List[ResponseSchema]) -> tuple[StructuredOutputParser, str]:
+    def get_format_instruction(self, response_schema: List[ResponseSchema]) -> tuple[StructuredOutputParser, str]:
         output_parser = StructuredOutputParser.from_response_schemas(
             response_schemas=response_schema
         )
         format_instruction = output_parser.get_format_instructions()
         return output_parser, format_instruction
 
-    def _text_loader(self, file_path: str) -> list:
+    def text_loader(self, file_path: str) -> list:
         loader = TextLoader(
             file_path=file_path,
             encoding="utf-8"
@@ -91,7 +91,7 @@ class ApolloExplorationService:
         return history
 
     def query_classifier(self, query: str):
-        output_parser, format_instruction = self._get_format_instruction(
+        output_parser, format_instruction = self.get_format_instruction(
             response_schema=query_classifier_realstate_schema
         )
         chat_query_classifier_prompt_template = ChatPromptTemplate.from_template(
@@ -151,7 +151,7 @@ class ApolloExplorationService:
         cached_cities = cache.get("open_ai:cities_context")
         cities_available = cached_cities if cached_cities else "No available cities currently in the database"
 
-        output_parser, format_instruction = self._get_format_instruction(
+        output_parser, format_instruction = self.get_format_instruction(
             response_schema=recommendation_response_schemas
         )
         chat_recommendation_prompt_template = ChatPromptTemplate.from_template(
@@ -159,13 +159,14 @@ class ApolloExplorationService:
         )
 
         message = chat_recommendation_prompt_template.format_messages(
-            query_type=query_type,
             question=query,
             available_cities=cities_available,
             available_properties=available_properties,
             conversation_history=conversation_history,
             format_instructions=format_instruction,
         )
+
+        print(available_properties)
 
         # print(message[0].content)
 

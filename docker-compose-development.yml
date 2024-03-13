@@ -3,11 +3,13 @@ services:
   redis:
     container_name: kmc_savills_redis
     image: redis:alpine
-    command: "redis-server --save 60 1 --loglevel warning"
+    command: "redis-server --appendonly yes --save 60 1 --loglevel warning"
     sysctls:
       - net.core.somaxconn=1024
     ports:
-      - "6379:6379"
+      - "6381:6379"
+    volumes:
+      - ./redis/data:/data
   postgres:
     container_name: kmc_savills_db
     build:
@@ -22,7 +24,7 @@ services:
       - POSTGRES_PASSWORD=postgres
     # command: ["sh", "-c", "psql -U postgres -d django -c 'CREATE EXTENSION IF NOT EXISTS vector;'"]
     ports:
-    - "5432:5432"
+    - "5433:5432"
   django:
     container_name: kmc_savills_app
     build:
@@ -71,7 +73,7 @@ services:
       context: .
       dockerfile: Dockerfile.local
     command: >
-      sh -c "/wait && celery -A mytreehouse worker -l INFO -E --concurrency=5"
+      sh -c "/wait && celery -A mytreehouse worker -l INFO -E --concurrency=4"
     volumes:
       - .:/app
     env_file:

@@ -3,7 +3,11 @@ from langchain.output_parsers import ResponseSchema
 query_classifier_realstate_schema = [
     ResponseSchema(
         name="query_type",
-        description="'real_estate' or 'non_real_estate' or 'user_satisfaction'"
+        description="'real_estate' (must include at least the property type), 'general_inquiry' (for general questions about services or properties), 'user_satisfaction' (to gauge user satisfaction with the service), or 'user_feedback' (for specific feedback on properties or services)"
+    ),
+    ResponseSchema(
+        name="user_preference",
+        description="enhance vector search formulation by extracting user preferences for property features, location, property type, and specific requirements."
     ),
     ResponseSchema(
         name="location",
@@ -39,6 +43,6 @@ query_classifier_realstate_schema = [
     ),
     ResponseSchema(
         name="for_vector_search",
-        description="For the real estate query type, please generate a query based on the extracted information that we can input into our vector search. If there is a valid property type, please include it in the query (e.g. property_type: condominium). You can include this even if there is no other information to add, or leave it empty if query type is none real estate related.",
+        description="For the real estate query type, this schema is responsible for generating a comprehensive query that incorporates all relevant extracted information for input into our vector search engine.",
     ),
 ]
