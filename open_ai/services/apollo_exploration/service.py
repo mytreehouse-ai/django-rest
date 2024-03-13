@@ -160,7 +160,6 @@ class ApolloExplorationService:
 
         message = chat_recommendation_prompt_template.format_messages(
             question=query,
-            available_cities=cities_available,
             available_properties=available_properties,
             conversation_history=conversation_history,
             format_instructions=format_instruction,
