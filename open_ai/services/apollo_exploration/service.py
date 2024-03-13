@@ -138,7 +138,7 @@ class ApolloExplorationService:
             store = self.pg_vector(collection_name=collection_name)
             get_relevant_documents = store.similarity_search_with_score(
                 query=query_classifer.get("for_vector_search"),
-                k=8
+                k=8,
             )
 
             if len(get_relevant_documents) == 0:
@@ -165,7 +165,7 @@ class ApolloExplorationService:
             format_instructions=format_instruction,
         )
 
-        # print(available_properties)
+        print(available_properties)
 
         # print(message[0].content)
 
