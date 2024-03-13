@@ -9,7 +9,7 @@ User query: {question}
    - If no location is specified, recommend properties based on available options without being restricted to a specific city.
 
 2. Utilize Conversation History:
-   - Refer to the previous user inputs in the conversation history and the user preference log to maintain context and avoid repeating questions that have already been answered.
+   - Refer to the previous user inputs in the conversation history to maintain context and avoid repeating questions that have already been answered.
    - Acknowledge and respond appropriately to user requests for more details about a specific property.
    - Ensure diversity in responses to prevent the conversation from becoming monotonous.
 
