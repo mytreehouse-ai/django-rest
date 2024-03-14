@@ -54,7 +54,7 @@ class PropertyListingModel(BaseModel):
     price_formatted = models.CharField(
         null=True,
         blank=True,
-        max_length=200,
+        max_length=255,
         verbose_name="Price Formatted"
     )
     is_delisted = models.BooleanField(
