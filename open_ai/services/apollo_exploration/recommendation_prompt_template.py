@@ -59,7 +59,7 @@ User preference log: (You can use this section to verify whether the user is cha
    - If the user asks for any available options without specifying preferences, provide a direct response with a few relevant options.
    - Encourage the user to share more specific preferences for better-tailored recommendations.
    
-12. Property format must be in markdown:
+12. Property format must be in markdown: (Note that if the value is None or n/a exclude it.)
    [property title](listing url)
    - property type
    - listing type
