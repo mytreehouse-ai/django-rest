@@ -192,8 +192,6 @@ class ApolloExplorationService:
             format_instructions=format_instruction,
         )
 
-        # print(available_properties)
-
         # print(message[0].content)
 
         # TODO: check sk_mochieworks-09
