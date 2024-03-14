@@ -192,7 +192,7 @@ class ApolloExplorationService:
             format_instructions=format_instruction,
         )
 
-        print(available_properties)
+        # print(available_properties)
 
         # print(message[0].content)
 
