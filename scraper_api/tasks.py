@@ -475,3 +475,18 @@ def lamudi_multi_page_scraper_task():
         sleep(2)
 
     property_details = []
+
+
+@shared_task()
+def reset_single_page_processing_status():
+    # Count the number of Scrapy jobs that are single-page, not yet processed, and have HTML code
+    scrapy_job_count = ScrapyJobModel.objects.filter(
+        single_page=True,
+        is_single_page_processed=False
+    ).count()
+
+    # If there are no such Scrapy jobs, reset the single-page processing status for all jobs with HTML code
+    if scrapy_job_count == 0:
+        ScrapyJobModel.objects.filter().update(
+            is_single_page_processed=False
+        )
