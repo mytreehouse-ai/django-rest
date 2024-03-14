@@ -1,6 +1,6 @@
 import os
 import json
-from typing import List, Optional
+from typing import List
 from logging import getLogger
 from openai import OpenAI, BadRequestError, RateLimitError, APIError
 from django.core.cache import cache
@@ -90,7 +90,19 @@ class ApolloExplorationService:
         )
         return history
 
-    def query_classifier(self, query: str):
+    def query_classifier(self, query: str, thread_id: str):
+        user_preference_log = """"""
+
+        user_preference_log_history = self.get_message_history(
+            thread_id=f"{thread_id}:user_preference_log"
+        )
+
+        for message in user_preference_log_history.messages:
+            message_json = message.to_json()
+            message_data = message_json.get("kwargs")
+            message_content = message_data.get('content')
+            user_preference_log += f"- {message_content}\n"
+
         output_parser, format_instruction = self.get_format_instruction(
             response_schema=query_classifier_realstate_schema
         )
@@ -108,51 +120,47 @@ class ApolloExplorationService:
 
         output_dict = output_parser.parse(ai_classifier_response.content)
 
-        return output_dict
+        user_preference = output_dict.get("user_preference", "")
 
-    def assistant(self, query: str, collection_name: str, thread_id: Optional[str] = None):
-        query_classifer = self.query_classifier(query=query)
+        if user_preference:
+            user_preference_log_history.add_user_message(
+                message=user_preference
+            )
+            user_preference_log += f"- {user_preference}\n"
+
+        return output_dict, user_preference_log
+
+    def assistant(self, query: str, collection_name: str, thread_id: str):
+        conversation_history = "This is a new query no conversation history at the moment"
+        available_properties = """"""
+
+        query_classifer, user_preference_log = self.query_classifier(
+            query=query,
+            thread_id=thread_id
+        )
+
+        print(user_preference_log)
 
         print(json.dumps(query_classifer, indent=4))
 
-        conversation_history = "This is a new query no conversation history at the moment"
-        user_preference_log = """"""
-        available_properties = """"""
+        get_conversation_history = self.get_message_history(
+            thread_id=f"{thread_id}:user_conversation_history"
+        )
 
-        if thread_id:
-            get_conversation_history = self.get_message_history(
-                thread_id=f"{thread_id}:user_conversation_history"
-            )
-
-            if len(get_conversation_history.messages) > 0:
-                conversation_history = """"""
-                for message in get_conversation_history.messages:
-                    message_json = message.to_json()
-                    message_data = message_json.get("kwargs")
-                    message_type = message_data.get('type')
-                    message_content = message_data.get('content')
-                    conversation_history += f"{message_type.title()}: {message_content}\n"
+        if len(get_conversation_history.messages) > 0:
+            conversation_history = """"""
+            for message in get_conversation_history.messages:
+                message_json = message.to_json()
+                message_data = message_json.get("kwargs")
+                message_type = message_data.get('type')
+                message_content = message_data.get('content')
+                conversation_history += f"{message_type.title()}: {message_content}\n"
 
         query_type = query_classifer.get("query_type", "")
         user_preference = query_classifer.get("user_preference", "")
 
         if query_type == "real_estate":
             store = self.pg_vector(collection_name=collection_name)
-
-            user_preference_log_history = self.get_message_history(
-                thread_id=f"{thread_id}:user_preference_log"
-            )
-
-            if user_preference:
-                user_preference_log_history.add_user_message(
-                    message=user_preference
-                )
-
-            for message in user_preference_log_history.messages:
-                message_json = message.to_json()
-                message_data = message_json.get("kwargs")
-                message_content = message_data.get('content')
-                user_preference_log += f"- {message_content}\n"
 
             get_relevant_documents = store.similarity_search_with_score(
                 query=query_classifer.get("for_vector_search"),
@@ -184,7 +192,7 @@ class ApolloExplorationService:
             format_instructions=format_instruction,
         )
 
-        # print(available_properties)
+        print(available_properties)
 
         # print(message[0].content)
 
@@ -193,11 +201,10 @@ class ApolloExplorationService:
         try:
             response = self.gpt4_0125_preview_llm.invoke(message)
             output_dict = output_parser.parse(response.content)
-            if thread_id and get_conversation_history:
-                get_conversation_history.add_user_message(message=query)
-                get_conversation_history.add_ai_message(
-                    message=f"{output_dict.get('ai_suggestion')}"
-                )
+            get_conversation_history.add_user_message(message=query)
+            get_conversation_history.add_ai_message(
+                message=f"{output_dict.get('ai_suggestion')}"
+            )
         except BadRequestError as e:
             output_dict = {
                 "detail": f"BadRequestError: {str(e)}",

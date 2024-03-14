@@ -32,7 +32,7 @@ class ApolloExplorationAiQueryParamsSerializer(serializers.Serializer):
     """
     query = serializers.CharField(required=True)
     collection_name = serializers.CharField(required=True)
-    thread_id = serializers.CharField(required=False)
+    thread_id = serializers.CharField(required=True)
 
     class Meta:
         """
