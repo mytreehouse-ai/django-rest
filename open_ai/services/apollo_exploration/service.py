@@ -164,7 +164,7 @@ class ApolloExplorationService:
 
             get_relevant_documents = store.similarity_search_with_score(
                 query=query_classifer.get("for_vector_search"),
-                k=8,
+                k=12,
             )
 
             if len(get_relevant_documents) == 0:
