@@ -56,7 +56,7 @@ jobs:
       - name: Check if containers are running
         id: check_containers
         run: |
-          RUNNING_CONTAINERS=$(docker compose -f docker-compose.production.yml ps -q)
+          RUNNING_CONTAINERS=$(docker compose -f docker-compose-production.yml ps -q)
           if [ -z "$RUNNING_CONTAINERS" ]; then
             echo "Containers are not running, starting them..."
             echo "containers_up=false" >> $GITHUB_OUTPUT
@@ -66,9 +66,9 @@ jobs:
           fi
       - name: Start containers if not running
         if: steps.check_containers.outputs.containers_up == 'false'
-        run: docker compose -f docker-compose.production.yml up -d
+        run: docker compose -f docker-compose-production.yml up -d
       - name: Run and build docker-compose file
-        run: docker compose -f docker-compose.production.yml build
+        run: docker compose -f docker-compose-production.yml build
 
 
 
