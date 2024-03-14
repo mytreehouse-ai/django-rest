@@ -1,7 +1,7 @@
 version: '3.9'
 services:
   redis:
-    container_name: mytreehouse_redis
+    container_name: mytreehouse_redis_production
     image: redis:alpine
     command: "redis-server --appendonly yes --save 60 1 --loglevel warning"
     sysctls:
@@ -11,7 +11,7 @@ services:
     volumes:
       - ~/mytreehouse_redis_data:/data
   django:
-    container_name: mytreehouse_api
+    container_name: mytreehouse_api_production
     build:
       context: .
       dockerfile: Dockerfile.local
@@ -27,7 +27,7 @@ services:
     env_file:
       - .env
   celery:
-    container_name: mytreehouse_celery
+    container_name: mytreehouse_celery_production
     build:
       context: .
       dockerfile: Dockerfile.local
@@ -44,7 +44,7 @@ services:
     environment:
       WAIT_HOSTS: django:8000,redis:6379
   worker:
-    container_name: mytreehouse_worker
+    container_name: mytreehouse_worker_production
     build:
       context: .
       dockerfile: Dockerfile.local
