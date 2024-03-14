@@ -65,7 +65,7 @@ class ApolloExplorationAiAPIView(RetrieveAPIView):
 
         - `collection_name`: The vector collection name identifier. This parameter specifies the context or domain from which the AI should generate responses, enhancing the relevance and accuracy of the AI's output.
 
-        - `thread_id`: An optional parameter used to retain conversation history with the bot. Providing a thread ID allows the AI to maintain context over multiple interactions, leading to more coherent and contextually appropriate responses.
+        - `thread_id`: A parameter used to retain conversation history with the bot. Providing a thread ID allows the AI to maintain context over multiple interactions, leading to more coherent and contextually appropriate responses.
         """,
         operation_id="get_apollo_exploration_response",
         query_serializer=ApolloExplorationAiQueryParamsSerializer(),
