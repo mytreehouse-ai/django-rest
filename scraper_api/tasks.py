@@ -1,3 +1,4 @@
+import os
 import json
 import uuid
 from time import sleep
@@ -163,7 +164,7 @@ def lamudi_multi_page_scraper_task():
                             "status": "finished",
                             "attempts": 0,
                             "single_page": True,
-                            "status_url": f"https://api.mytree.house/status/{generated_uuid}",
+                            "status_url": f"{os.getenv('DJANGO_API_URL')}/status/{generated_uuid}",
                             "supposed_to_run_at": timezone.now()
                         }
                     )
@@ -228,7 +229,7 @@ def lamudi_multi_page_scraper_task():
                             "status": "finished",
                             "attempts": 0,
                             "single_page": True,
-                            "status_url": f"https://api.mytree.house/status/{generated_uuid}",
+                            "status_url": f"{os.getenv('DJANGO_API_URL')}/status/{generated_uuid}",
                             "supposed_to_run_at": timezone.now()
                         }
                     )
@@ -296,7 +297,7 @@ def lamudi_multi_page_scraper_task():
                             "status": "finished",
                             "attempts": 0,
                             "single_page": True,
-                            "status_url": f"https://api.mytree.house/status/{generated_uuid}",
+                            "status_url": f"{os.getenv('DJANGO_API_URL')}/status/{generated_uuid}",
                             "supposed_to_run_at": timezone.now()
                         }
                     )
@@ -363,7 +364,7 @@ def lamudi_multi_page_scraper_task():
                             "status": "finished",
                             "attempts": 0,
                             "single_page": True,
-                            "status_url": f"https://api.mytree.house/status/{generated_uuid}",
+                            "status_url": f"{os.getenv('DJANGO_API_URL')}/status/{generated_uuid}",
                             "supposed_to_run_at": timezone.now()
                         }
                     )
@@ -430,7 +431,7 @@ def lamudi_multi_page_scraper_task():
                             "status": "finished",
                             "attempts": 0,
                             "single_page": True,
-                            "status_url": f"https://api.mytree.house/status/{generated_uuid}",
+                            "status_url": f"{os.getenv('DJANGO_API_URL')}/status/{generated_uuid}",
                             "supposed_to_run_at": timezone.now()
                         }
                     )
@@ -471,6 +472,6 @@ def lamudi_multi_page_scraper_task():
 
                     print(f"New listing added: {new_listing.listing_url}")
 
-        sleep(10)
+        sleep(2)
 
     property_details = []
