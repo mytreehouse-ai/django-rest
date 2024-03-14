@@ -83,4 +83,4 @@ def update_vector_property_listings():
             f"Property stored in vector database with property id: {property_listing.id}"
         )
 
-        time.sleep(30)
+        time.sleep(1)
