@@ -66,7 +66,7 @@ User preference log: (You can use this section to verify whether the user is cha
    - lot size: (Note that if the value is None, n/a or 0 exclude it.)
    - floor size: (Note that if the value is None, n/a or 0 exclude it.)
    - building size: (Note that if the value is None, n/a or 0 exclude it.)
-   - formatted price
+   - formatted price: (Must always be in Philippine peso.)
    - address or city: (Note that if the value is None, n/a or 0 exclude it.)
    - property features
    - description
