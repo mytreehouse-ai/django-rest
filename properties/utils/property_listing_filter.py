@@ -15,15 +15,15 @@ class PropertyListingFilter(django_filters.FilterSet):
         lookup_expr='lte'
     )
     # Example usage in API: ?property_type_id=1&listing_type_id=2&property_status_id=3
-    property_type_id = django_filters.NumberFilter(
+    property_type = django_filters.NumberFilter(
         field_name='property_type__id',
         lookup_expr='exact'
     )
-    listing_type_id = django_filters.NumberFilter(
+    listing_type = django_filters.NumberFilter(
         field_name='listing_type__id',
         lookup_expr='exact'
     )
-    property_status_id = django_filters.NumberFilter(
+    property_status = django_filters.NumberFilter(
         field_name='property_status__id',
         lookup_expr='exact'
     )
@@ -91,7 +91,7 @@ class PropertyListingFilter(django_filters.FilterSet):
         lookup_expr='icontains'
     )
     # Example usage in API: ?city_id=1
-    city_id = django_filters.NumberFilter(
+    city = django_filters.NumberFilter(
         field_name='estate__city__id',
         lookup_expr='exact'
     )
