@@ -20,9 +20,9 @@ jobs:
           if [ -n "${{ vars.NODE_ENV }}" ]; then echo "NODE_ENV=${{ vars.NODE_ENV }}" >> .env; fi
           if [ -n "${{ secrets.DJANGO_SECRET_KEY }}" ]; then echo "DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" >> .env; fi
           if [ -n "${{ vars.DJANGO_API_URL }}" ]; then echo "DJANGO_API_URL=${{ vars.DJANGO_API_URL }}" >> .env; fi
-          if [ -n "${{ vars.CORS_ALLOWED_ORIGINS }}" ]; then echo "CORS_ALLOWED_ORIGINS=${{ vars.CORS_ALLOWED_ORIGINS }}" >> .env; fi
-          if [ -n "${{ vars.CSRF_TRUSTED_ORIGINS }}" ]; then echo "CSRF_TRUSTED_ORIGINS=${{ vars.CSRF_TRUSTED_ORIGINS }}" >> .env; fi
           if [ -n "${{ vars.DJANGO_ALLOWED_HOSTS }}" ]; then echo "DJANGO_ALLOWED_HOSTS=${{ vars.DJANGO_ALLOWED_HOSTS }}" >> .env; fi
+          if [ -n "${{ vars.CSRF_TRUSTED_ORIGINS }}" ]; then echo "CSRF_TRUSTED_ORIGINS=${{ vars.CSRF_TRUSTED_ORIGINS }}" >> .env; fi
+          if [ -n "${{ vars.CORS_ALLOWED_ORIGINS }}" ]; then echo "CORS_ALLOWED_ORIGINS=${{ vars.CORS_ALLOWED_ORIGINS }}" >> .env; fi
           if [ -n "${{ secrets.MONGODB_URI }}" ]; then echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" >> .env; fi
           if [ -n "${{ secrets.OPENAI_API_KEY }}" ]; then echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> .env; fi
           if [ -n "${{ secrets.POSTGRES_DATABASE }}" ]; then echo "POSTGRES_DATABASE=${{ secrets.POSTGRES_DATABASE }}" >> .env; fi
