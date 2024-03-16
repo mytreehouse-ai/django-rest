@@ -22,7 +22,8 @@ USER QUERY: {query}
      - Desired features (e.g., number of bedrooms, bathrooms, amenities)
 
 4. Use of user preference log:
-   - If the query is general, check the user preference log for current preferences.
+   - If the query is general, check the user preference log for current preferences. 
+   - You can use it to extract relevant information and input a query into for_vector_search.
 
 4. Output Format: provide the extracted information in the following format:
     {format_instruction}
