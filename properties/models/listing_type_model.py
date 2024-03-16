@@ -11,6 +11,11 @@ class ListingTypeModel(BaseModel):
         unique=True,
         verbose_name="Description"
     )
+    slug = models.CharField(
+        max_length=200,
+        verbose_name="Slug",
+        null=True
+    )
 
     def __str__(self) -> str:
         return self.description
