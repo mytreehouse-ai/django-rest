@@ -15,6 +15,7 @@ class PropertyTypeModel(BaseModel):
         max_length=200,
         verbose_name="Slug",
         null=True,
+        unique=True
     )
 
     def __str__(self) -> str:
