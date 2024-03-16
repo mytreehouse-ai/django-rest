@@ -6,53 +6,14 @@ on:
   workflow_dispatch:
 
 jobs:
-  set-environment-variables:
+  run-build-docker-compose:
     runs-on: self-hosted
-    environment: docker-server
-    permissions:
-      contents: read
-
     steps:
       - uses: actions/checkout@v4
-      - name: Create .env file
-        run: |
-          # Check if each variable exists before writing it to the .env file
-          if [ -n "${{ vars.NODE_ENV }}" ]; then echo "NODE_ENV=${{ vars.NODE_ENV }}" >> .env; fi
-          if [ -n "${{ secrets.DJANGO_SECRET_KEY }}" ]; then echo "DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" >> .env; fi
-          if [ -n "${{ vars.DJANGO_API_URL }}" ]; then echo "DJANGO_API_URL=${{ vars.DJANGO_API_URL }}" >> .env; fi
-          if [ -n "${{ vars.DJANGO_ALLOWED_HOSTS }}" ]; then echo "DJANGO_ALLOWED_HOSTS=${{ vars.DJANGO_ALLOWED_HOSTS }}" >> .env; fi
-          if [ -n "${{ vars.CSRF_TRUSTED_ORIGINS }}" ]; then echo "CSRF_TRUSTED_ORIGINS=${{ vars.CSRF_TRUSTED_ORIGINS }}" >> .env; fi
-          if [ -n "${{ vars.CORS_ALLOWED_ORIGINS }}" ]; then echo "CORS_ALLOWED_ORIGINS=${{ vars.CORS_ALLOWED_ORIGINS }}" >> .env; fi
-          if [ -n "${{ secrets.MONGODB_URI }}" ]; then echo "MONGODB_URI=${{ secrets.MONGODB_URI }}" >> .env; fi
-          if [ -n "${{ secrets.OPENAI_API_KEY }}" ]; then echo "OPENAI_API_KEY=${{ secrets.OPENAI_API_KEY }}" >> .env; fi
-          if [ -n "${{ secrets.POSTGRES_DATABASE }}" ]; then echo "POSTGRES_DATABASE=${{ secrets.POSTGRES_DATABASE }}" >> .env; fi
-          if [ -n "${{ secrets.POSTGRES_HOST }}" ]; then echo "POSTGRES_HOST=${{ secrets.POSTGRES_HOST }}" >> .env; fi
-          if [ -n "${{ secrets.POSTGRES_USERNAME }}" ]; then echo "POSTGRES_USERNAME=${{ secrets.POSTGRES_USERNAME }}" >> .env; fi
-          if [ -n "${{ secrets.POSTGRES_PASSWORD }}" ]; then echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env; fi
-          if [ -n "${{ secrets.POSTGRES_PORT }}" ]; then echo "POSTGRES_PORT=${{ secrets.POSTGRES_PORT }}" >> .env; fi
-          if [ -n "${{ secrets.REDIS_CACHE_URL }}" ]; then echo "REDIS_CACHE_URL=${{ secrets.REDIS_CACHE_URL }}" >> .env; fi
-          if [ -n "${{ secrets.REDIS_PASSWORD }}" ]; then echo "REDIS_PASSWORD=${{ secrets.REDIS_PASSWORD }}" >> .env; fi
-          if [ -n "${{ secrets.REDIS_VM_IP_ADD }}" ]; then echo "REDIS_VM_IP_ADD=${{ secrets.REDIS_VM_IP_ADD }}" >> .env; fi
-          if [ -n "${{ secrets.SCRAPER_API_KEY }}" ]; then echo "SCRAPER_API_KEY=${{ secrets.SCRAPER_API_KEY }}" >> .env; fi
-          if [ -n "${{ vars.POSTGRES_SSL_ON }}" ]; then echo "POSTGRES_SSL_ON=${{ vars.POSTGRES_SSL_ON }}" >> .env; fi
-          if [ -n "${{ vars.REDIS_SSL_ENABLED }}" ]; then echo "REDIS_SSL_ENABLED=${{ vars.REDIS_SSL_ENABLED }}" >> .env; fi
-          if [ -n "${{ secrets.SCRAPERAPI_WEBHOOK_API_KEY }}" ]; then echo "SCRAPERAPI_WEBHOOK_API_KEY=${{ secrets.SCRAPERAPI_WEBHOOK_API_KEY }}" >> .env; fi
-
-  validate-environment-variables:
-    runs-on: self-hosted
-    needs: set-environment-variables
-
-    steps:
       - name: Grant execute permissions to validate_env_vars.sh
         run: chmod +x ./validate_env_vars.sh
       - name: Execute environment variable validation
         run: ./validate_env_vars.sh
-
-  run-build-docker-compose:
-    runs-on: self-hosted
-    needs: validate-environment-variables
-
-    steps:
       - name: Check if containers are running
         id: check_containers
         run: |
