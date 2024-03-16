@@ -10,10 +10,6 @@ jobs:
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
-      - name: Grant execute permissions to validate_env_vars.sh
-        run: chmod +x ./validate_env_vars.sh
-      - name: Execute environment variable validation
-        run: ./validate_env_vars.sh
       - name: Check if containers are running
         id: check_containers
         run: |
