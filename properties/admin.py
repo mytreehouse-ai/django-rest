@@ -43,8 +43,8 @@ class PriceHistoryModelAdmin(admin.ModelAdmin):
 
 @admin.register(PropertyTypeModel)
 class PropertyTypeModelAdmin(admin.ModelAdmin):
-    list_display = ("id", "description")
-    search_fields = ("description",)
+    list_display = ("id", "description", "slug")
+    search_fields = ("description", "slug")
 
 
 @admin.register(ListingTypeModel)
