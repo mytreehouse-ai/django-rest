@@ -92,17 +92,13 @@ class ApolloExplorationService:
         return history
 
     def query_classifier(self, query: str, thread_id: str):
-        user_preference_log = """"""
-
         user_preference_log_history = self.get_message_history(
             thread_id=f"{thread_id}:user_preference_log"
         )
 
-        for message in user_preference_log_history.messages:
-            message_json = message.to_json()
-            message_data = message_json.get("kwargs")
-            message_content = message_data.get('content')
-            user_preference_log += f"- {message_content}\n"
+        memory = ConversationBufferMemory(
+            memory_key="user_preference_log", chat_memory=user_preference_log_history
+        )
 
         output_parser, format_instruction = self.get_format_instruction(
             response_schema=query_classifier_realstate_schema
@@ -121,13 +117,15 @@ class ApolloExplorationService:
 
         query_classifer = output_parser.parse(ai_classifier_response.content)
 
+        query_type = query_classifer.get("query_type", "")
         user_preference = query_classifer.get("user_preference", "")
 
-        if user_preference:
+        if user_preference and query_type == "real_estate":
             user_preference_log_history.add_user_message(
                 message=user_preference
             )
-            user_preference_log += f"- {user_preference}\n"
+
+        user_preference_log = memory.chat_memory
 
         return query_classifer, user_preference_log
 
@@ -185,7 +183,7 @@ class ApolloExplorationService:
             format_instructions=format_instruction,
         )
 
-        print(message[0].content)
+        # print(message[0].content)
 
         try:
             response = self.gpt3_5_turbo_0125_llm.invoke(message)
