@@ -49,8 +49,8 @@ class PropertyTypeModelAdmin(admin.ModelAdmin):
 
 @admin.register(ListingTypeModel)
 class ListingTypeModelAdmin(admin.ModelAdmin):
-    list_display = ("id", "description")
-    search_fields = ("description",)
+    list_display = ("id", "description", "slug")
+    search_fields = ("description", "slug")
 
 
 @admin.register(PropertyStatusModel)
