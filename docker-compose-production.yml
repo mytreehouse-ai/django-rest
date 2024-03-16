@@ -25,7 +25,7 @@ services:
     ports:
     - "8001:8000"
     env_file:
-      - .env
+      - ~/secrets/mytreehouse/production/.env
   celery:
     container_name: mytreehouse_celery_production
     build:
@@ -37,7 +37,7 @@ services:
     volumes:
       - .:/app
     env_file:
-      - .env
+      - ~/secrets/mytreehouse/production/.env
     depends_on:
       - redis
       - django
@@ -53,7 +53,7 @@ services:
     volumes:
       - .:/app
     env_file:
-      - .env
+      - ~/secrets/mytreehouse/production/.env
     depends_on:
       - redis
       - django
