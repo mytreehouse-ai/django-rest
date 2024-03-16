@@ -67,7 +67,7 @@ Question: {question}
    - If the user asks for any available options without specifying preferences, provide a direct response with a few relevant options.
    - Encourage the user to share more specific preferences for better-tailored recommendations.
    
-12. Property format must be in markdown:
+12. If you have a property to suggest, please ensure that it is in markdown format only:
    [property title](listing url)
    - property type
    - listing type

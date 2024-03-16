@@ -108,8 +108,11 @@ class ApolloExplorationService:
         )
         message = chat_query_classifier_prompt_template.format_messages(
             query=query,
-            query_classifier_realstate_schema=format_instruction
+            user_preference_log=memory.chat_memory,
+            format_instruction=format_instruction
         )
+
+        print(message[0].content)
 
         ai_classifier_response = self.gpt3_5_turbo_0125_llm.invoke(
             input=message
