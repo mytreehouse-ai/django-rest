@@ -112,8 +112,6 @@ class ApolloExplorationService:
             format_instruction=format_instruction
         )
 
-        print(message[0].content)
-
         ai_classifier_response = self.gpt3_5_turbo_0125_llm.invoke(
             input=message
         )
@@ -186,7 +184,7 @@ class ApolloExplorationService:
             format_instructions=format_instruction,
         )
 
-        # print(message[0].content)
+        print(message[0].content)
 
         try:
             response = self.gpt3_5_turbo_0125_llm.invoke(message)
