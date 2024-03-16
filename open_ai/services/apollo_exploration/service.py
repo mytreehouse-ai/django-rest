@@ -10,14 +10,15 @@ from langchain.output_parsers import StructuredOutputParser
 from langchain_community.document_loaders import TextLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.chat_message_histories import RedisChatMessageHistory
+from langchain.memory import ConversationBufferMemory
 from langchain_core.prompts import ChatPromptTemplate
 from langchain.output_parsers import ResponseSchema
 from langchain.schema.document import Document
 
 from .recommendation_response_schemas import recommendation_response_schemas
+from .recommendation_prompt_template import recommendation_prompt_template
 from .query_classifier_realstate_schema import query_classifier_realstate_schema
 from .query_classifier_prompt_template import query_classifier_prompt_template
-from .recommendation_prompt_template import recommendation_prompt_template
 
 
 logger = getLogger(__name__)
@@ -114,13 +115,13 @@ class ApolloExplorationService:
             query_classifier_realstate_schema=format_instruction
         )
 
-        ai_classifier_response = self.gpt4_0125_preview_llm.invoke(
+        ai_classifier_response = self.gpt3_5_turbo_0125_llm.invoke(
             input=message
         )
 
-        output_dict = output_parser.parse(ai_classifier_response.content)
+        query_classifer = output_parser.parse(ai_classifier_response.content)
 
-        user_preference = output_dict.get("user_preference", "")
+        user_preference = query_classifer.get("user_preference", "")
 
         if user_preference:
             user_preference_log_history.add_user_message(
@@ -128,10 +129,9 @@ class ApolloExplorationService:
             )
             user_preference_log += f"- {user_preference}\n"
 
-        return output_dict, user_preference_log
+        return query_classifer, user_preference_log
 
     def assistant(self, query: str, collection_name: str, thread_id: str):
-        conversation_history = "This is a new query no conversation history at the moment"
         available_properties = """"""
 
         query_classifer, user_preference_log = self.query_classifier(
@@ -139,22 +139,11 @@ class ApolloExplorationService:
             thread_id=thread_id
         )
 
-        print(user_preference_log)
-
         print(json.dumps(query_classifer, indent=4))
 
         get_conversation_history = self.get_message_history(
             thread_id=f"{thread_id}:user_conversation_history"
         )
-
-        if len(get_conversation_history.messages) > 0:
-            conversation_history = """"""
-            for message in get_conversation_history.messages:
-                message_json = message.to_json()
-                message_data = message_json.get("kwargs")
-                message_type = message_data.get('type')
-                message_content = message_data.get('content')
-                conversation_history += f"{message_type.title()}: {message_content}\n"
 
         query_type = query_classifer.get("query_type", "")
         user_preference = query_classifer.get("user_preference", "")
@@ -184,20 +173,22 @@ class ApolloExplorationService:
             template=recommendation_prompt_template
         )
 
+        memory = ConversationBufferMemory(
+            memory_key="conversation_history", chat_memory=get_conversation_history
+        )
+
         message = chat_recommendation_prompt_template.format_messages(
             question=query,
             user_preference_log=user_preference_log,
             available_properties=available_properties,
-            conversation_history=conversation_history,
+            conversation_history=memory.chat_memory,
             format_instructions=format_instruction,
         )
 
-        # print(message[0].content)
-
-        # TODO: check sk_mochieworks-09
+        print(message[0].content)
 
         try:
-            response = self.gpt4_0125_preview_llm.invoke(message)
+            response = self.gpt3_5_turbo_0125_llm.invoke(message)
             output_dict = output_parser.parse(response.content)
             get_conversation_history.add_user_message(message=query)
             get_conversation_history.add_ai_message(
