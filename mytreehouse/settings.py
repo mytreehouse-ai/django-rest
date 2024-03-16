@@ -34,8 +34,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('DJANGO_SECRET_KEY')
 
-print(env.list("DJANGO_ALLOWED_HOSTS"))
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('NODE_ENV') != 'production'
 ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS")
