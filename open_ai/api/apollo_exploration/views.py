@@ -48,16 +48,17 @@ class ApolloExplorationAiAPIView(RetrieveAPIView):
             "thread_id",
             None
         )
+        llm = serialize_query_params.validated_data.get("llm")
 
         apollo_exporation_service = ApolloExplorationService(
             api_key=os.getenv("OPENAI_API_KEY")
         )
 
-        return apollo_exporation_service.assistant(collection_name=collection_name, query=query, thread_id=thread_id)
+        return apollo_exporation_service.assistant(collection_name=collection_name, query=query, thread_id=thread_id, llm=llm)
 
     @swagger_auto_schema(
         operation_description="""
-        Retrieve AI-generated responses for a given query, collection name, and an optional thread ID without requiring any authentication or authorization. This endpoint allows clients to interact with the Apollo Exploration AI to receive responses based on their queries.
+        Retrieve AI-generated responses for a given query, collection name, an optional thread ID, and a specified language model without requiring any authentication or authorization. This endpoint allows clients to interact with the Apollo Exploration AI to receive responses based on their queries.
 
         **Query Parameters:**
 
@@ -66,6 +67,8 @@ class ApolloExplorationAiAPIView(RetrieveAPIView):
         - `collection_name`: The vector collection name identifier. This parameter specifies the context or domain from which the AI should generate responses, enhancing the relevance and accuracy of the AI's output.
 
         - `thread_id`: A parameter used to retain conversation history with the bot. Providing a thread ID allows the AI to maintain context over multiple interactions, leading to more coherent and contextually appropriate responses.
+
+        - `llm`: Specifies the language model to be used for generating responses. This parameter allows clients to choose between different AI models for response generation, tailoring the output to their specific needs.
         """,
         operation_id="get_apollo_exploration_response",
         query_serializer=ApolloExplorationAiQueryParamsSerializer(),

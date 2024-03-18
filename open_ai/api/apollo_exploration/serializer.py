@@ -33,6 +33,14 @@ class ApolloExplorationAiQueryParamsSerializer(serializers.Serializer):
     query = serializers.CharField(required=True)
     collection_name = serializers.CharField(required=True)
     thread_id = serializers.CharField(required=True)
+    llm = serializers.ChoiceField(
+        choices=[
+            ("gpt-3.5-turbo-0125", "gpt-3.5-turbo-0125"),
+            ("gpt-4-0125-preview", "gpt-4-0125-preview")
+        ],
+        default="gpt-3.5-turbo-0125",
+        required=False
+    )
 
     class Meta:
         """

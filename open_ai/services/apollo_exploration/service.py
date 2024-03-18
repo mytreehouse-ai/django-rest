@@ -1,6 +1,6 @@
 import os
 import json
-from typing import List
+from typing import List, Optional
 from logging import getLogger
 from openai import OpenAI, BadRequestError, RateLimitError, APIError
 from django.core.cache import cache
@@ -130,7 +130,7 @@ class ApolloExplorationService:
 
         return query_classifer, user_preference_log
 
-    def assistant(self, query: str, collection_name: str, thread_id: str):
+    def assistant(self, query: str, collection_name: str, thread_id: str, llm: Optional[str] = "gpt-3.5-turbo-0125"):
         available_properties = """"""
 
         query_classifer, user_preference_log = self.query_classifier(
@@ -184,10 +184,12 @@ class ApolloExplorationService:
             format_instructions=format_instruction,
         )
 
-        print(message[0].content)
-
         try:
-            response = self.gpt3_5_turbo_0125_llm.invoke(message)
+            if llm == "gpt-4-0125-preview":
+                response = self.gpt4_0125_preview_llm.invoke(message)
+            else:
+                response = self.gpt3_5_turbo_0125_llm.invoke(message)
+
             output_dict = output_parser.parse(response.content)
             get_conversation_history.add_user_message(message=query)
             get_conversation_history.add_ai_message(
