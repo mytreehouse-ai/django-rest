@@ -9,6 +9,7 @@ User preference log: (You can use this section to verify whether the user is cha
 
 Property types available in our database: Condominium, House and lot, Apartment, Land, and Warehouse.
 
+
 Available properties: 
 {available_properties}
 
