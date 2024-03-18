@@ -2,6 +2,7 @@ import os
 import json
 from typing import List, Optional
 from logging import getLogger
+from groq import Groq
 from openai import OpenAI, BadRequestError, RateLimitError, APIError
 from django.core.cache import cache
 from langchain.vectorstores.pgvector import PGVector
@@ -27,6 +28,9 @@ logger = getLogger(__name__)
 class ApolloExplorationService:
     def __init__(self, api_key: str):
         OpenAI(api_key=api_key)
+        self.groq_client = Groq(
+            api_key=os.environ.get("GROQAI_API_KEY"),
+        )
         self._pg_host = os.getenv("POSTGRES_HOST")
         self._pg_user = os.getenv("POSTGRES_USERNAME")
         self._pg_pass = os.getenv("POSTGRES_PASSWORD")
@@ -186,7 +190,11 @@ class ApolloExplorationService:
 
         try:
             if llm == "gpt-4-0125-preview":
-                response = self.gpt4_0125_preview_llm.invoke(message)
+                # response = self.gpt4_0125_preview_llm.invoke(message)
+                response = self.groq_client.chat.completions.create(
+                    messages=message,
+                    model="mixtral-8x7b-32768",
+                )
             else:
                 response = self.gpt3_5_turbo_0125_llm.invoke(message)
 
