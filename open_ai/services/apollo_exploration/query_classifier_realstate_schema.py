@@ -7,7 +7,7 @@ query_classifier_realstate_schema = [
     ),
     ResponseSchema(
         name="user_preference",
-        description="Extract user preferences for property type, including Condominium, House and Lot, Apartment, Land, and Warehouse. Also, gather information on size, features, location, and specific requirements to enhance vector search. Be sure to update preferences if they change."
+        description="Please gather user preferences for the type of property they are interested in, including Condominiums, Houses and Lots, Apartments, Land, and Warehouses. Additionally, collect information on the size, features, location, and any specific requirements that would improve the vector search. Ensure that preferences are updated if they change and avoid repeating the same preference."
     ),
     ResponseSchema(
         name="for_vector_search",
