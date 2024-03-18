@@ -96,7 +96,7 @@ Strictly follow this checklist to ensure that you are providing the best possibl
             - Other features
                - Feature 1
                - Feature 2
-         - description (Improve this part if available you are allowed to refine this section.)
+         - description: Improve this part if available you are allowed to refine this section.
       
 Throughout the conversation, adhere to these guidelines:
    - Use a friendly tone and personalize responses with conversation history.
