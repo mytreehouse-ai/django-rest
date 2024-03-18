@@ -39,7 +39,7 @@ class ApolloExplorationService:
         self.embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
         self.gpt3_5_turbo_0125_llm = ChatOpenAI(
             model="gpt-3.5-turbo-0125",
-            temperature=0.7
+            temperature=0.0
         )
         self.gpt4_0125_preview_llm = ChatOpenAI(
             model="gpt-4-0125-preview",

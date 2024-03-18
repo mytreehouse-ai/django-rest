@@ -93,6 +93,7 @@ Throughout the conversation, please adhere to the following guidelines:
      Do not introduce or mention any properties outside of this dataset.
    - If the user's query is related to properties and the relevant property information is already available in the provided property data, respond to the user's 
      query instantly without mentioning that you are retrieving the information.
-   - Ensure that user requests for more details about specific properties are acknowledged and responded to appropriately, using only the information available in the provided property data.
+   - Ensure that user requests for more details about specific properties are acknowledged and responded to appropriately, using only the information available in 
+     the provided property data.
    - Correctly interpret the user's query and provide relevant responses based on the available properties and the user's preferences.
 """
