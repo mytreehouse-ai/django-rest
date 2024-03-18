@@ -79,8 +79,8 @@ Strictly follow this checklist to ensure that you are providing the best possibl
 13. If you have a property to suggest, please ensure to follow this format:
       - Please remember to always provide helpful information as to why you recommended the property.
          [property title](listing url) <- This is the most important information to include.
-         - property type
-         - listing type
+         - property type: required
+         - listing type: required
          - lot size: (Note that if the value is None, n/a or 0 exclude it.)
          - floor size: (Note that if the value is None, n/a or 0 exclude it.)
          - building size: (Note that if the value is None, n/a or 0 exclude it.)
