@@ -61,9 +61,7 @@ class ApolloExplorationAiAPIView(RetrieveAPIView):
             llm=llm
         )
 
-        return {
-            "ai_suggestion": ai_suggestion
-        }
+        return ai_suggestion
 
     @swagger_auto_schema(
         operation_description="""
