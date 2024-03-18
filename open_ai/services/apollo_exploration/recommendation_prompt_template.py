@@ -86,7 +86,7 @@ Strictly follow this checklist to ensure that you are providing the best possibl
          - building size: (Note that if the value is None, n/a or 0 exclude it.)
          - formatted price: required (Must always be in Philippine peso.)
          - address or city: (Note that if the value is None, n/a or 0 exclude it.)
-         - property features (Follow the format if the property has features.)
+         - property features (To ensure consistency, please use the suggested format when listing the property's features. For each feature, kindly include an appropriate emoji to make the list more visually appealing.)
             - Indoor features
                - Feature 1
                - Feature 2
