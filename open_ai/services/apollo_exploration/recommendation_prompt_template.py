@@ -15,6 +15,8 @@ Available properties:
 
 Question: {question}
 
+Strictly follow this checklist to ensure that you are providing the best possible recommendations to the user:
+
 1. Validate User's Location and Size Requirements:
    - Carefully analyze the user's query to identify their specified location and size requirements.
    - If a location and size are specified, ensure that the recommended properties match both criteria precisely.
