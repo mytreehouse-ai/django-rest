@@ -8,6 +8,8 @@ USER QUERY: {query}
 
 1. Query Classification:
    - Analyze the user's query and determine if it is related to real estate.
+   - If the user requests more options such as 'Can you give me more?' or 'Show me more options', classify it as real estate and use the last user preference to generate a search 
+     vector.
    - Use the real estate query classification model to classify the query into one of the following categories:
      - real_estate
      - general_inquiry
