@@ -11,6 +11,7 @@ from open_ai.services.apollo_exploration.service import ApolloExplorationService
 logger = getLogger(__name__)
 
 
+# TODO: might not need this..
 @shared_task()
 def update_available_cities_for_ai_context():
     """

@@ -133,14 +133,12 @@ class ApolloExplorationService:
                 message=user_preference
             )
 
-        user_preference_log = memory.chat_memory
-
-        return query_classifer, user_preference_log
+        return query_classifer
 
     def assistant(self, query: str, collection_name: str, thread_id: str, llm: Optional[str] = "gpt-3.5-turbo-0125"):
         available_properties = """"""
 
-        query_classifer, user_preference_log = self.query_classifier(
+        query_classifer = self.query_classifier(
             query=query,
             thread_id=thread_id
         )
@@ -152,14 +150,13 @@ class ApolloExplorationService:
         )
 
         query_type = query_classifer.get("query_type", "")
-        user_preference = query_classifer.get("user_preference", "")
 
         if query_type == "real_estate":
             store = self.pg_vector(collection_name=collection_name)
 
             get_relevant_documents = store.similarity_search_with_score(
                 query=query_classifer.get("for_vector_search"),
-                k=12,
+                k=4,
             )
 
             if len(get_relevant_documents) == 0:
@@ -169,12 +166,10 @@ class ApolloExplorationService:
                     data, _similarity_score = relevant_doc
                     available_properties += data.page_content + "\n"
 
-        cached_cities = cache.get("open_ai:cities_context")
-        cities_available = cached_cities if cached_cities else "No available cities currently in the database"
-
         output_parser, format_instruction = self.get_format_instruction(
             response_schema=recommendation_response_schemas
         )
+
         chat_recommendation_prompt_template = ChatPromptTemplate.from_template(
             template=recommendation_prompt_template
         )
@@ -185,9 +180,10 @@ class ApolloExplorationService:
 
         message = chat_recommendation_prompt_template.format_messages(
             question=query,
-            user_preference_log=user_preference_log,
+            query_type=query_classifer.get("query_type"),
             available_properties=available_properties,
             conversation_history=memory.chat_memory,
+            format_instruction=format_instruction
         )
 
         try:
@@ -198,11 +194,10 @@ class ApolloExplorationService:
             else:
                 response = self.gpt3_5_turbo_0125_llm.invoke(message)
 
-            # output_dict = output_parser.parse(response.content)
-            # output_dict.get('ai_suggestion')
+            output_dict = output_parser.parse(response.content)
             get_conversation_history.add_user_message(message=query)
             get_conversation_history.add_ai_message(
-                message=f"{response.content}"
+                message=f"{output_dict.get('ai_suggestion')}"
             )
 
         except BadRequestError as e:
@@ -224,4 +219,4 @@ class ApolloExplorationService:
             }
             print(f"APIError: {str(e)}")
 
-        return response.content
+        return output_dict
