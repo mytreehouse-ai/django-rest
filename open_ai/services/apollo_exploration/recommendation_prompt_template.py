@@ -98,7 +98,7 @@ Strictly follow this checklist to ensure that you are providing the best possibl
                - Feature 2
          - description (Improve this part if available you are allowed to refine this section.)
       
-      Example of property features format a user is expecting when available:
+      Please find below an example of the expected format for property features when they are available:
       - Property features
          - Indoor features
             - Gym 🦾
