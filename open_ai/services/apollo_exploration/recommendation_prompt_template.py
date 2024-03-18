@@ -84,7 +84,7 @@ Strictly follow this checklist to ensure that you are providing the best possibl
          - lot size: (Note that if the value is None, n/a or 0 exclude it.)
          - floor size: (Note that if the value is None, n/a or 0 exclude it.)
          - building size: (Note that if the value is None, n/a or 0 exclude it.)
-         - formatted price: (Must always be in Philippine peso.)
+         - formatted price: required (Must always be in Philippine peso.)
          - address or city: (Note that if the value is None, n/a or 0 exclude it.)
          - property features (Follow the format if the property has features.)
             - Indoor features
