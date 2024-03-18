@@ -2,10 +2,10 @@ import os
 import json
 from typing import List, Optional
 from logging import getLogger
+from groq import Groq
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_groq import ChatGroq
 from openai import OpenAI, BadRequestError, RateLimitError, APIError
-from django.core.cache import cache
 from langchain.vectorstores.pgvector import PGVector
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain.output_parsers import StructuredOutputParser
@@ -17,6 +17,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain.output_parsers import ResponseSchema
 from langchain.schema.document import Document
 
+from .groq_recommendation_propmt_template import groq_recommendation_prompt_template
 from .recommendation_response_schemas import recommendation_response_schemas
 from .recommendation_prompt_template import recommendation_prompt_template
 from .query_classifier_realstate_schema import query_classifier_realstate_schema
@@ -29,6 +30,9 @@ logger = getLogger(__name__)
 class ApolloExplorationService:
     def __init__(self, api_key: str):
         OpenAI(api_key=api_key)
+        self.groq_ai_client = Groq(
+            api_key=os.environ.get("GROQAI_API_KEY"),
+        )
         self._pg_host = os.getenv("POSTGRES_HOST")
         self._pg_user = os.getenv("POSTGRES_USERNAME")
         self._pg_pass = os.getenv("POSTGRES_PASSWORD")
@@ -51,6 +55,11 @@ class ApolloExplorationService:
             temperature=0.5,
             groq_api_key=os.getenv("GROQAI_API_KEY"),
             model_name="mixtral-8x7b-32768"
+        )
+        self.llma2_70b_chat = ChatGroq(
+            temperature=0.5,
+            groq_api_key=os.getenv("GROQAI_API_KEY"),
+            model_name="LLaMA2-70b-chat"
         )
 
     def get_format_instruction(self, response_schema: List[ResponseSchema]) -> tuple[StructuredOutputParser, str]:
@@ -133,12 +142,14 @@ class ApolloExplorationService:
                 message=user_preference
             )
 
-        return query_classifer
+        user_preference_log = memory.chat_memory
+
+        return query_classifer, user_preference_log
 
     def assistant(self, query: str, collection_name: str, thread_id: str, llm: Optional[str] = "gpt-3.5-turbo-0125"):
         available_properties = """"""
 
-        query_classifer = self.query_classifier(
+        query_classifer, user_preference_log = self.query_classifier(
             query=query,
             thread_id=thread_id
         )
@@ -159,12 +170,9 @@ class ApolloExplorationService:
                 k=4,
             )
 
-            if len(get_relevant_documents) == 0:
-                available_properties = f"No available properties related to query: {query}"
-            else:
-                for relevant_doc in get_relevant_documents:
-                    data, _similarity_score = relevant_doc
-                    available_properties += data.page_content + "\n"
+            for relevant_doc in get_relevant_documents:
+                data, _similarity_score = relevant_doc
+                available_properties += data.page_content + "\n"
 
         output_parser, format_instruction = self.get_format_instruction(
             response_schema=recommendation_response_schemas
@@ -174,11 +182,15 @@ class ApolloExplorationService:
             template=recommendation_prompt_template
         )
 
+        groq_chat_recommendation_propmt_template = ChatPromptTemplate.from_template(
+            template=groq_recommendation_prompt_template
+        )
+
         memory = ConversationBufferMemory(
             memory_key="conversation_history", chat_memory=get_conversation_history
         )
 
-        message = chat_recommendation_prompt_template.format_messages(
+        messages = chat_recommendation_prompt_template.format_messages(
             question=query,
             query_type=query_classifer.get("query_type"),
             available_properties=available_properties,
@@ -186,15 +198,47 @@ class ApolloExplorationService:
             format_instruction=format_instruction
         )
 
-        try:
-            if llm == "gpt-4-0125-preview":
-                response = self.gpt4_0125_preview_llm.invoke(message)
-            elif llm == "mixtral-8x7b-32768":
-                response = self.mixtral_8x7b_32768.invoke(message)
-            else:
-                response = self.gpt3_5_turbo_0125_llm.invoke(message)
+        groq_system_instruction = groq_chat_recommendation_propmt_template.format_messages(
+            user_preference_log=user_preference_log,
+            conversation_history=memory.chat_memory,
+            available_properties=available_properties
+        )
 
-            output_dict = output_parser.parse(response.content)
+        print(user_preference_log)
+
+        try:
+            llm_response = json.dumps({"ai_suggestion": "I don't know."})
+
+            if llm == "gpt-4-0125-preview":
+                response = self.gpt4_0125_preview_llm.invoke(messages)
+                llm_response = response.content
+            elif llm == "mixtral-8x7b-32768":
+                chat_completion = self.groq_ai_client.chat.completions.create(
+                    messages=[
+                        {
+                            "role": "system",
+                            "content": groq_system_instruction[0].content,
+                        },
+                        {
+                            "role": "user",
+                            "content": query,
+                        }
+                    ],
+                    model="mixtral-8x7b-32768",
+                    temperature=0.25,
+                )
+
+                llm_response = json.dumps(
+                    {
+                        "ai_suggestion": chat_completion.choices[0].message.content
+                    },
+                    indent=4
+                )
+            else:
+                response = self.gpt3_5_turbo_0125_llm.invoke(messages)
+                llm_response = response.content
+
+            output_dict = output_parser.parse(llm_response)
             get_conversation_history.add_user_message(message=query)
             get_conversation_history.add_ai_message(
                 message=f"{output_dict.get('ai_suggestion')}"
