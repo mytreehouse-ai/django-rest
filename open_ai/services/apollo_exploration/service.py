@@ -2,7 +2,8 @@ import os
 import json
 from typing import List, Optional
 from logging import getLogger
-from groq import Groq
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_groq import ChatGroq
 from openai import OpenAI, BadRequestError, RateLimitError, APIError
 from django.core.cache import cache
 from langchain.vectorstores.pgvector import PGVector
@@ -28,9 +29,6 @@ logger = getLogger(__name__)
 class ApolloExplorationService:
     def __init__(self, api_key: str):
         OpenAI(api_key=api_key)
-        self.groq_client = Groq(
-            api_key=os.environ.get("GROQAI_API_KEY"),
-        )
         self._pg_host = os.getenv("POSTGRES_HOST")
         self._pg_user = os.getenv("POSTGRES_USERNAME")
         self._pg_pass = os.getenv("POSTGRES_PASSWORD")
@@ -48,6 +46,11 @@ class ApolloExplorationService:
         self.gpt4_0125_preview_llm = ChatOpenAI(
             model="gpt-4-0125-preview",
             temperature=0.5
+        )
+        self.mixtral_8x7b_32768 = ChatGroq(
+            temperature=0.5,
+            groq_api_key=os.getenv("GROQAI_API_KEY"),
+            model_name="mixtral-8x7b-32768"
         )
 
     def get_format_instruction(self, response_schema: List[ResponseSchema]) -> tuple[StructuredOutputParser, str]:
@@ -185,24 +188,23 @@ class ApolloExplorationService:
             user_preference_log=user_preference_log,
             available_properties=available_properties,
             conversation_history=memory.chat_memory,
-            format_instructions=format_instruction,
         )
 
         try:
             if llm == "gpt-4-0125-preview":
-                # response = self.gpt4_0125_preview_llm.invoke(message)
-                response = self.groq_client.chat.completions.create(
-                    messages=message,
-                    model="mixtral-8x7b-32768",
-                )
+                response = self.gpt4_0125_preview_llm.invoke(message)
+            elif llm == "mixtral-8x7b-32768":
+                response = self.mixtral_8x7b_32768.invoke(message)
             else:
                 response = self.gpt3_5_turbo_0125_llm.invoke(message)
 
-            output_dict = output_parser.parse(response.content)
+            # output_dict = output_parser.parse(response.content)
+            # output_dict.get('ai_suggestion')
             get_conversation_history.add_user_message(message=query)
             get_conversation_history.add_ai_message(
-                message=f"{output_dict.get('ai_suggestion')}"
+                message=f"{response.content}"
             )
+
         except BadRequestError as e:
             output_dict = {
                 "detail": f"BadRequestError: {str(e)}",
@@ -222,4 +224,4 @@ class ApolloExplorationService:
             }
             print(f"APIError: {str(e)}")
 
-        return output_dict
+        return response.content

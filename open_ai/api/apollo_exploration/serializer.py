@@ -36,7 +36,8 @@ class ApolloExplorationAiQueryParamsSerializer(serializers.Serializer):
     llm = serializers.ChoiceField(
         choices=[
             ("gpt-3.5-turbo-0125", "gpt-3.5-turbo-0125"),
-            ("gpt-4-0125-preview", "gpt-4-0125-preview")
+            ("gpt-4-0125-preview", "gpt-4-0125-preview"),
+            ("mixtral-8x7b-32768", "mixtral-8x7b-32768")
         ],
         default="gpt-3.5-turbo-0125",
         required=False
