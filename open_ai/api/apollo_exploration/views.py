@@ -54,7 +54,16 @@ class ApolloExplorationAiAPIView(RetrieveAPIView):
             api_key=os.getenv("OPENAI_API_KEY")
         )
 
-        return apollo_exporation_service.assistant(collection_name=collection_name, query=query, thread_id=thread_id, llm=llm)
+        ai_suggestion = apollo_exporation_service.assistant(
+            collection_name=collection_name,
+            query=query,
+            thread_id=thread_id,
+            llm=llm
+        )
+
+        return {
+            "ai_suggestion": ai_suggestion
+        }
 
     @swagger_auto_schema(
         operation_description="""
