@@ -112,7 +112,7 @@ class ApolloExplorationService:
             format_instruction=format_instruction
         )
 
-        ai_classifier_response = self.gpt3_5_turbo_0125_llm.invoke(
+        ai_classifier_response = self.gpt4_0125_preview_llm.invoke(
             input=message
         )
 

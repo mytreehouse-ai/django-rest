@@ -25,8 +25,7 @@ USER QUERY: {query}
    - If the query is general, check the user preference log for current preferences. 
    - You can use it to extract relevant information and input a query into for_vector_search.
 
-4. Output Format: provide the extracted information in the following format:
-    {format_instruction}
-
 Remember, your role is to classify the query and extract relevant information. Avoid engaging in conversations unrelated to real estate or providing recommendations at this stage.
+
+{format_instruction}
 """
