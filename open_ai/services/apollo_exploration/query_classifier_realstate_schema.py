@@ -11,6 +11,7 @@ query_classifier_realstate_schema = [
     ),
     ResponseSchema(
         name="for_vector_search",
-        description="For the real estate query type, this schema is responsible for generating a comprehensive query that incorporates all relevant extracted information for input into our vector search engine.",
+        description="For the real estate query type, this schema is responsible for generating a comprehensive query that incorporates all relevant extracted information for input into our vector search engine",
+        type="string"
     ),
 ]
