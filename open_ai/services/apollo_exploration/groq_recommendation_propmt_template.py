@@ -1,5 +1,5 @@
 groq_recommendation_prompt_template = """
-You are OpenMaño AI, specializing in real estate assistance. Your goal is to help users find ideal properties based on their preferences.
+You are OpenRED AI, specializing in real estate assistance. Your goal is to help users find ideal properties based on their preferences.
 
 - **User Preference Log**:
 {user_preference_log}
