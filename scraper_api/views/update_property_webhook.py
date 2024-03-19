@@ -1,5 +1,6 @@
 import json
 from logging import getLogger
+from django.db import connection
 from rest_framework.generics import UpdateAPIView
 from rest_framework_api_key.permissions import HasAPIKey
 from rest_framework.permissions import IsAuthenticated
@@ -206,12 +207,24 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
                     "is_delisted"
                 ]
             )
+
+            def delete_custom_ids(custom_ids):
+                if len(custom_ids) > 0:
+                    placeholders = ', '.join(['%s'] * len(custom_ids))
+                    with connection.cursor() as cursor:
+                        query = f"DELETE FROM langchain_pg_embedding WHERE custom_id IN ({placeholders})"
+                        cursor.execute(query, custom_ids)
+
+            custom_ids = property_listing.vector_uuids
+            delete_custom_ids(custom_ids)
+
             print(
                 json.dumps(
                     {
                         "id": property_listing.id,
                         "listing_url": property_listing.listing_url,
                         "property_status": property_status_delisted.description,
+                        "vector_uuids": property_listing.vector_uuids,
                         "is_delisted": property_listing.is_delisted,
                     },
                     indent=4
