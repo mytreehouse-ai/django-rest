@@ -223,7 +223,7 @@ class ApolloExplorationService:
                         }
                     ],
                     model="mixtral-8x7b-32768",
-                    temperature=0.25,
+                    temperature=0.1,
                 )
 
                 llm_response = json.dumps(
