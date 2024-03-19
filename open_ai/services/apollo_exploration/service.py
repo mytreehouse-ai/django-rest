@@ -204,8 +204,6 @@ class ApolloExplorationService:
             available_properties=available_properties
         )
 
-        print(user_preference_log)
-
         try:
             llm_response = json.dumps({"ai_suggestion": "I don't know."})
 
