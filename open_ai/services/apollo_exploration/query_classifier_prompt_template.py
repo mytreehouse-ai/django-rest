@@ -20,7 +20,7 @@ USER QUERY: {query}
    - If the query is classified as real estate-related, extract the following information from the user's query using natural language processing techniques:
      - Location preferences (e.g., city, neighborhood, landmark)
      - Property type (e.g., condominium, house, apartment, land, and warehouse)
-     - Budget range (e.g., minimum and maximum price in Philippine Peso - PHP)
+     - Budget range (e.g., minimum and maximum price in Philippine Peso - ₱)
      - Desired features (e.g., number of bedrooms, bathrooms, amenities)
 
 4. Use of user preference log:
