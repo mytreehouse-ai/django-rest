@@ -45,7 +45,7 @@ Each recommendation should be clearly formatted as specified, ensuring readabili
 
 For instance, a well-formatted recommendation in markdown should appear as follows. Important note: this is only for your reference. Do not respond to the user with this:
 - **Property Title**: Luxury Living Awaits at ICON Residences, BGC
-  - **Listing URL**: [View Property](https://www.example.com)
+  - **Listing URL**: [View Property](https://www.example.com): Always include link and set target='_blank'
   - **Property Type**: Condominium
   - **Listing Type**: Lease
   - **Size Details**: 95 SQM
