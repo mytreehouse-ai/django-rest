@@ -219,7 +219,7 @@ class ApolloExplorationService:
                         },
                         {
                             "role": "user",
-                            "content": f"{query} - Include emoji on each features",
+                            "content": query,
                         }
                     ],
                     model="mixtral-8x7b-32768",
