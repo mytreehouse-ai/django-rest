@@ -99,6 +99,8 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
         if attributes:
             attribute_set_name = attributes.get("attribute_set_name", None)
             price_formatted = attributes.get("price_formatted", None)
+            land_size = attributes.get("land_size", 0)
+            building_size = attributes.get("building_size", 0)
             offer_type = attributes.get("offer_type", None)
             indoor_features = attributes.get("indoor_features", [])
             outdoor_features = attributes.get("outdoor_features", [])
@@ -156,6 +158,8 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
             )
 
             if city:
+                property_listing.estate.land_size = land_size
+                property_listing.estate.building_size = building_size
                 property_listing.estate.address = listing_address
                 property_listing.estate.city = city
                 property_listing.estate.indoor_features = indoor_features
@@ -169,6 +173,8 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
                 property_listing.estate.metadata = json_fields
                 property_listing.estate.save(
                     update_fields=[
+                        "land_size",
+                        "building_size",
                         "address",
                         "city",
                         "indoor_features",
