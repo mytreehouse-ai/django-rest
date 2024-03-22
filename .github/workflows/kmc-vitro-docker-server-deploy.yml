@@ -12,8 +12,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Run and build docker-compose file
         run: docker compose -f docker-compose-production.yml build
-      - name: Check if specific containers are running and restart if necessary
-        id: check_and_restart_containers
+      - name: Check if API container is running and restart if necessary
+        id: check_and_restart_api_container
         run: |
           if ! docker compose -f docker-compose-production.yml ps | grep -q mytreehouse_api_production; then
             echo "mytreehouse_api_production is not running. Attempting to restart..."
@@ -21,12 +21,14 @@ jobs:
           else
             echo "mytreehouse_api_production is already running. No action needed."
           fi
-          
-          if ! docker compose -f docker-compose-production.yml ps | grep -q mytreehouse_worker_production; then
-            echo "mytreehouse_worker_production is not running. Attempting to restart..."
-            docker compose -f docker-compose-production.yml restart worker
+      - name: Stop worker container if running
+        id: stop_worker_container
+        run: |
+          if docker compose -f docker-compose-production.yml ps | grep -q mytreehouse_worker_production; then
+            echo "mytreehouse_worker_production is running. Attempting to stop..."
+            docker compose -f docker-compose-production.yml stop worker
           else
-            echo "mytreehouse_worker_production is already running. No action needed."
+            echo "mytreehouse_worker_production is not running. No action needed."
           fi
 
 
