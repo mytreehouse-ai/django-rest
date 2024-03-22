@@ -158,7 +158,7 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
             )
 
             if city:
-                property_listing.estate.land_size = land_size
+                property_listing.estate.lot_size = land_size
                 property_listing.estate.building_size = building_size
                 property_listing.estate.address = listing_address
                 property_listing.estate.city = city
@@ -173,7 +173,7 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
                 property_listing.estate.metadata = json_fields
                 property_listing.estate.save(
                     update_fields=[
-                        "land_size",
+                        "lot_size",
                         "building_size",
                         "address",
                         "city",
