@@ -15,16 +15,18 @@ jobs:
       - name: Check if specific containers are running and restart if necessary
         id: check_and_restart_containers
         run: |
-          REQUIRED_CONTAINERS="mytreehouse_redis_production mytreehouse_celery_production mytreehouse_worker_production mytreehouse_api_production"
-          for CONTAINER in $REQUIRED_CONTAINERS; do
-            CONTAINER_NAME=$(echo $CONTAINER | sed 's/mytreehouse_//;s/_production//')
-            if ! docker compose -f docker-compose-production.yml ps | grep -q $CONTAINER; then
-              echo "$CONTAINER is not running. Attempting to restart..."
-              docker compose -f docker-compose-production.yml restart $CONTAINER_NAME
-            else
-              echo "$CONTAINER is already running. No action needed."
-            fi
-          done
-
+          if ! docker compose -f docker-compose-production.yml ps | grep -q mytreehouse_api_production; then
+            echo "mytreehouse_api_production is not running. Attempting to restart..."
+            docker compose -f docker-compose-production.yml restart django
+          else
+            echo "mytreehouse_api_production is already running. No action needed."
+          fi
+          
+          if ! docker compose -f docker-compose-production.yml ps | grep -q mytreehouse_worker_production; then
+            echo "mytreehouse_worker_production is not running. Attempting to restart..."
+            docker compose -f docker-compose-production.yml restart worker
+          else
+            echo "mytreehouse_worker_production is already running. No action needed."
+          fi
 
 
