@@ -12,26 +12,21 @@ jobs:
       - uses: actions/checkout@v4
       - name: Run and build docker-compose file
         run: docker compose -f docker-compose-production.yml build
-      - name: Check if specific containers are running
-        id: check_containers
+      - name: Check if specific containers are running and restart if necessary
+        id: check_and_restart_containers
         run: |
-          REQUIRED_CONTAINERS="mytreehouse_redis_production mytreehouse_celery_production mytreehouse_worker_production"
-          NOT_RUNNING_CONTAINERS=""
-          for CONTAINER in $REQUIRED_CONTAINERS; do
-            if ! docker compose -f docker-compose-production.yml ps | grep -q $CONTAINER; then
-              NOT_RUNNING_CONTAINERS="$NOT_RUNNING_CONTAINERS $CONTAINER"
-            fi
-          done
-          if [ -n "$NOT_RUNNING_CONTAINERS" ]; then
-            echo "Some containers are not running: $NOT_RUNNING_CONTAINERS. Attempting to restart..."
-            echo "containers_up=false" >> $GITHUB_OUTPUT
+          if ! docker compose -f docker-compose-production.yml ps | grep -q mytreehouse_api_production; then
+            echo "mytreehouse_api_production is not running. Attempting to restart..."
+            docker compose -f docker-compose-production.yml restart django
           else
-            echo "All required containers are running."
-            echo "containers_up=true" >> $GITHUB_OUTPUT
+            echo "mytreehouse_api_production is already running. No action needed."
           fi
-      - name: Start containers if not running
-        if: steps.check_containers.outputs.containers_up == 'false'
-        run: docker compose -f docker-compose-production.yml up -d
-
+          
+          if ! docker compose -f docker-compose-production.yml ps | grep -q mytreehouse_worker_production; then
+            echo "mytreehouse_worker_production is not running. Attempting to restart..."
+            docker compose -f docker-compose-production.yml restart worker
+          else
+            echo "mytreehouse_worker_production is already running. No action needed."
+          fi
 
 
