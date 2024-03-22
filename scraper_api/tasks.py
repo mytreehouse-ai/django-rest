@@ -483,7 +483,7 @@ def reset_property_with_zero_sqm():
         html_code__isnull=False,
         single_page=True,
         is_single_page_processed=True
-    )
+    )[:100]
 
     eyy.update(
         is_single_page_processed=False
