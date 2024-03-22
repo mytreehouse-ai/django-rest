@@ -10,22 +10,28 @@ jobs:
     runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
-      - name: Check if containers are running
+      - name: Run and build docker-compose file
+        run: docker compose -f docker-compose-production.yml build
+      - name: Check if specific containers are running
         id: check_containers
         run: |
-          RUNNING_CONTAINERS=$(docker compose -f docker-compose-production.yml ps -q)
-          if [ -z "$RUNNING_CONTAINERS" ]; then
-            echo "Containers are not running, starting them..."
+          REQUIRED_CONTAINERS="mytreehouse_redis_production mytreehouse_celery_production mytreehouse_worker_production"
+          NOT_RUNNING_CONTAINERS=""
+          for CONTAINER in $REQUIRED_CONTAINERS; do
+            if ! docker compose -f docker-compose-production.yml ps | grep -q $CONTAINER; then
+              NOT_RUNNING_CONTAINERS="$NOT_RUNNING_CONTAINERS $CONTAINER"
+            fi
+          done
+          if [ -n "$NOT_RUNNING_CONTAINERS" ]; then
+            echo "Some containers are not running: $NOT_RUNNING_CONTAINERS. Attempting to restart..."
             echo "containers_up=false" >> $GITHUB_OUTPUT
           else
-            echo "All containers are already running."
+            echo "All required containers are running."
             echo "containers_up=true" >> $GITHUB_OUTPUT
           fi
       - name: Start containers if not running
         if: steps.check_containers.outputs.containers_up == 'false'
         run: docker compose -f docker-compose-production.yml up -d
-      - name: Run and build docker-compose file
-        run: docker compose -f docker-compose-production.yml build
 
 
 
