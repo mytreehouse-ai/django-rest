@@ -15,8 +15,8 @@ class PropertyListingFilter(django_filters.FilterSet):
         lookup_expr='lte'
     )
     # Example usage in API: ?property_type_id=1&listing_type_id=2&property_status_id=3
-    property_type = django_filters.NumberFilter(
-        field_name='property_type__id',
+    property_type = django_filters.CharFilter(
+        field_name='property_type__description',
         lookup_expr='exact'
     )
     listing_type = django_filters.NumberFilter(
