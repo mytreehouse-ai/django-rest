@@ -90,8 +90,8 @@ class PropertyListingFilter(django_filters.FilterSet):
         field_name='estate__other_features',
         lookup_expr='icontains'
     )
-    # Example usage in API: ?city_id=1
+    # Example usage in API: ?location=Makati
     location = django_filters.NumberFilter(
-        field_name='estate__city__id',
+        field_name='estate__city__slug',
         lookup_expr='exact'
     )

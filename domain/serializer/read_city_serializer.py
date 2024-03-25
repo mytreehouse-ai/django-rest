@@ -11,5 +11,6 @@ class ReadCitySerializer(serializers.ModelSerializer):
         model = CityModel
         fields = [
             "id",
-            "name"
+            "name",
+            "slug"
         ]
