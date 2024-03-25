@@ -10,6 +10,11 @@ class PropertyListingModel(BaseModel):
         unique=True,
         verbose_name="Listing Title"
     )
+    slug = models.SlugField(
+        unique=True,
+        null=True,
+        verbose_name="Slug"
+    )
     listing_url = models.URLField(
         unique=True,
         verbose_name="Listing URL"
