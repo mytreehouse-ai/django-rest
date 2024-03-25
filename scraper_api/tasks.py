@@ -217,8 +217,9 @@ def lamudi_multi_page_scraper_task():
                 new_listing, created = PropertyListingModel.objects.update_or_create(
                     listing_title=property.get("listing_title"),
                     defaults={
-                        'listing_url': property.get("listing_url"),
-                        'price': price
+                        "listing_url": property.get("listing_url"),
+                        "slug": slugify(property.get("listing_title")),
+                        "price": price
                     }
                 )
 
@@ -285,8 +286,9 @@ def lamudi_multi_page_scraper_task():
                 new_listing, created = PropertyListingModel.objects.update_or_create(
                     listing_title=property.get("listing_title"),
                     defaults={
-                        'listing_url': property.get("listing_url"),
-                        'price': price
+                        "listing_url": property.get("listing_url"),
+                        "slug": slugify(property.get("listing_title")),
+                        "price": price
                     }
                 )
 
@@ -352,8 +354,9 @@ def lamudi_multi_page_scraper_task():
                 new_listing, created = PropertyListingModel.objects.update_or_create(
                     listing_title=property.get("listing_title"),
                     defaults={
-                        'listing_url': property.get("listing_url"),
-                        'price': price
+                        "listing_url": property.get("listing_url"),
+                        "slug": slugify(property.get("listing_title")),
+                        "price": price
                     }
                 )
 
@@ -419,8 +422,9 @@ def lamudi_multi_page_scraper_task():
                 new_listing, created = PropertyListingModel.objects.update_or_create(
                     listing_title=property.get("listing_title"),
                     defaults={
-                        'listing_url': property.get("listing_url"),
-                        'price': price
+                        "listing_url": property.get("listing_url"),
+                        "slug": slugify(property.get("listing_title")),
+                        "price": price
                     }
                 )
 
