@@ -11,6 +11,7 @@ class PropertyListingModel(BaseModel):
         verbose_name="Listing Title"
     )
     slug = models.SlugField(
+        max_length=1000,
         unique=True,
         null=True,
         verbose_name="Slug"
