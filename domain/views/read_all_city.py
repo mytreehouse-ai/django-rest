@@ -23,7 +23,7 @@ class ReadAllCityAPIView(APIView):
     permission_classes = [AllowAny]
     serializer_class = ReadCitySerializer(many=True)
 
-    @method_decorator(cache_page(60 * 60 * 2))
+    # @method_decorator(cache_page(60 * 60 * 2))
     @swagger_auto_schema(
         operation_description="Retrieve a list of all cities. Supports searching by city name and ordering by id, created_at, and updated_at.",
         operation_id="list_all_cities",
