@@ -2,8 +2,8 @@ from logging import getLogger
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-# from django.utils.decorators import method_decorator
-# from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from drf_yasg.utils import swagger_auto_schema
 
 from ..services.domain_service import DomainService
@@ -23,7 +23,7 @@ class ReadAllCityAPIView(APIView):
     permission_classes = [AllowAny]
     serializer_class = ReadCitySerializer(many=True)
 
-    # @method_decorator(cache_page(60 * 60 * 2))
+    @method_decorator(cache_page(60 * 60 * 2))
     @swagger_auto_schema(
         operation_description="Retrieve a list of all cities. Supports searching by city name and ordering by id, created_at, and updated_at.",
         operation_id="list_all_cities",
