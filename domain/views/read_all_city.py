@@ -1,5 +1,5 @@
 from logging import getLogger
-from rest_framework.generics import ListAPIView
+from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
@@ -11,7 +11,7 @@ from ..serializer.read_city_serializer import ReadCitySerializer
 logger = getLogger(__name__)
 
 
-class ReadAllCityAPIView(ListAPIView):
+class ReadAllCityAPIView(APIView):
     """
     API view to retrieve a list of all cities available in the database.
 
