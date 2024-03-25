@@ -11,7 +11,7 @@ class ListingTypeModel(BaseModel):
         unique=True,
         verbose_name="Description"
     )
-    slug = models.CharField(
+    slug = models.SlugField(
         max_length=200,
         verbose_name="Slug",
         null=True,
