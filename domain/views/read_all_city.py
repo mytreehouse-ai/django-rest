@@ -49,4 +49,5 @@ class ReadAllCityAPIView(APIView):
 
         cities = DomainService.get_all_city()
         serializer = ReadCitySerializer(cities, many=True)
+
         return Response(serializer.data)
