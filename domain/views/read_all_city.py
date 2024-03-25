@@ -1,6 +1,7 @@
 from logging import getLogger
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from drf_yasg.utils import swagger_auto_schema
@@ -20,8 +21,7 @@ class ReadAllCityAPIView(APIView):
     and ordering by specific fields like city name, id, created_at, and updated_at through query parameters.
     """
     permission_classes = [AllowAny]
-    serializer_class = ReadCitySerializer
-    queryset = DomainService.get_all_city()
+    serializer_class = ReadCitySerializer(many=True)
 
     @method_decorator(cache_page(60 * 60 * 2))
     @swagger_auto_schema(
@@ -46,4 +46,7 @@ class ReadAllCityAPIView(APIView):
             Response: A DRF Response object containing the paginated list of cities, adhering to the specified search
             and ordering criteria.
         """
-        return super().get(request, *args, **kwargs)
+
+        cities = DomainService.get_all_city()
+        serializer = ReadCitySerializer(cities, many=True)
+        return Response(serializer.data)
