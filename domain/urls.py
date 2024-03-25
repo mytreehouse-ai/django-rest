@@ -4,5 +4,5 @@ from .views.read_all_city import ReadAllCityAPIView
 
 urlpatterns = [
     path("cities", ReadFilteredCityAPIView.as_view()),
-    path("all-citiesss", ReadAllCityAPIView.as_view())
+    path("all-cities", ReadAllCityAPIView.as_view())
 ]
