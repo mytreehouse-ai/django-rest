@@ -487,11 +487,11 @@ def lamudi_multi_page_scraper_task():
 def create_slug():
     for city in CityModel.objects.filter(slug__isnull=True)[:50]:
         city.slug = slugify(city.name)
-        city.save()
+        city.save(update_fields=["slug"])
 
     for listing in PropertyListingModel.objects.filter(slug__isnull=True)[:50]:
         listing.slug = slugify(listing.listing_title)
-        listing.save()
+        listing.save(update_fields=["slug"])
 
     return f"Slug creation complete"
 
