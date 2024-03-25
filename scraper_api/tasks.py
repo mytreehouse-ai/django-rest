@@ -478,21 +478,6 @@ def lamudi_multi_page_scraper_task():
 
 
 @shared_task()
-def reset_property_with_zero_sqm():
-    eyy = ScrapyJobModel.objects.filter(
-        html_code__isnull=False,
-        single_page=True,
-        is_single_page_processed=True
-    )[:100]
-
-    eyy.update(
-        is_single_page_processed=False
-    )
-
-    return f"Reset {eyy.count()} single page processing status"
-
-
-@shared_task()
 def reset_single_page_processing_status():
     # Count the number of Scrapy jobs that are single-page, not yet processed, and have HTML code
     scrapy_job_count = ScrapyJobModel.objects.filter(
