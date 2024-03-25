@@ -14,7 +14,7 @@ class DomainService:
     """
 
     @staticmethod
-    def get_all_city() -> List[CityModel]:
+    def get_filtered_city() -> List[CityModel]:
         """
         Retrieves all cities from the database.
 
@@ -22,3 +22,13 @@ class DomainService:
             List[CityModel]: A list of all CityModel instances from the database.
         """
         return CityModel.objects.filter()
+
+    @staticmethod
+    def get_all_city() -> List[CityModel]:
+        """
+        Retrieves all cities from the database.
+
+        Returns:
+            List[CityModel]: A list of all CityModel instances from the database.
+        """
+        return CityModel.objects.all()

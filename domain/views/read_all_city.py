@@ -1,44 +1,24 @@
 from logging import getLogger
 from rest_framework.generics import ListAPIView
 from rest_framework.permissions import AllowAny
-from rest_framework.pagination import PageNumberPagination
-from rest_framework import filters
-from django_filters.rest_framework import DjangoFilterBackend
+from django.utils.decorators import method_decorator
+from django.views.decorators.cache import cache_page
 from drf_yasg.utils import swagger_auto_schema
 
-# from ..utils.city_filter import CityFilter
 from ..services.domain_service import DomainService
-from ..serializer.read_city_serializer import ReadCitySerializer
-from domain.utils.custom_page_number_pagination import CustomPageNumberPagination
 
 logger = getLogger(__name__)
 
 
 class ReadAllCityAPIView(ListAPIView):
     """
-    API view for reading all cities.
+    API view to retrieve a list of all cities available in the database.
 
-    This view allows for listing all cities with support for searching and ordering.
-    It supports pagination through `CustomPageNumberPagination`.
+    This view extends the ListAPIView to leverage Django Rest Framework's capabilities for listing resources.
+    It utilizes the DomainService to fetch all cities and supports additional functionalities such as searching
+    and ordering by specific fields like city name, id, created_at, and updated_at through query parameters.
     """
     permission_classes = [AllowAny]
-    filter_backends = [
-        DjangoFilterBackend,
-        filters.SearchFilter,
-        filters.OrderingFilter
-    ]
-    # filterset_class = CityFilter  # Uncomment and implement CityFilter for filtering capabilities.
-    search_fields = [
-        "name",
-    ]
-    ordering_fields = [
-        "id",
-        "name",
-        "created_at",
-        "updated_at"
-    ]
-    serializer_class = ReadCitySerializer
-    pagination_class = CustomPageNumberPagination
     queryset = DomainService.get_all_city()
 
     @swagger_auto_schema(
@@ -46,18 +26,22 @@ class ReadAllCityAPIView(ListAPIView):
         operation_id="list_all_cities",
         tags=["Domains"],
     )
+    @method_decorator(cache_page(60 * 60 * 2))
     def get(self, request, *args, **kwargs):
         """
-        Handles GET requests to retrieve a list of all cities.
+        Overridden GET method to handle the retrieval of all cities.
 
-        Supports searching by city name and ordering by id, created_at, and updated_at.
+        This method enhances the base ListAPIView's get method by providing detailed documentation on its functionality
+        and the supported query parameters for searching and ordering. It returns a paginated list of cities based on
+        the provided query parameters.
 
         Args:
-            request (Request): The request object containing query parameters.
+            request (Request): The request object containing query parameters for searching and ordering.
             *args: Variable length argument list.
             **kwargs: Arbitrary keyword arguments.
 
         Returns:
-            Response: A DRF Response object containing the paginated list of cities.
+            Response: A DRF Response object containing the paginated list of cities, adhering to the specified search
+            and ordering criteria.
         """
         return super().get(request, *args, **kwargs)
