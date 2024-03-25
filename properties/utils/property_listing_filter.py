@@ -91,7 +91,7 @@ class PropertyListingFilter(django_filters.FilterSet):
         lookup_expr='icontains'
     )
     # Example usage in API: ?location=Makati
-    location = django_filters.NumberFilter(
+    location = django_filters.CharFilter(
         field_name='estate__city__slug',
         lookup_expr='exact'
     )
