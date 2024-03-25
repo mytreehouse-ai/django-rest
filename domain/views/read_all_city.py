@@ -27,6 +27,9 @@ class ReadAllCityAPIView(APIView):
     @swagger_auto_schema(
         operation_description="Retrieve a list of all cities. Supports searching by city name and ordering by id, created_at, and updated_at.",
         operation_id="list_all_cities",
+        responses={
+            200: ReadCitySerializer(many=True)
+        },
         tags=["Domains"],
     )
     def get(self, request, *args, **kwargs):
@@ -49,4 +52,5 @@ class ReadAllCityAPIView(APIView):
 
         cities = DomainService.get_all_city()
         serializer = ReadCitySerializer(cities, many=True)
+
         return Response(serializer.data)
