@@ -2,8 +2,9 @@ import os
 import json
 import uuid
 from time import sleep
-from logging import getLogger
+from slugify import slugify
 from bs4 import BeautifulSoup
+from logging import getLogger
 from celery import shared_task
 from django.utils import timezone
 
@@ -476,6 +477,19 @@ def lamudi_multi_page_scraper_task():
         sleep(2)
 
     property_details = []
+
+
+@shared_task()
+def create_slug():
+    for city in CityModel.objects.filter(slug__isnull=True)[:50]:
+        city.slug = slugify(city.name)
+        city.save()
+
+    for listing in PropertyListingModel.objects.filter(slug__isnull=True)[:50]:
+        listing.slug = slugify(listing.listing_title)
+        listing.save()
+
+    return f"Slug creation complete"
 
 
 @shared_task()
