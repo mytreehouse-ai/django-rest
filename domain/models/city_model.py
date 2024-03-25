@@ -9,6 +9,12 @@ class CityModel(BaseModel):
         db_index=True,
         verbose_name="Name"
     )
+    slug = models.SlugField(
+        max_length=200,
+        unique=True,
+        null=True,
+        verbose_name="Slug"
+    )
 
     def __str__(self) -> str:
         return self.name

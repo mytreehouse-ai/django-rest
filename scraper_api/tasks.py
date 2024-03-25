@@ -10,6 +10,7 @@ from django.utils import timezone
 from .services.scraperapi_service import ScrapyJobService
 from .serializers.create_scrapy_job_serializer import CreateScrapyJobSerializer
 from .models.scrapy_job_model import ScrapyJobModel
+from domain.models.city_model import CityModel
 from properties.models.property_listing_model import PropertyListingModel
 from properties.models.property_model import PropertyModel
 from properties.models.price_history_model import PriceHistoryModel
