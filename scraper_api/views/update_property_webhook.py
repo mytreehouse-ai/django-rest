@@ -1,6 +1,7 @@
 import json
 from logging import getLogger
 from django.db import connection
+from slugify import slugify
 from rest_framework.generics import UpdateAPIView
 from rest_framework_api_key.permissions import HasAPIKey
 from rest_framework.permissions import IsAuthenticated
@@ -135,6 +136,7 @@ class UpdatePropertyWebhookAPIView(UpdateAPIView):
                     id=int(attributes.get("listing_city_id")),
                     defaults={
                         "name": attributes.get("listing_city"),
+                        "slug": slugify(attributes.get("listing_city"))
                     }
                 )
 
