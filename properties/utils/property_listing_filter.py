@@ -19,8 +19,8 @@ class PropertyListingFilter(django_filters.FilterSet):
         field_name='property_type__description',
         lookup_expr='exact'
     )
-    listing_type = django_filters.NumberFilter(
-        field_name='listing_type__id',
+    listing_type = django_filters.CharFilter(
+        field_name='listing_type__slug',
         lookup_expr='exact'
     )
     property_status = django_filters.NumberFilter(
