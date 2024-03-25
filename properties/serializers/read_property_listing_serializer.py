@@ -55,6 +55,7 @@ class ReadPropertyListingSerializer(serializers.ModelSerializer):
         fields = [
             "id",
             "listing_title",
+            "slug",
             "listing_url",
             "estate",
             "property_type",
