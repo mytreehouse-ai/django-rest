@@ -30,6 +30,7 @@ class ReadAllPublicPropertyListingAPIView(ListAPIView):
     search_fields = [
         "listing_title",
         "listing_url",
+        "city__name",
         "estate__building_name",
         "estate__subdivision_name",
         "estate__address",
