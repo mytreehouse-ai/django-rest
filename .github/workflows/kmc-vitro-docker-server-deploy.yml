@@ -22,9 +22,9 @@ jobs:
             echo "mytreehouse_api_production is already running. No action needed."
           fi
           
-          if ! docker compose -f docker-compose-production.yml ps | grep -q mytreehouse_worker_production; then
+          if  docker compose -f docker-compose-production.yml ps | grep -q mytreehouse_worker_production; then
             echo "mytreehouse_worker_production is not running. Attempting to restart..."
-            docker compose -f docker-compose-production.yml restart worker
+            docker compose -f docker-compose-production.yml stop worker
           else
             echo "mytreehouse_worker_production is already running. No action needed."
           fi
