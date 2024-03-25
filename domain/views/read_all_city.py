@@ -6,6 +6,7 @@ from django.views.decorators.cache import cache_page
 from drf_yasg.utils import swagger_auto_schema
 
 from ..services.domain_service import DomainService
+from ..serializer.read_city_serializer import ReadCitySerializer
 
 logger = getLogger(__name__)
 
@@ -19,14 +20,15 @@ class ReadAllCityAPIView(ListAPIView):
     and ordering by specific fields like city name, id, created_at, and updated_at through query parameters.
     """
     permission_classes = [AllowAny]
+    serializer_class = ReadCitySerializer
     queryset = DomainService.get_all_city()
 
+    @method_decorator(cache_page(60 * 60 * 2))
     @swagger_auto_schema(
         operation_description="Retrieve a list of all cities. Supports searching by city name and ordering by id, created_at, and updated_at.",
         operation_id="list_all_cities",
         tags=["Domains"],
     )
-    @method_decorator(cache_page(60 * 60 * 2))
     def get(self, request, *args, **kwargs):
         """
         Overridden GET method to handle the retrieval of all cities.
