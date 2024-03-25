@@ -1,6 +1,8 @@
 from django.urls import path
+from .views.read_filtered_city import ReadFilteredCityAPIView
 from .views.read_all_city import ReadAllCityAPIView
 
 urlpatterns = [
-    path("cities", ReadAllCityAPIView.as_view())
+    path("cities", ReadFilteredCityAPIView.as_view()),
+    path("all-cities", ReadAllCityAPIView.as_view())
 ]
