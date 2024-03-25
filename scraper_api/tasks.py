@@ -490,7 +490,7 @@ def create_slug():
         city.save(update_fields=["slug"])
 
     for listing in PropertyListingModel.objects.filter(slug__isnull=True)[:50]:
-        listing.slug = slugify(listing.listing_title)
+        listing.slug = slugify(f"{listing.listing_title} {listing.id}")
         listing.save(update_fields=["slug"])
 
     return f"Slug creation complete"
