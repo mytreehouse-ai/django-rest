@@ -11,8 +11,7 @@ class CityModel(BaseModel):
     )
     slug = models.SlugField(
         max_length=200,
-        unique=True,
-        null=True,
+        db_index=True,
         verbose_name="Slug"
     )
 
@@ -26,4 +25,5 @@ class CityModel(BaseModel):
         ordering = ["name"]
         indexes = [
             models.Index(fields=['name'], name='name_idx'),
+            models.Index(fields=['slug'], name='slug_idx'),
         ]
