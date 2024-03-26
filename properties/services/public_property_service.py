@@ -41,6 +41,6 @@ class PublicPropertyService:
             PropertyListingModel: The property listing if found, otherwise None.
         """
         try:
-            return PropertyListingModel.objects.get(listing_title=listing_title)
+            return PropertyListingModel.objects.get(slug=listing_title)
         except PropertyListingModel.DoesNotExist:
             return None
