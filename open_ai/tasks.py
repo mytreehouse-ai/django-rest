@@ -64,7 +64,7 @@ def update_estate_description_using_ai():
             update_fields=["description", "ai_generated_description"]
         )
 
-    return "Success updated estate description using AI"
+    return f"Success updated estate description using AI for {property_listing.listing_title}"
 
 
 @shared_task()
