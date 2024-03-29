@@ -42,7 +42,7 @@ def update_estate_description_using_ai():
     system_prompt = "Improve the property description using markdown and emojis for better readability and engagement. Do not include information not present in the original description."
 
     for property_listing in property_listings:
-        time.sleep(2)  # Adding a delay of 2 seconds before each API call
+        time.sleep(5)  # Adding a delay of 5 seconds before each API call
         chat_completion = groq_ai_client.chat.completions.create(
             messages=[
                 {
