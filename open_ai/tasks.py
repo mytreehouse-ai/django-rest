@@ -51,7 +51,13 @@ def update_estate_description_using_ai():
                 },
                 {
                     "role": "user",
-                    "content": property_listing.estate.description,
+                    "content": """
+                    {property_listing.estate.description}
+                    
+                    Indoor features: {property_listing.estate.indoor_features}
+                    Outdoor features: {property_listing.estate.outdoor_features}
+                    Other features: {property_listing.estate.other_features}
+                    """,
                 }
             ],
             model="mixtral-8x7b-32768",
