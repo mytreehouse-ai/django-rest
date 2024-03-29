@@ -41,7 +41,7 @@ def update_estate_description_using_ai():
     system_prompt = "Improve the property description using markdown for better readability and engagement."
 
     for property_listing in property_listings:
-        time.sleep(2)  # Adding a delay of 1 second before each API call
+        time.sleep(2)  # Adding a delay of 2 seconds before each API call
         chat_completion = groq_ai_client.chat.completions.create(
             messages=[
                 {
@@ -59,7 +59,7 @@ def update_estate_description_using_ai():
 
         property_listing.estate.description = chat_completion.choices[0].message.content
         property_listing.estate.ai_generated_description = True
-        property_listing.save(
+        property_listing.estate.save(
             update_fields=["description", "ai_generated_description"]
         )
 
