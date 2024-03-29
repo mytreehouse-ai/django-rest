@@ -97,6 +97,10 @@ class PropertyModel(BaseModel):
         blank=True,
         verbose_name="Description"
     )
+    ai_generated_description = models.BooleanField(
+        default=False,
+        verbose_name="AI Generated Description"
+    )
     markdown = models.TextField(
         null=True,
         blank=True,
