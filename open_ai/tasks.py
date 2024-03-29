@@ -39,7 +39,7 @@ def update_estate_description_using_ai():
         estate__ai_generated_description=False
     ).order_by('-id')[:10]
 
-    system_prompt = "Improve the property description using markdown and emojis for better readability and engagement. Do not include information not present in the original description."
+    system_prompt = "Improve the property description using markdown and emojis for better readability and engagement, ensuring all important information is included and the output is complete. Do not include information not present in the original description."
 
     for property_listing in property_listings:
         time.sleep(5)  # Adding a delay of 5 seconds before each API call
@@ -51,11 +51,17 @@ def update_estate_description_using_ai():
                 },
                 {
                     "role": "user",
-                    "content": property_listing.estate.description,
+                    "content": """
+                    {property_listing.estate.description}
+                    
+                    Indoor features: {property_listing.estate.indoor_features}
+                    Outdoor features: {property_listing.estate.outdoor_features}
+                    Other features: {property_listing.estate.other_features}
+                    """,
                 }
             ],
             model="mixtral-8x7b-32768",
-            temperature=0.25,
+            temperature=0.20,
         )
 
         property_listing.estate.markdown = chat_completion.choices[0].message.content
