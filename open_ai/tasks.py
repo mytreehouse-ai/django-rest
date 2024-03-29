@@ -54,6 +54,7 @@ def update_estate_description_using_ai():
                     "content": """
                     {property_listing.estate.description}
                     
+                    Only include the features if it's available.
                     Indoor features: {property_listing.estate.indoor_features}
                     Outdoor features: {property_listing.estate.outdoor_features}
                     Other features: {property_listing.estate.other_features}
