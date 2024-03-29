@@ -24,8 +24,8 @@ class PropertyModelAdmin(admin.ModelAdmin):
     list_display = (
         "id", "building_name", "subdivision_name", "lot_size", "floor_size",
         "building_size", "num_bedrooms", "num_bathrooms", "num_carspaces",
-        "address", "city", "longitude", "latitude", "image_url", "created_at",
-        "updated_at"
+        "address", "city", "longitude", "latitude", "image_url", "ai_generated_description",
+        "description", "created_at", "updated_at"
     )
     search_fields = (
         "building_name", "subdivision_name", "address", "city__name", "description"
