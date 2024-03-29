@@ -47,6 +47,8 @@ def reset_markdown_description_for_property():
             update_fields=["ai_generated_description", "description"]
         )
 
+    return f"Success reset markdown description for {property_listings.count()} property listings"
+
 
 @shared_task()
 def update_estate_description_using_ai():
