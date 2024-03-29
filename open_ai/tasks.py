@@ -39,7 +39,7 @@ def update_estate_description_using_ai():
         estate__ai_generated_description=False
     ).order_by('-id')[:10]
 
-    system_prompt = "Improve the property description using markdown and emojis for better readability and engagement. Do not include information not present in the original description."
+    system_prompt = "Improve the property description using markdown and emojis for better readability and engagement, ensuring all important information is included and the output is complete. Do not include information not present in the original description."
 
     for property_listing in property_listings:
         time.sleep(5)  # Adding a delay of 5 seconds before each API call
