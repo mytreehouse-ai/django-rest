@@ -63,6 +63,7 @@ def update_estate_description_using_ai():
             ],
             model="mixtral-8x7b-32768",
             temperature=0.20,
+            stream=False
         )
 
         property_listing.estate.markdown = chat_completion.choices[0].message.content
