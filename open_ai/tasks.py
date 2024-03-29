@@ -28,6 +28,29 @@ def update_available_cities_for_ai_context():
 
 
 @shared_task()
+def reset_markdown_description_for_property():
+    property_listings = PropertyListingModel.objects.filter(
+        is_active=True,
+        estate__markdown__isnull=False,
+        estate__ai_generated_description=True
+    ).order_by('-id')[:25]
+
+    for property in property_listings:
+        description_text = property.estate.get(
+            "description", {}
+        ).get("text", "N/A")
+
+        property.estate.ai_generated_description = False
+        property.estate.description = description_text
+
+        property.estate.save(
+            update_fields=["ai_generated_description", "description"]
+        )
+
+    return f"Success reset markdown description for {property_listings.count()} property listings"
+
+
+@shared_task()
 def update_estate_description_using_ai():
     groq_ai_client = Groq(
         api_key=os.environ.get("GROQAI_API_KEY"),
