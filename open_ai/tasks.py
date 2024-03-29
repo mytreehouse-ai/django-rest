@@ -58,10 +58,10 @@ def update_estate_description_using_ai():
             temperature=0.25,
         )
 
-        property_listing.estate.description = chat_completion.choices[0].message.content
+        property_listing.estate.markdown = chat_completion.choices[0].message.content
         property_listing.estate.ai_generated_description = True
         property_listing.estate.save(
-            update_fields=["description", "ai_generated_description"]
+            update_fields=["markdown", "ai_generated_description"]
         )
 
     return f"Success updated estate description using AI for {property_listing.listing_title}"
