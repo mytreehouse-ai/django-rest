@@ -1,5 +1,6 @@
 import os
 import time
+from groq import Groq
 from logging import getLogger
 from celery import shared_task
 from django.core.cache import cache
@@ -27,11 +28,48 @@ def update_available_cities_for_ai_context():
 
 
 @shared_task()
+def update_estate_description_using_ai():
+    groq_ai_client = Groq(
+        api_key=os.environ.get("GROQAI_API_KEY"),
+    )
+
+    property_listings = PropertyListingModel.objects.filter(
+        estate__description__isnull=False,
+        estate__ai_generated_description=False
+    ).order_by('-id')[:10]
+
+    system_prompt = "Improve the property description using markdown for better readability and engagement."
+
+    for property_listing in property_listings:
+        chat_completion = groq_ai_client.chat.completions.create(
+            messages=[
+                {
+                    "role": "system",
+                    "content": system_prompt,
+                },
+                {
+                    "role": "user",
+                    "content": property_listing.estate.description,
+                }
+            ],
+            model="mixtral-8x7b-32768",
+            temperature=0.25,
+        )
+
+        property_listing.estate.description = chat_completion.choices[0].message.content
+        property_listing.estate.ai_generated_description = True
+        property_listing.save(
+            update_fields=["description", "ai_generated_description"]
+        )
+
+    return "Success updated estate description using AI"
+
+
+@shared_task()
 def update_vector_property_listings():
     apollo_exporation_service = ApolloExplorationService(
         api_key=os.getenv("OPENAI_API_KEY")
     )
-
     pg_vector = apollo_exporation_service.pg_vector(
         collection_name="property_listings"
     )
@@ -64,11 +102,10 @@ def update_vector_property_listings():
             Description: {property_listing.estate.description}
             """
 
-        print(estate)
-
         documents = apollo_exporation_service.get_text_chunks_langchain(
             text=estate
         )
+
         customs_ids = pg_vector.add_documents(documents=documents)
 
         property_listing.vector_uuids = customs_ids
