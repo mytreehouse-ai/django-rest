@@ -51,7 +51,7 @@ def update_estate_description_using_ai():
                 },
                 {
                     "role": "user",
-                    "content": """
+                    "content": f"""
                     {property_listing.estate.description}
                     
                     Only include the features if it's available.
