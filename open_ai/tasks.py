@@ -34,6 +34,7 @@ def update_estate_description_using_ai():
     )
 
     property_listings = PropertyListingModel.objects.filter(
+        is_active=True,
         estate__description__isnull=False,
         estate__ai_generated_description=False
     ).order_by('-id')[:10]
