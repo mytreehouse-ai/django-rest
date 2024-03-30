@@ -31,6 +31,7 @@ def update_available_cities_for_ai_context():
 def reset_markdown_description_for_property():
     property_listings = PropertyListingModel.objects.filter(
         is_active=True,
+        estate__metadata__isnull=False,
     ).order_by('-id')[:100]
 
     for property in property_listings:
