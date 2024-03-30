@@ -36,7 +36,7 @@ def reset_markdown_description_for_property():
     ).order_by('-id')[:25]
 
     for property in property_listings:
-        description_text = property.estate.get(
+        description_text = property.estate.metadata.get(
             "description", {}
         ).get("text", "N/A")
 
