@@ -24,7 +24,7 @@ class PublicPropertyService:
         Returns:
             List[PropertyListingModel]: A list of all property listings.
         """
-        return PropertyListingModel.objects.filter()
+        return PropertyListingModel.objects.filter(slug__isnull=False)
 
     @staticmethod
     def get_one_property_listing(listing_title: str) -> PropertyListingModel:
